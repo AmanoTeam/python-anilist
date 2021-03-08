@@ -22,13 +22,15 @@
 
 import httpx
 
-from anilist.types import Anime
+from anilist.types import Anime, Manga
 from typing import Optional
 from anilist.utils import (
     ANIME_GET_QUERY,
     ANIME_SEARCH_QUERY,
     API_URL,
     HEADERS,
+    MANGA_GET_QUERY,
+    MANGA_SEARCH_QUERY,
 )
 
 
@@ -55,7 +57,7 @@ class Client:
             raise TypeError(
                 f"query argument must be a string, not '{query.__class__.__name__}'"
             )
-        if limit.isdecimal():
+        if isinstance(limit, str) and limit.isdecimal():
             limit = int(limit)
         elif not isinstance(limit, int):
             raise TypeError(
@@ -63,6 +65,8 @@ class Client:
             )
         if content_type == "anime":
             return self.search_anime(query=query, limit=limit)
+        elif content_type == "manga":
+            return self.search_manga(query=query, limit=limit)
         else:
             raise TypeError("There is no such content type.")
 
@@ -81,6 +85,8 @@ class Client:
             )
         if content_type == "anime":
             return self.get_anime(id=id)
+        elif content_type == "manga":
+            return self.get_manga(id=id)
         else:
             raise TypeError("There is no such content type.")
 
@@ -112,6 +118,34 @@ class Client:
                 pass
         return None
 
+    def search_manga(self, query: str, limit: int) -> Optional[Manga]:
+        if not self.httpx:
+            self.httpx = httpx
+        response = self.httpx.post(
+            url=API_URL,
+            json=dict(
+                query=MANGA_SEARCH_QUERY,
+                variables=dict(
+                    search=query,
+                    per_page=limit,
+                    MediaType="MANGA",
+                ),
+            ),
+            headers=HEADERS,
+        )
+        data = response.json()
+        if data["data"]:
+            try:
+                items = data["data"]["Page"]["media"]
+                results = [
+                    Manga(id=item["id"], title=item["title"], url=item["siteUrl"])
+                    for item in items
+                ]
+                return results
+            except:
+                pass
+        return None
+
     def get_anime(self, id: int) -> Optional[Anime]:
         if not self.httpx:
             self.httpx = httpx
@@ -134,6 +168,7 @@ class Client:
                     id=item["id"],
                     title=item["title"],
                     url=item["siteUrl"],
+                    episodes=item["episodes"],
                     description=item["description"],
                     format=item["format"],
                     status=item["status"],
@@ -162,6 +197,61 @@ class Client:
                     trailer=item["trailer"],
                     staff=item["staff"],
                     characters=item["characters"],
+                )
+            except:
+                pass
+        return None
+
+    def get_manga(self, id: int) -> Optional[Manga]:
+        if not self.httpx:
+            self.httpx = httpx
+        response = self.httpx.post(
+            url=API_URL,
+            json=dict(
+                query=MANGA_GET_QUERY,
+                variables=dict(
+                    id=id,
+                    MediaType="MANGA",
+                ),
+            ),
+            headers=HEADERS,
+        )
+        data = response.json()
+        if data["data"]:
+            try:
+                item = data["data"]["Page"]["media"][0]
+                return Manga(
+                    id=item["id"],
+                    title=item["title"],
+                    url=item["siteUrl"],
+                    chapters=item["chapters"],
+                    description=item["description"],
+                    status=item["status"],
+                    genres=item["genres"],
+                    tags=item["tags"],
+                    studios=item["studios"],
+                    start_date=item["startDate"],
+                    end_date=item["endDate"],
+                    season=dict(
+                        name=item["season"],
+                        year=item["seasonYear"],
+                        number=item["seasonInt"],
+                    ),
+                    country=item["countryOfOrigin"],
+                    cover=item["coverImage"],
+                    banner=item["bannerImage"],
+                    source=item["source"],
+                    hashtag=item["hashtag"],
+                    synonyms=item["synonyms"],
+                    score=dict(
+                        mean=item["meanScore"],
+                        average=item["averageScore"],
+                    ),
+                    next_airing=item["nextAiringEpisode"],
+                    trailer=item["trailer"],
+                    staff=item["staff"],
+                    characters=item["characters"],
+                    volumes=item["volumes"],
                 )
             except:
                 pass

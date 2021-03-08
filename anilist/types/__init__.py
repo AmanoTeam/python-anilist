@@ -25,6 +25,7 @@ from .character import Character
 from .cover import Cover
 from .date import Date
 from .next_airing import NextAiring
+from .manga import Manga
 from .title import Title
 from .trailer import Trailer
 from .score import Score
@@ -36,6 +37,7 @@ __all__ = [
     "Cover",
     "Date",
     "NextAiring",
+    "Manga",
     "Title",
     "Trailer",
     "Score",

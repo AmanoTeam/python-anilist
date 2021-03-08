@@ -43,6 +43,22 @@ query ($id: Int, $per_page: Int, $search: String) {
 }
 """
 
+MANGA_SEARCH_QUERY = """
+query ($id: Int, $per_page: Int, $search: String) {
+    Page (page: 1, perPage: $per_page) {
+        media (id: $id, search: $search, type: MANGA, sort: POPULARITY_DESC) {
+            id
+            title {
+                romaji
+                english
+                native
+            }
+            siteUrl
+        }
+    }
+}
+"""
+
 # Get
 ANIME_GET_QUERY = """
 query ($id: Int) {
@@ -124,6 +140,90 @@ query ($id: Int) {
                     }
                 }
             }
+        }
+    }
+}
+"""
+
+MANGA_GET_QUERY = """
+query ($id: Int) {
+    Page(page: 1, perPage: 1) {
+        media(id: $id, type: MANGA) {
+            id
+            title {
+                romaji
+                english
+                native
+            }
+            siteUrl
+            chapters
+            description
+            status
+            genres
+            tags {
+                name
+            }
+            studios {
+                nodes {
+                    name
+                }
+            }
+            startDate {
+                year
+                month
+                day
+            }
+            endDate {
+                year
+                month
+                day
+            }
+            season
+            seasonYear
+            seasonInt
+            countryOfOrigin
+            coverImage {
+                medium
+                large
+                extraLarge
+            }
+            bannerImage
+            source
+            hashtag
+            synonyms
+            meanScore
+            averageScore
+            nextAiringEpisode {
+                timeUntilAiring
+                airingAt
+                episode
+            }
+            trailer {
+                id
+                thumbnail
+                site
+            }
+            staff(sort: FAVOURITES_DESC) {
+                edges {
+                    node {
+                        name {
+                            full
+                        }
+                        id
+                    }
+                }
+            }
+            characters(role: MAIN) {
+                edges {
+                    node {
+                        name {
+                            full
+                        }
+                        id
+                    }
+                }
+            }
+            volumes
         }
     }
 }
