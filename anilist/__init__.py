@@ -25,5 +25,7 @@ __email__ = "contact@amanoteam.com"
 __license__ = "MIT"
 __version__ = "1.0.0"
 
+from . import types
+
 from .sync_client import Client
 from .async_client import Client as AsyncClient
