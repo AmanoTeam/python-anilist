@@ -1,0 +1,8 @@
+# Personal files
+test.py
+
+# Byte pre-compiled
+*.egg*
+build/
+dist/
+__pycache__/
