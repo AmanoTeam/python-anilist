@@ -24,7 +24,7 @@ import httpx
 
 from .types import Anime
 from typing import Optional
-from utils import (
+from .utils import (
     ANIME_GET_QUERY,
     ANIME_SEARCH_QUERY,
     API_URL,
