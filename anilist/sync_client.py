@@ -163,6 +163,6 @@ class Client:
                     staff=item["staff"],
                     characters=item["characters"],
                 )
-            except Exception as e:
-                print(e)
+            except:
+                pass
         return None
