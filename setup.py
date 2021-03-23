@@ -13,7 +13,7 @@ setup(
     name="python-anilist",
     version=version,
     packages=find_packages(),
-    install_requires=["httpx[http2]>=0.14"],
+    install_requires=["httpx[http2] >= 0.14"],
     url="https://github.com/AmanoTeam/python-anilist",
     python_requires=">=3.8",
     author=author,
