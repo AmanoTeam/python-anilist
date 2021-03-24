@@ -15,7 +15,7 @@ setup(
     packages=find_packages(),
     install_requires=["httpx[http2] >= 0.14"],
     url="https://github.com/AmanoTeam/python-anilist",
-    python_requires=">=3.8",
+    python_requires=">=3.6",
     author=author,
     author_email=email,
     license=license,
@@ -25,6 +25,8 @@ setup(
         "Operating System :: OS Independent",
         "Framework :: AsyncIO",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9"
         "Programming Language :: Python :: 3 :: Only",
