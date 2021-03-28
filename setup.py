@@ -1,9 +1,3 @@
-from anilist import (
-    __author__ as author,
-    __email__ as email,
-    __license__ as license,
-    __version__ as version,
-)
 from setuptools import find_packages, setup
 
 with open("README.md", "r") as file:
@@ -11,14 +5,14 @@ with open("README.md", "r") as file:
 
 setup(
     name="python-anilist",
-    version=version,
+    version="1.0.2",
     packages=find_packages(),
     install_requires=["httpx[http2] >= 0.14"],
     url="https://github.com/AmanoTeam/python-anilist",
-    python_requires=">=3.6",
-    author=author,
-    author_email=email,
-    license=license,
+    python_requires=">=3.7",
+    author="AmanoTeam",
+    author_email="contact@amanoteam.com",
+    license="MIT",
     classifiers=[
         "Development Status :: 4 - Beta",
         "License :: OSI Approved :: MIT License",
