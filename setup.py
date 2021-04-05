@@ -3,11 +3,15 @@ from setuptools import find_packages, setup
 with open("README.md", "r") as file:
     readme = file.read()
 
+with open("CHANGELOG.md", "r") as file:
+    readme += "\n\n"
+    readme += file.read()
+
 setup(
     name="python-anilist",
-    version="1.0.2",
+    version="1.0.3",
     packages=find_packages(),
-    install_requires=["httpx[http2] >= 0.14"],
+    install_requires=["httpx[http2]>=0.14"],
     url="https://github.com/AmanoTeam/python-anilist",
     python_requires=">=3.6",
     author="AmanoTeam",
