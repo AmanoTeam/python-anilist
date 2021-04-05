@@ -28,9 +28,9 @@ HEADERS = {
 
 # Search
 ANIME_SEARCH_QUERY = """
-query ($id: Int, $per_page: Int, $search: String) {
-    Page (page: 1, perPage: $per_page) {
-        media (id: $id, search: $search, type: ANIME, sort: POPULARITY_DESC) {
+query($id: Int, $per_page: Int, $search: String) {
+    Page(page: 1, perPage: $per_page) {
+        media(id: $id, search: $search, type: ANIME, sort: POPULARITY_DESC) {
             id
             title {
                 romaji
@@ -43,10 +43,26 @@ query ($id: Int, $per_page: Int, $search: String) {
 }
 """
 
+CHARACTER_SEARCH_QUERY = """
+query($per_page: Int, $search: String) {
+    Page(page: 1, perPage: $per_page) {
+        characters(search: $search) {
+            id
+            name {
+                first
+                full
+                native
+                last
+            }
+        }
+    }
+}
+"""
+
 MANGA_SEARCH_QUERY = """
-query ($id: Int, $per_page: Int, $search: String) {
-    Page (page: 1, perPage: $per_page) {
-        media (id: $id, search: $search, type: MANGA, sort: POPULARITY_DESC) {
+query($id: Int, $per_page: Int, $search: String) {
+    Page(page: 1, perPage: $per_page) {
+        media(id: $id, search: $search, type: MANGA, sort: POPULARITY_DESC) {
             id
             title {
                 romaji
@@ -61,7 +77,7 @@ query ($id: Int, $per_page: Int, $search: String) {
 
 # Get
 ANIME_GET_QUERY = """
-query ($id: Int) {
+query($id: Int) {
     Page(page: 1, perPage: 1) {
         media(id: $id, type: ANIME) {
             id
@@ -124,7 +140,10 @@ query ($id: Int) {
                 edges {
                     node {
                         name {
+                            first
                             full
+                            native
+                            last
                         }
                         id
                     }
@@ -134,7 +153,10 @@ query ($id: Int) {
                 edges {
                     node {
                         name {
+                            first
                             full
+                            native
+                            last
                         }
                         id
                     }
@@ -145,8 +167,42 @@ query ($id: Int) {
 }
 """
 
+CHARACTER_GET_QUERY = """
+query($id: Int) {
+    Character(id: $id, sort: FAVOURITES_DESC) {
+        id
+        name {
+            first
+            full
+            native
+            last
+        }
+        image {
+            medium
+            large
+        }
+        siteUrl
+        favourites
+        description
+        media {
+            edges {
+                node {
+                    title {
+                        romaji
+                        english
+                        native
+                    }
+                    id
+                }
+            }
+        }
+        isFavourite
+    }
+}
+"""
+
 MANGA_GET_QUERY = """
-query ($id: Int) {
+query($id: Int) {
     Page(page: 1, perPage: 1) {
         media(id: $id, type: MANGA) {
             id

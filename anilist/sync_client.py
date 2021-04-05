@@ -22,12 +22,14 @@
 
 import httpx
 
-from anilist.types import Anime, Manga
+from anilist.types import Anime, Character, Manga
 from typing import Optional
 from anilist.utils import (
     ANIME_GET_QUERY,
     ANIME_SEARCH_QUERY,
     API_URL,
+    CHARACTER_GET_QUERY,
+    CHARACTER_SEARCH_QUERY,
     HEADERS,
     MANGA_GET_QUERY,
     MANGA_SEARCH_QUERY,
@@ -65,6 +67,8 @@ class Client:
             )
         if content_type == "anime":
             return self.search_anime(query=query, limit=limit)
+        elif content_type in ["char", "character"]:
+            return self.search_character(query=query, limit=limit)
         elif content_type == "manga":
             return self.search_manga(query=query, limit=limit)
         else:
@@ -85,6 +89,8 @@ class Client:
             )
         if content_type == "anime":
             return self.get_anime(id=id)
+        elif content_type in ["char", "character"]:
+            return self.get_character(id=id)
         elif content_type == "manga":
             return self.get_manga(id=id)
         else:
@@ -111,6 +117,33 @@ class Client:
                 items = data["data"]["Page"]["media"]
                 results = [
                     Anime(id=item["id"], title=item["title"], url=item["siteUrl"])
+                    for item in items
+                ]
+                return results
+            except:
+                pass
+        return None
+    
+    def search_character(self, query: str, limit: int) -> Optional[Character]:
+        if not self.httpx:
+            self.httpx = httpx.Client()
+        response = self.httpx.post(
+            url=API_URL,
+            json=dict(
+                query=CHARACTER_SEARCH_QUERY,
+                variables=dict(
+                    search=query,
+                    per_page=limit,
+                ),
+            ),
+            headers=HEADERS,
+        )
+        data = response.json()
+        if data["data"]:
+            try:
+                items = data["data"]["Page"]["characters"]
+                results = [
+                    Character(id=item["id"], name=item["name"])
                     for item in items
                 ]
                 return results
@@ -197,6 +230,37 @@ class Client:
                     trailer=item["trailer"],
                     staff=item["staff"],
                     characters=item["characters"],
+                )
+            except:
+                pass
+        return None
+    
+    def get_character(self, id: int) -> Optional[Character]:
+        if not self.httpx:
+            self.httpx = httpx.Client()
+        response = self.httpx.post(
+            url=API_URL,
+            json=dict(
+                query=CHARACTER_GET_QUERY,
+                variables=dict(
+                    id=id,
+                ),
+            ),
+            headers=HEADERS,
+        )
+        data = response.json()
+        if data["data"]:
+            try:
+                item = data["data"]["Character"]
+                return Character(
+                    id=item["id"],
+                    name=item["name"],
+                    image=item["image"],
+                    url=item["siteUrl"],
+                    favorites=item["favourites"],
+                    description=item["description"],
+                    media=item["media"],
+                    is_favorite=item["isFavourite"],
                 )
             except:
                 pass

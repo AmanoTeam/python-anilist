@@ -132,14 +132,14 @@ class Anime:
         if staff and len(staff["edges"]) > 0:
             self.staff = [
                 Character(
-                    id=character["node"]["id"], name=character["node"]["name"]["full"]
+                    id=character["node"]["id"], name=character["node"]["name"]
                 )
                 for character in staff["edges"]
             ]
         if characters and len(characters["edges"]) > 0:
             self.characters = [
                 Character(
-                    id=character["node"]["id"], name=character["node"]["name"]["full"]
+                    id=character["node"]["id"], name=character["node"]["name"]
                 )
                 for character in characters["edges"]
             ]

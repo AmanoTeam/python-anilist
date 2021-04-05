@@ -24,6 +24,8 @@ from .anime import Anime
 from .character import Character
 from .cover import Cover
 from .date import Date
+from .image import Image
+from .name import Name
 from .next_airing import NextAiring
 from .manga import Manga
 from .title import Title
@@ -36,6 +38,8 @@ __all__ = [
     "Character",
     "Cover",
     "Date",
+    "Image",
+    "Name",
     "NextAiring",
     "Manga",
     "Title",

@@ -22,12 +22,14 @@
 
 import httpx
 
-from anilist.types import Anime, Manga
+from anilist.types import Anime, Character, Manga
 from typing import Optional
 from anilist.utils import (
     ANIME_GET_QUERY,
     ANIME_SEARCH_QUERY,
     API_URL,
+    CHARACTER_GET_QUERY,
+    CHARACTER_SEARCH_QUERY,
     HEADERS,
     MANGA_GET_QUERY,
     MANGA_SEARCH_QUERY,
@@ -66,6 +68,8 @@ class Client:
             )
         if content_type == "anime":
             return await self.search_anime(query=query, limit=limit)
+        elif content_type in ["char", "character"]:
+            return await self.search_character(query=query, limit=limit)
         elif content_type == "manga":
             return await self.search_manga(query=query, limit=limit)
         else:
@@ -86,6 +90,8 @@ class Client:
             )
         if content_type == "anime":
             return await self.get_anime(id=id)
+        elif content_type in ["char", "character"]:
+            return await self.get_character(id=id)
         elif content_type == "manga":
             return await self.get_manga(id=id)
         else:
@@ -111,11 +117,44 @@ class Client:
         data = response.json()
         if need_to_close:
             await self.httpx.aclose()
+            self.httpx = None
         if data["data"]:
             try:
                 items = data["data"]["Page"]["media"]
                 results = [
                     Anime(id=item["id"], title=item["title"], url=item["siteUrl"])
+                    for item in items
+                ]
+                return results
+            except:
+                pass
+        return None
+    
+    async def search_character(self, query: str, limit: int) -> Optional[Character]:
+        need_to_close = False
+        if not self.httpx:
+            self.httpx = httpx.AsyncClient(http2=True)
+            need_to_close = True
+        response = await self.httpx.post(
+            url=API_URL,
+            json=dict(
+                query=CHARACTER_SEARCH_QUERY,
+                variables=dict(
+                    search=query,
+                    per_page=limit,
+                ),
+            ),
+            headers=HEADERS,
+        )
+        data = response.json()
+        if need_to_close:
+            await self.httpx.aclose()
+            self.httpx = None
+        if data["data"]:
+            try:
+                items = data["data"]["Page"]["characters"]
+                results = [
+                    Character(id=item["id"], name=item["name"])
                     for item in items
                 ]
                 return results
@@ -143,6 +182,7 @@ class Client:
         data = response.json()
         if need_to_close:
             await self.httpx.aclose()
+            self.httpx = None
         if data["data"]:
             try:
                 items = data["data"]["Page"]["media"]
@@ -174,6 +214,7 @@ class Client:
         data = response.json()
         if need_to_close:
             await self.httpx.aclose()
+            self.httpx = None
         if data["data"]:
             try:
                 item = data["data"]["Page"]["media"][0]
@@ -214,6 +255,42 @@ class Client:
             except:
                 pass
         return None
+    
+    async def get_character(self, id: int) -> Optional[Character]:
+        need_to_close = False
+        if not self.httpx:
+            self.httpx = httpx.AsyncClient(http2=True)
+            need_to_close = True
+        response = await self.httpx.post(
+            url=API_URL,
+            json=dict(
+                query=CHARACTER_GET_QUERY,
+                variables=dict(
+                    id=id,
+                ),
+            ),
+            headers=HEADERS,
+        )
+        data = response.json()
+        if need_to_close:
+            await self.httpx.aclose()
+            self.httpx = None
+        if data["data"]:
+            try:
+                item = data["data"]["Character"]
+                return Character(
+                    id=item["id"],
+                    name=item["name"],
+                    image=item["image"],
+                    url=item["siteUrl"],
+                    favorites=item["favourites"],
+                    description=item["description"],
+                    media=item["media"],
+                    is_favorite=item["isFavourite"],
+                )
+            except:
+                pass
+        return None
 
     async def get_manga(self, id: int) -> Optional[Manga]:
         need_to_close = False
@@ -234,6 +311,7 @@ class Client:
         data = response.json()
         if need_to_close:
             await self.httpx.aclose()
+            self.httpx = None
         if data["data"]:
             try:
                 item = data["data"]["Page"]["media"][0]
