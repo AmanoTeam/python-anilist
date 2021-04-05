@@ -40,12 +40,13 @@ class Character:
     ):
         self.id = id
         self.name = Name(
-            first=name["first"], full=name["full"], native=name["native"], last=name["last"]
+            first=name["first"],
+            full=name["full"],
+            native=name["native"],
+            last=name["last"],
         )
         if image:
-            self.image = Image(
-                medium=image["medium"], large=image["large"]
-            )
+            self.image = Image(medium=image["medium"], large=image["large"])
         if url:
             self.url = url
         if favorites:
@@ -56,7 +57,6 @@ class Character:
             self.media = [item["node"] for item in media["edges"]]
         if is_favorite is not None:
             self.is_favorite = is_favorite
-        
 
     def raw(self) -> Dict:
         return self.__dict__

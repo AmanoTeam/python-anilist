@@ -129,7 +129,7 @@ class Client:
             except:
                 pass
         return None
-    
+
     async def search_character(self, query: str, limit: int) -> Optional[Character]:
         need_to_close = False
         if not self.httpx:
@@ -154,8 +154,7 @@ class Client:
             try:
                 items = data["data"]["Page"]["characters"]
                 results = [
-                    Character(id=item["id"], name=item["name"])
-                    for item in items
+                    Character(id=item["id"], name=item["name"]) for item in items
                 ]
                 return results
             except:
@@ -255,7 +254,7 @@ class Client:
             except:
                 pass
         return None
-    
+
     async def get_character(self, id: int) -> Optional[Character]:
         need_to_close = False
         if not self.httpx:

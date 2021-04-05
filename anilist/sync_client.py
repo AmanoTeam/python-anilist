@@ -123,7 +123,7 @@ class Client:
             except:
                 pass
         return None
-    
+
     def search_character(self, query: str, limit: int) -> Optional[Character]:
         if not self.httpx:
             self.httpx = httpx.Client()
@@ -143,8 +143,7 @@ class Client:
             try:
                 items = data["data"]["Page"]["characters"]
                 results = [
-                    Character(id=item["id"], name=item["name"])
-                    for item in items
+                    Character(id=item["id"], name=item["name"]) for item in items
                 ]
                 return results
             except:
@@ -234,7 +233,7 @@ class Client:
             except:
                 pass
         return None
-    
+
     def get_character(self, id: int) -> Optional[Character]:
         if not self.httpx:
             self.httpx = httpx.Client()
