@@ -39,7 +39,7 @@ class Client:
         self.httpx = None
 
     async def __aenter__(self):
-        self.httpx = httpx.AsyncClient()
+        self.httpx = httpx.AsyncClient(http2=True)
         return self
 
     async def __aexit__(self, *args):
@@ -94,7 +94,7 @@ class Client:
     async def search_anime(self, query: str, limit: int) -> Optional[Anime]:
         need_to_close = False
         if not self.httpx:
-            self.httpx = httpx.AsyncClient()
+            self.httpx = httpx.AsyncClient(http2=True)
             need_to_close = True
         response = await self.httpx.post(
             url=API_URL,
@@ -126,7 +126,7 @@ class Client:
     async def search_manga(self, query: str, limit: int) -> Optional[Manga]:
         need_to_close = False
         if not self.httpx:
-            self.httpx = httpx.AsyncClient()
+            self.httpx = httpx.AsyncClient(http2=True)
             need_to_close = True
         response = await self.httpx.post(
             url=API_URL,
@@ -158,7 +158,7 @@ class Client:
     async def get_anime(self, id: int) -> Optional[Anime]:
         need_to_close = False
         if not self.httpx:
-            self.httpx = httpx.AsyncClient()
+            self.httpx = httpx.AsyncClient(http2=True)
             need_to_close = True
         response = await self.httpx.post(
             url=API_URL,
@@ -218,7 +218,7 @@ class Client:
     async def get_manga(self, id: int) -> Optional[Manga]:
         need_to_close = False
         if not self.httpx:
-            self.httpx = httpx.AsyncClient()
+            self.httpx = httpx.AsyncClient(http2=True)
             need_to_close = True
         response = await self.httpx.post(
             url=API_URL,

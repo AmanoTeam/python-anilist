@@ -39,7 +39,7 @@ class Client:
         self.httpx = None
 
     def __enter__(self):
-        self.httpx = httpx
+        self.httpx = httpx.Client()
         return self
 
     def __exit__(self, *args):
@@ -92,7 +92,7 @@ class Client:
 
     def search_anime(self, query: str, limit: int) -> Optional[Anime]:
         if not self.httpx:
-            self.httpx = httpx
+            self.httpx = httpx.Client()
         response = self.httpx.post(
             url=API_URL,
             json=dict(
@@ -120,7 +120,7 @@ class Client:
 
     def search_manga(self, query: str, limit: int) -> Optional[Manga]:
         if not self.httpx:
-            self.httpx = httpx
+            self.httpx = httpx.Client()
         response = self.httpx.post(
             url=API_URL,
             json=dict(
@@ -148,7 +148,7 @@ class Client:
 
     def get_anime(self, id: int) -> Optional[Anime]:
         if not self.httpx:
-            self.httpx = httpx
+            self.httpx = httpx.Client()
         response = self.httpx.post(
             url=API_URL,
             json=dict(
@@ -204,7 +204,7 @@ class Client:
 
     def get_manga(self, id: int) -> Optional[Manga]:
         if not self.httpx:
-            self.httpx = httpx
+            self.httpx = httpx.Client()
         response = self.httpx.post(
             url=API_URL,
             json=dict(

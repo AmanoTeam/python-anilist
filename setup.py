@@ -9,7 +9,7 @@ setup(
     packages=find_packages(),
     install_requires=["httpx[http2] >= 0.14"],
     url="https://github.com/AmanoTeam/python-anilist",
-    python_requires=">=3.7",
+    python_requires=">=3.6",
     author="AmanoTeam",
     author_email="contact@amanoteam.com",
     license="MIT",
