@@ -263,7 +263,10 @@ query($id: Int) {
                 edges {
                     node {
                         name {
+                            first
                             full
+                            native
+                            last
                         }
                         id
                     }
@@ -273,7 +276,10 @@ query($id: Int) {
                 edges {
                     node {
                         name {
+                            first
                             full
+                            native
+                            last
                         }
                         id
                     }
