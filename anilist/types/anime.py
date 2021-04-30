@@ -136,7 +136,11 @@ class Anime:
             ]
         if characters and len(characters["edges"]) > 0:
             self.characters = [
-                Character(id=character["node"]["id"], name=character["node"]["name"])
+                Character(
+                    id=character["node"]["id"],
+                    name=character["node"]["name"],
+                    role=character["role"],
+                )
                 for character in characters["edges"]
             ]
 

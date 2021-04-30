@@ -149,7 +149,7 @@ query($id: Int) {
                     }
                 }
             }
-            characters(role: MAIN) {
+            characters(sort: FAVOURITES_DESC) {
                 edges {
                     node {
                         name {
@@ -160,6 +160,7 @@ query($id: Int) {
                         }
                         id
                     }
+                    role
                 }
             }
         }
@@ -272,7 +273,7 @@ query($id: Int) {
                     }
                 }
             }
-            characters(role: MAIN) {
+            characters(sort: FAVOURITES_DESC) {
                 edges {
                     node {
                         name {
@@ -283,6 +284,7 @@ query($id: Int) {
                         }
                         id
                     }
+                    role
                 }
             }
             volumes

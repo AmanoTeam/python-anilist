@@ -31,6 +31,7 @@ class Character:
         *,
         id: int,
         name: Dict,
+        role: str = None,
         image: Dict = None,
         url: str = None,
         favorites: int = None,
@@ -45,6 +46,8 @@ class Character:
             native=name["native"],
             last=name["last"],
         )
+        if role:
+            self.role = role
         if image:
             self.image = Image(medium=image["medium"], large=image["large"])
         if url:
