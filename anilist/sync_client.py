@@ -20,19 +20,33 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from re import I
 import httpx
-
-from anilist.types import Anime, Character, Manga
-from typing import Optional
+import logging
+from anilist.types import (
+    Anime,
+    Character,
+    Manga,
+    User,
+    FavouritesUnion,
+    Staff,
+    Studio,
+    StatisticsUnion,
+    Statistic,
+)
+from typing import Optional, Union
 from anilist.utils import (
     ANIME_GET_QUERY,
     ANIME_SEARCH_QUERY,
+    ANIME_ACTIVITY_QUERY,
     API_URL,
     CHARACTER_GET_QUERY,
     CHARACTER_SEARCH_QUERY,
     HEADERS,
     MANGA_GET_QUERY,
     MANGA_SEARCH_QUERY,
+    USER_GET_QUERY,
+    LIST_GET_QUERY,
 )
 
 
@@ -74,7 +88,7 @@ class Client:
         else:
             raise TypeError("There is no such content type.")
 
-    def get(self, id: int, content_type: str = "anime"):
+    def get(self, id: Union[int, str], content_type: str = "anime"):
         if isinstance(content_type, str):
             content_type = content_type.lower()
         else:
@@ -84,6 +98,9 @@ class Client:
         if isinstance(id, str) and id.isdecimal():
             id = int(id)
         elif not isinstance(id, int):
+            if content_type == "user":
+                return self.get_user(name=id)
+
             raise TypeError(
                 f"id argument must be a string, not '{id.__class__.__name__}'"
             )
@@ -229,6 +246,165 @@ class Client:
                     trailer=item["trailer"],
                     staff=item["staff"],
                     characters=item["characters"],
+                )
+            except:
+                pass
+        return None
+
+    def get_user(self, name: str) -> Optional[User]:
+        if not self.httpx:
+            self.httpx = httpx.Client()
+        response = self.httpx.post(
+            url=API_URL,
+            json=dict(
+                query=USER_GET_QUERY,
+                variables=dict(
+                    name=name,
+                ),
+            ),
+            headers=HEADERS,
+        )
+        data = response.json()
+        if data["data"]:
+            try:
+                item = data["data"]["User"]
+
+                favourites = FavouritesUnion(
+                    anime=[
+                        Anime(
+                            id=i["id"],
+                            title=i["title"],
+                            url=i["siteUrl"],
+                            genres=i["genres"],
+                            cover=i["coverImage"],
+                            banner=i["bannerImage"],
+                            source=i["source"],
+                            hashtag=i["hashtag"],
+                            synonyms=i["synonyms"],
+                            score=dict(
+                                mean=i["meanScore"],
+                                average=i["averageScore"],
+                            ),
+                        )
+                        for i in item["favourites"]["anime"]["nodes"]
+                    ],
+                    manga=[
+                        Manga(
+                            id=i["id"],
+                            title=i["title"],
+                            url=i["siteUrl"],
+                            genres=i["genres"],
+                            cover=i["coverImage"],
+                            banner=i["bannerImage"],
+                            source=i["source"],
+                            hashtag=i["hashtag"],
+                            synonyms=i["synonyms"],
+                            score=dict(
+                                mean=i["meanScore"],
+                                average=i["averageScore"],
+                            ),
+                        )
+                        for i in item["favourites"]["manga"]["nodes"]
+                    ],
+                    characters=[
+                        Character(
+                            id=i["id"],
+                            name=i["name"],
+                            image=i["image"],
+                            description=i["description"],
+                            gender=i["gender"],
+                            birth_date=i["dateOfBirth"],
+                            url=i["siteUrl"],
+                            favorites=i["favourites"],
+                            age=i["age"],
+                        )
+                        for i in item["favourites"]["characters"]["nodes"]
+                    ],
+                    staff=[
+                        Staff(
+                            id=i["id"],
+                            name=i["name"],
+                            language=i["languageV2"],
+                            image=i["image"],
+                            description=i["description"],
+                            gender=i["gender"],
+                            birth_date=i["dateOfBirth"],
+                            death_date=i["dateOfDeath"],
+                            url=i["siteUrl"],
+                            favorites=i["favourites"],
+                            occupations=i["primaryOccupations"],
+                            age=i["age"],
+                            years_active=i["yearsActive"],
+                            home_town=i["homeTown"],
+                        )
+                        for i in item["favourites"]["staff"]["nodes"]
+                    ],
+                    studios=[
+                        Studio(
+                            id=i["id"],
+                            name=i["name"],
+                            is_animation_studio=i["isAnimationStudio"],
+                            url=i["siteUrl"],
+                            favourites=i["favourites"],
+                        )
+                        for i in item["favourites"]["studios"]["nodes"]
+                    ],
+                )
+
+                stat_anime = item["statistics"]["anime"]
+                stat_manga = item["statistics"]["manga"]
+
+                statistics = StatisticsUnion(
+                    anime=Statistic(
+                        count=stat_anime["count"],
+                        mean_score=stat_anime["meanScore"],
+                        minutes_watched=stat_anime["minutesWatched"],
+                        episodes_watched=stat_anime["episodesWatched"],
+                        statuses=[
+                            [stat["status"], stat["count"]]
+                            for stat in stat_anime["statuses"]
+                        ],
+                        genres=[
+                            [genre["genre"], genre["count"]]
+                            for genre in stat_anime["genres"]
+                        ],
+                        tags=[
+                            [tag["tag"]["name"], tag["count"]]
+                            for tag in stat_anime["tags"]
+                        ],
+                    ),
+                    manga=Statistic(
+                        count=stat_manga["count"],
+                        mean_score=stat_manga["meanScore"],
+                        chapters_read=stat_manga["chaptersRead"],
+                        volumes_read=stat_manga["volumesRead"],
+                        statuses=[
+                            [stat["status"], stat["count"]]
+                            for stat in stat_manga["statuses"]
+                        ],
+                        genres=[
+                            [genre["genre"], genre["count"]]
+                            for genre in stat_manga["genres"]
+                        ],
+                        tags=[
+                            [tag["tag"]["name"], tag["count"]]
+                            for tag in stat_manga["tags"]
+                        ],
+                    ),
+                )
+
+                return User(
+                    id=item["id"],
+                    name=item["name"],
+                    created_at=item["createdAt"],
+                    updated_at=item["updatedAt"],
+                    image=item["avatar"],
+                    url=item["siteUrl"],
+                    about=item["about"],
+                    donator_tier=item["donatorTier"],
+                    donator_badge=item["donatorBadge"],
+                    favourites=favourites,
+                    statistics=statistics,
                 )
             except:
                 pass

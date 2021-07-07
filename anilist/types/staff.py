@@ -23,25 +23,48 @@
 from .name import Name
 from .image import Image
 from .date import Date
-from typing import Callable, Dict
+from typing import Callable, Dict, List
 
 
-class Character:
+class Studio:
+    def __init__(
+        self,
+        *,
+        id: int,
+        name: str,
+        is_animation_studio: bool = False,
+        url: str = None,
+        favourites: int = None,
+    ) -> None:
+        self.id = id
+        self.name = name
+        self.is_animation_studio = is_animation_studio
+        if url:
+            self.url = url
+        if favourites:
+            self.favourites = favourites
+
+
+class Staff:
     def __init__(
         self,
         *,
         id: int,
         name: Dict,
         role: str = None,
+        language: str = None,
         image: Dict = None,
         url: str = None,
         favorites: int = None,
         description: str = None,
-        media: Dict = None,
-        birth_date: Dict = None,
-        age: int = None,
-        is_favorite: bool = None,
+        occupations: List[str] = None,
         gender: str = None,
+        birth_date: Dict = None,
+        death_date: Dict = None,
+        age: int = None,
+        years_active: int = None,
+        home_town: str = None,
+        is_favorite: bool = None,
     ):
         self.id = id
         self.name = Name(
@@ -52,6 +75,8 @@ class Character:
         )
         if role:
             self.role = role
+        if language:
+            self.language = language
         if image:
             self.image = Image(medium=image["medium"], large=image["large"])
         if url:
@@ -60,18 +85,28 @@ class Character:
             self.favorites = favorites
         if description:
             self.description = description
-        if media:
-            self.media = [item["node"] for item in media["edges"]]
+        if occupations:
+            self.occupations = occupations
+        if gender:
+            self.gender = gender
         if birth_date:
             self.birth_date = Date(
                 year=birth_date["year"],
                 month=birth_date["month"],
                 day=birth_date["day"],
             )
+        if death_date:
+            self.death_date = Date(
+                year=death_date["year"],
+                month=death_date["month"],
+                day=death_date["day"],
+            )
         if age:
             self.age = age
-        if gender:
-            self.gender = gender
+        if years_active:
+            self.years_active = years_active
+        if home_town:
+            self.home_town = home_town
         if is_favorite is not None:
             self.is_favorite = is_favorite
 

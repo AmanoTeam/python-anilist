@@ -20,29 +20,48 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from datetime import datetime
+from .name import Name
+from .image import Image
+from .date import Date
+from .favourites import FavouritesUnion
+from .statistics import StatisticsUnion
 from typing import Callable, Dict
 
 
-class Date:
+class User:
     def __init__(
         self,
         *,
-        year: int = None,
-        month: int = None,
-        day: int = None,
+        id: int,
+        name: str,
+        created_at: int,
+        updated_at: int,
+        about: str = None,
+        image: Dict = None,
+        favourites: FavouritesUnion = None,
+        statistics: StatisticsUnion = None,
+        url: str = None,
+        donator_tier: int = None,
+        donator_badge: str = None,
     ):
-        if year:
-            self.year = year
-        if month:
-            self.month = month
-        if day:
-            self.day = day
-
-    @staticmethod
-    def from_timestamp(timestamp: int):
-        time = datetime.fromtimestamp(timestamp)
-        return Date(year=time.year, month=time.month, day=time.day)
+        self.id = id
+        self.name = name
+        self.created_at = Date.from_timestamp(created_at)
+        self.updated_at = Date.from_timestamp(updated_at)
+        if about:
+            self.about = about
+        if image:
+            self.image = Image(medium=image["medium"], large=image["large"])
+        if favourites:
+            self.favourites = favourites
+        if statistics:
+            self.statistics = statistics
+        if url:
+            self.url = url
+        if donator_tier:
+            self.donator_tier = donator_tier
+        if donator_badge:
+            self.donator_badge = donator_badge
 
     def raw(self) -> Dict:
         return self.__dict__

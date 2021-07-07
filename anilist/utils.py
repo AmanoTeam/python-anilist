@@ -27,6 +27,16 @@ HEADERS = {
 }
 
 # Search
+USER_SEARCH_QUERY = """
+query ($name: String, $perPage: Int = 5) {
+    Page(page: 0, perPage: $perPage) {
+        users(search: $name, sort: SEARCH_MATCH) {
+            id
+        }
+    }
+}
+"""
+
 ANIME_SEARCH_QUERY = """
 query($id: Int, $per_page: Int, $search: String) {
     Page(page: 1, perPage: $per_page) {
@@ -76,6 +86,218 @@ query($id: Int, $per_page: Int, $search: String) {
 """
 
 # Get
+USER_GET_QUERY = """
+query ($name: String) {
+    User(name: $name) {
+        id
+        name
+        about
+        avatar {
+            large
+            medium
+        }
+        bannerImage
+        favourites {
+            anime {
+                nodes {
+                    id
+                    title {
+                        romaji
+                        english
+                        native
+                    }
+                    siteUrl
+                    genres
+                    coverImage {
+                        medium
+                        large
+                        extraLarge
+                    }
+                    bannerImage
+                    source
+                    hashtag
+                    synonyms
+                    averageScore
+                    meanScore
+                }
+            }
+            manga {
+                nodes {
+                    id
+                    title {
+                        romaji
+                        english
+                        native
+                        userPreferred
+                    }
+                    siteUrl
+                    genres
+                    coverImage {
+                        medium
+                        large
+                        extraLarge
+                    }
+                    bannerImage
+                    source
+                    hashtag
+                    synonyms
+                    averageScore
+                    meanScore
+                }
+            }
+            characters {
+                nodes {
+                    id
+                    name {
+                        first
+                        middle
+                        last
+                        full
+                        native
+                        userPreferred
+                    }
+                    image {
+                        large
+                        medium
+                    }
+                    description
+                    gender
+                    dateOfBirth {
+                        year
+                        month
+                        day
+                    }
+                    age
+                    siteUrl
+                    favourites
+                }
+            }
+            staff {
+                nodes {
+                    id
+                    name {
+                        first
+                        middle
+                        last
+                        full
+                        native
+                        userPreferred
+                    }
+                    languageV2
+                    image {
+                        large
+                        medium
+                    }
+                    description
+                    primaryOccupations
+                    gender
+                    dateOfBirth {
+                        year
+                        month
+                        day
+                    }
+                    dateOfDeath {
+                        year
+                        month
+                        day
+                    }
+                    age
+                    yearsActive
+                    homeTown
+                    siteUrl
+                    favourites
+                }
+            }
+            studios {
+                nodes {
+                    id
+                    name
+                    isAnimationStudio
+                    siteUrl
+                    favourites
+                }
+            }
+        }
+        statistics {
+            anime {
+                count
+                meanScore
+                minutesWatched
+                episodesWatched
+                statuses {
+                    status
+                    count
+                }
+                genres(sort: COUNT_DESC) {
+                    genre
+                    count
+                }
+                tags(sort: COUNT_DESC) {
+                    tag {
+                        name
+                    }
+                    count
+                }
+            }
+            manga {
+                count
+                meanScore
+                chaptersRead
+                volumesRead
+                statuses {
+                    status
+                    count
+                }
+                genres(sort: COUNT_DESC) {
+                    genre
+                    count
+                }
+                tags(sort: COUNT_DESC) {
+                    tag {
+                        name
+                    }
+                    count
+                }
+            }
+        }
+        siteUrl
+        donatorTier
+        donatorBadge
+        createdAt
+        updatedAt
+    }
+}
+"""
+
+LIST_GET_QUERY = """
+query ($userId: Int, $perPage: Int) {
+    anime: Page(page: 0, perPage: $perPage) {
+        mediaList(userId: $userId, sort: UPDATED_TIME_DESC, type: ANIME) {
+            media {
+                title {
+                    romaji
+                    english
+                    native
+                    userPreferred
+                }
+            }
+        }
+    }
+    manga: Page(page: 0, perPage: $perPage) {
+        mediaList(userId: $userId, sort: UPDATED_TIME_DESC, type: MANGA) {
+            media {
+                title {
+                    romaji
+                    english
+                    native
+                    userPreferred
+                }
+            }
+        }
+    }
+}
+"""
+
 ANIME_GET_QUERY = """
 query($id: Int) {
     Page(page: 1, perPage: 1) {
@@ -288,6 +510,108 @@ query($id: Int) {
                 }
             }
             volumes
+        }
+    }
+}
+"""
+# Activity
+
+ANIME_ACTIVITY_QUERY = """
+query ($userId: Int, $perPage: Int = 25) {
+    Page(page: 0, perPage: $perPage) {
+        anime: activities(userId: $userId, type: ANIME_LIST, sort: ID_DESC) {
+            ... on ListActivity {
+                id
+                status
+                progress
+                siteUrl
+                createdAt
+                media {
+                    id
+                    title {
+                        romaji
+                        english
+                        native
+                    }
+                    siteUrl
+                    episodes
+                    description
+                    format
+                    status
+                    duration
+                    genres
+                    tags {
+                        name
+                    }
+                    studios {
+                        nodes {
+                            name
+                        }
+                    }
+                    startDate {
+                        year
+                        month
+                        day
+                    }
+                    endDate {
+                        year
+                        month
+                        day
+                    }
+                    season
+                    seasonYear
+                    seasonInt
+                    countryOfOrigin
+                    coverImage {
+                        medium
+                        large
+                        extraLarge
+                    }
+                    bannerImage
+                    source
+                    hashtag
+                    synonyms
+                    meanScore
+                    averageScore
+                    nextAiringEpisode {
+                        timeUntilAiring
+                        airingAt
+                        episode
+                    }
+                    trailer {
+                        id
+                        thumbnail
+                        site
+                    }
+                    staff(sort: FAVOURITES_DESC) {
+                        edges {
+                            node {
+                                name {
+                                    first
+                                    full
+                                    native
+                                    last
+                                }
+                                id
+                            }
+                        }
+                    }
+                    characters(sort: FAVOURITES_DESC) {
+                        edges {
+                            node {
+                                name {
+                                    first
+                                    full
+                                    native
+                                    last
+                                }
+                                id
+                            }
+                            role
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -21,38 +21,33 @@
 # SOFTWARE.
 
 from .anime import Anime
-from .character import Character
-from .cover import Cover
-from .date import Date
-from .image import Image
-from .name import Name
-from .next_airing import NextAiring
 from .manga import Manga
-from .title import Title
-from .trailer import Trailer
-from .score import Score
-from .season import Season
+from .character import Character
 from .staff import Staff, Studio
-from .favourites import FavouritesUnion
-from .statistics import Statistic, StatisticsUnion
-from .user import User
+from typing import List, Dict, Callable
 
-__all__ = [
-    "Anime",
-    "Character",
-    "Cover",
-    "Date",
-    "FavouritesUnion",
-    "Image",
-    "Name",
-    "NextAiring",
-    "Manga",
-    "Title",
-    "Trailer",
-    "Score",
-    "Season",
-    "Staff",
-    "Statistic",
-    "StatisticsUnion",
-    "Studio",
-]
+
+class FavouritesUnion:
+    def __init__(
+        self,
+        *,
+        anime: List[Anime] = [],
+        manga: List[Manga] = [],
+        characters: List[Character] = [],
+        staff: List[Staff] = [],
+        studios: List[Studio] = [],
+    ) -> None:
+        self.anime = anime
+        self.manga = manga
+        self.characters = characters
+        self.staff = staff
+        self.studios = studios
+
+    def raw(self) -> Dict:
+        return self.__dict__
+
+    def __repr__(self) -> Callable:
+        return self.__str__()
+
+    def __str__(self) -> str:
+        return str(self.raw())
