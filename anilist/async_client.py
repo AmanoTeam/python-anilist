@@ -235,22 +235,14 @@ class Client:
                 f"id argument must be an int, not '{id.__class__.__name__}'"
             )
         if content_type == "anime":
-            # ANIME_LIST
             return await self.get_anime_activity(user_id=id)
         elif content_type == "manga":
-            # MANGA_LIST
-            return None
+            return await self.get_manga_activity(user_id=id)
         elif content_type == "text":
             # TEXT
             return None
         elif content_type == "message":
             # MESSAGE
-            return None
-        elif content_type == "anime_update":
-            # MEDIA_LIST
-            return None
-        elif content_type == "manga_update":
-            # MEDIA_LIST
             return None
 
     async def get_anime_activity(self, user_id: int) -> Optional[List[ListActivity]]:
@@ -323,6 +315,86 @@ class Client:
                             url=item["siteUrl"],
                             date=item["createdAt"],
                             media=anime,
+                        )
+                    )
+
+                return result
+            except:
+                pass
+        return None
+
+    async def get_manga_activity(self, user_id: int) -> Optional[List[ListActivity]]:
+        need_to_close = False
+        if not self.httpx:
+            self.httpx = httpx.AsyncClient(http2=True)
+            need_to_close = True
+        MANGA_ACTIVITY_QUERY = LIST_ACTIVITY_QUERY.replace(
+            "episodes", "chapters\nvolumes"
+        )
+        response = self.httpx.post(
+            url=API_URL,
+            json=dict(
+                query=MANGA_ACTIVITY_QUERY,
+                variables=dict(
+                    userId=user_id,
+                    ActivityType="MANGA_LIST",
+                ),
+            ),
+            headers=HEADERS,
+        )
+        data = response.json()
+        if need_to_close:
+            await self.httpx.aclose()
+            self.httpx = None
+        if data["data"]:
+            try:
+                items = data["data"]["Page"]["activities"]
+                result = []
+
+                for item in items:
+                    media = item["media"]
+                    manga = Manga(
+                        id=media["id"],
+                        title=media["title"],
+                        url=media["siteUrl"],
+                        chapters=media["chapters"],
+                        description=media["description"],
+                        status=media["status"],
+                        genres=media["genres"],
+                        tags=media["tags"],
+                        studios=media["studios"],
+                        start_date=media["startDate"],
+                        end_date=media["endDate"],
+                        season=dict(
+                            name=media["season"],
+                            year=media["seasonYear"],
+                            number=media["seasonInt"],
+                        ),
+                        country=media["countryOfOrigin"],
+                        cover=media["coverImage"],
+                        banner=media["bannerImage"],
+                        source=media["source"],
+                        hashtag=media["hashtag"],
+                        synonyms=media["synonyms"],
+                        score=dict(
+                            mean=media["meanScore"],
+                            average=media["averageScore"],
+                        ),
+                        next_airing=media["nextAiringEpisode"],
+                        trailer=media["trailer"],
+                        staff=media["staff"],
+                        characters=media["characters"],
+                        volumes=media["volumes"],
+                    )
+
+                    result.append(
+                        ListActivity(
+                            id=item["id"],
+                            status=item["status"],
+                            progress=item["progress"],
+                            url=item["siteUrl"],
+                            date=item["createdAt"],
+                            media=manga,
                         )
                     )
 

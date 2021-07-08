@@ -59,6 +59,8 @@ class ListActivityStatus:
                 self.progress = [int(i) for i in progress]
             else:
                 self.progress = int(progress)
+        else:
+            self.progress = None
 
     def __repr__(self) -> Callable:
         return "<ListActivityStatus: {}:{}>".format(self.string, str(self.type))
@@ -69,11 +71,18 @@ class ListActivityStatus:
         )
 
     def __str__(self) -> str:
-        return "{} {}".format(
+
+        progress_str = ""
+        if not self.progress:
+            pass
+        elif isinstance(self.progress, List):
+            progress_str = " " + " - ".join(str(i) for i in self.progress)
+        elif isinstance(self.progress, int):
+            progress_str = " " + str(self.progress)
+
+        return "{}{}".format(
             self.string.title(),
-            " - ".join(self.progress)
-            if isinstance(self.progress, List)
-            else str(self.progress),
+            progress_str,
         )
 
 

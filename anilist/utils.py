@@ -521,12 +521,14 @@ query ($userId: Int, $ActivityType: ActivityType, $perPage: Int = 25) {
     Page(page: 0, perPage: $perPage) {
         activities(userId: $userId, type: $ActivityType, sort: ID_DESC) {
             ... on ListActivity {
+                type
                 id
                 status
                 progress
                 siteUrl
                 createdAt
                 media {
+                    type
                     id
                     title {
                         romaji
