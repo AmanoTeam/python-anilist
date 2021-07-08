@@ -20,9 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from re import I
 import httpx
-import logging
 from anilist.types import (
     Anime,
     Character,
@@ -33,12 +31,13 @@ from anilist.types import (
     Studio,
     StatisticsUnion,
     Statistic,
+    ListActivity,
 )
-from typing import Optional, Union
+from typing import List, Optional, Union
 from anilist.utils import (
     ANIME_GET_QUERY,
     ANIME_SEARCH_QUERY,
-    ANIME_ACTIVITY_QUERY,
+    LIST_ACTIVITY_QUERY,
     API_URL,
     CHARACTER_GET_QUERY,
     CHARACTER_SEARCH_QUERY,
@@ -191,6 +190,121 @@ class Client:
                     for item in items
                 ]
                 return results
+            except:
+                pass
+        return None
+
+    def get_activity(
+        self, id: Union[int, str], content_type: str = "anime"
+    ) -> Optional[List[ListActivity]]:
+        if isinstance(content_type, str):
+            content_type = content_type.lower()
+        else:
+            raise TypeError(
+                f"content_type argument must be a string, not '{content_type.__class__.__name__}'"
+            )
+        if isinstance(id, str) and id.isdecimal():
+            id = int(id)
+        elif isinstance(id, str):
+            try:
+                user = self.get_user(name=id)
+                id = user.id
+            except:
+                raise TypeError(
+                    f"id argument must be an int, not '{id.__class__.__name__}'"
+                )
+        elif not isinstance(id, int):
+            raise TypeError(
+                f"id argument must be an int, not '{id.__class__.__name__}'"
+            )
+        if content_type == "anime":
+            # ANIME_LIST
+            return self.get_anime_activity(user_id=id)
+        elif content_type == "manga":
+            # MANGA_LIST
+            return None
+        elif content_type == "text":
+            # TEXT
+            return None
+        elif content_type == "message":
+            # MESSAGE
+            return None
+        elif content_type == "anime_update":
+            # MEDIA_LIST
+            return None
+        elif content_type == "manga_update":
+            # MEDIA_LIST
+            return None
+
+    def get_anime_activity(self, user_id: int) -> Optional[List[ListActivity]]:
+        if not self.httpx:
+            self.httpx = httpx.Client()
+        response = self.httpx.post(
+            url=API_URL,
+            json=dict(
+                query=LIST_ACTIVITY_QUERY,
+                variables=dict(
+                    userId=user_id,
+                    ActivityType="ANIME_LIST",
+                ),
+            ),
+            headers=HEADERS,
+        )
+        data = response.json()
+        if data["data"]:
+            try:
+                items = data["data"]["Page"]["activities"]
+                result = []
+
+                for item in items:
+                    media = item["media"]
+                    anime = Anime(
+                        id=media["id"],
+                        title=media["title"],
+                        url=media["siteUrl"],
+                        episodes=media["episodes"],
+                        description=media["description"],
+                        format=media["format"],
+                        status=media["status"],
+                        duration=media["duration"],
+                        genres=media["genres"],
+                        tags=media["tags"],
+                        studios=media["studios"],
+                        start_date=media["startDate"],
+                        end_date=media["endDate"],
+                        season=dict(
+                            name=media["season"],
+                            year=media["seasonYear"],
+                            number=media["seasonInt"],
+                        ),
+                        country=media["countryOfOrigin"],
+                        cover=media["coverImage"],
+                        banner=media["bannerImage"],
+                        source=media["source"],
+                        hashtag=media["hashtag"],
+                        synonyms=media["synonyms"],
+                        score=dict(
+                            mean=media["meanScore"],
+                            average=media["averageScore"],
+                        ),
+                        next_airing=media["nextAiringEpisode"],
+                        trailer=media["trailer"],
+                        staff=media["staff"],
+                        characters=media["characters"],
+                    )
+
+                    result.append(
+                        ListActivity(
+                            id=item["id"],
+                            status=item["status"],
+                            progress=item["progress"],
+                            url=item["siteUrl"],
+                            date=item["createdAt"],
+                            media=anime,
+                        )
+                    )
+
+                return result
             except:
                 pass
         return None

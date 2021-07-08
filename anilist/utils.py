@@ -514,12 +514,12 @@ query($id: Int) {
     }
 }
 """
-# Activity
 
-ANIME_ACTIVITY_QUERY = """
-query ($userId: Int, $perPage: Int = 25) {
+# Activity
+LIST_ACTIVITY_QUERY = """
+query ($userId: Int, $ActivityType: ActivityType, $perPage: Int = 25) {
     Page(page: 0, perPage: $perPage) {
-        anime: activities(userId: $userId, type: ANIME_LIST, sort: ID_DESC) {
+        activities(userId: $userId, type: $ActivityType, sort: ID_DESC) {
             ... on ListActivity {
                 id
                 status

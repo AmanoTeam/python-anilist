@@ -36,6 +36,7 @@ from .staff import Staff, Studio
 from .favourites import FavouritesUnion
 from .statistics import Statistic, StatisticsUnion
 from .user import User
+from .activity import ListActivity, ListActivityStatus
 
 __all__ = [
     "Anime",
@@ -44,6 +45,8 @@ __all__ = [
     "Date",
     "FavouritesUnion",
     "Image",
+    "ListActivity",
+    "ListActivityStatus",
     "Name",
     "NextAiring",
     "Manga",
@@ -55,4 +58,5 @@ __all__ = [
     "Statistic",
     "StatisticsUnion",
     "Studio",
+    "User",
 ]
