@@ -34,9 +34,10 @@ from .score import Score
 from .season import Season
 from .staff import Staff, Studio
 from .favourites import FavouritesUnion
-from .statistics import Statistic, StatisticsUnion
+from .statistics import Statistic, StatisticsUnion, Ranking
 from .user import User
 from .activity import ListActivity, ListActivityStatus
+from .medialist import MediaList
 
 __all__ = [
     "Anime",
@@ -50,6 +51,8 @@ __all__ = [
     "Name",
     "NextAiring",
     "Manga",
+    "MediaList",
+    "Ranking",
     "Title",
     "Trailer",
     "Score",

@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from .statistics import Ranking
 from .character import Character
 from .cover import Cover
 from .date import Date
@@ -59,6 +60,7 @@ class Manga:
         staff: Dict = None,
         characters: Dict = None,
         volumes: int = None,
+        rankings: List[Ranking] = None
     ):
         self.id = id
         self.title = Title(
@@ -140,6 +142,8 @@ class Manga:
             ]
         if volumes:
             self.volumes = volumes
+        if rankings:
+            self.rankings = rankings
 
     def raw(self) -> Dict:
         return self.__dict__

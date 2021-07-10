@@ -269,6 +269,31 @@ query ($name: String) {
 }
 """
 
+LIST_ITEM_GET_QUERY = """
+query ($name: String, $id: Int) {
+    MediaList(userName: $name, mediaId: $id) {
+        id
+        status
+        score
+        progress
+        repeat
+        priority
+        startedAt {
+            year
+            month
+            day
+        }
+        completedAt {
+            year
+            month
+            day
+        }
+        updatedAt
+        createdAt
+    }
+}
+"""
+
 LIST_GET_QUERY = """
 query ($userId: Int, $perPage: Int) {
     anime: Page(page: 0, perPage: $perPage) {
@@ -310,7 +335,7 @@ query($id: Int) {
             }
             siteUrl
             episodes
-            description
+            descriptione
             format
             status
             duration
@@ -348,6 +373,15 @@ query($id: Int) {
             synonyms
             meanScore
             averageScore
+            popularity
+            rankings {
+                type
+                allTime
+                format
+                rank
+                year
+                season
+            }
             nextAiringEpisode {
                 timeUntilAiring
                 airingAt
@@ -472,6 +506,14 @@ query($id: Int) {
             synonyms
             meanScore
             averageScore
+            rankings {
+                type
+                allTime
+                format
+                rank
+                year
+                season
+            }
             nextAiringEpisode {
                 timeUntilAiring
                 airingAt
@@ -575,6 +617,14 @@ query ($userId: Int, $ActivityType: ActivityType, $perPage: Int = 25) {
                     synonyms
                     meanScore
                     averageScore
+                    rankings {
+                        type
+                        allTime
+                        format
+                        rank
+                        year
+                        season
+                    }
                     nextAiringEpisode {
                         timeUntilAiring
                         airingAt

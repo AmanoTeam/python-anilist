@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from .statistics import Ranking
 from .character import Character
 from .cover import Cover
 from .date import Date
@@ -60,6 +61,7 @@ class Anime:
         trailer: Dict = None,
         staff: Dict = None,
         characters: Dict = None,
+        rankings: List[Ranking] = None
     ):
         self.id = id
         self.title = Title(
@@ -143,6 +145,8 @@ class Anime:
                 )
                 for character in characters["edges"]
             ]
+        if rankings:
+            self.rankings = rankings
 
     def raw(self) -> Dict:
         return self.__dict__

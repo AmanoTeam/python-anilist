@@ -24,6 +24,34 @@ from .score import Score
 from typing import Dict, Callable, List
 
 
+class Ranking:
+    def __init__(
+        self,
+        *,
+        type: str,
+        format: str,
+        rank: int,
+        all_time: bool = False,
+        year: int = None,
+        season: str = None,
+    ) -> None:
+        self.type = type
+        self.format = format
+        self.rank = rank
+        self.all_time = all_time
+        self.year = year
+        self.season = season
+
+    def raw(self) -> Dict:
+        return self.__dict__
+
+    def __repr__(self) -> Callable:
+        return self.__str__()
+
+    def __str__(self) -> str:
+        return str(self.raw())
+
+
 class Statistic:
     def __init__(
         self,

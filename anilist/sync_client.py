@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from anilist.types.medialist import MediaList
 import httpx
 from anilist.types import (
     Anime,
@@ -32,6 +33,7 @@ from anilist.types import (
     StatisticsUnion,
     Statistic,
     ListActivity,
+    Ranking,
 )
 from typing import List, Optional, Union
 from anilist.utils import (
@@ -46,6 +48,7 @@ from anilist.utils import (
     MANGA_SEARCH_QUERY,
     USER_GET_QUERY,
     LIST_GET_QUERY,
+    LIST_ITEM_GET_QUERY,
 )
 
 
@@ -284,6 +287,17 @@ class Client:
                         trailer=media["trailer"],
                         staff=media["staff"],
                         characters=media["characters"],
+                        rankings=[
+                            Ranking(
+                                type=i["type"],
+                                all_time=i["allTime"],
+                                format=i["format"],
+                                rank=i["rank"],
+                                year=i["year"],
+                                season=i["season"],
+                            )
+                            for i in media["rankings"]
+                        ],
                     )
 
                     result.append(
@@ -360,6 +374,17 @@ class Client:
                         staff=media["staff"],
                         characters=media["characters"],
                         volumes=media["volumes"],
+                        rankings=[
+                            Ranking(
+                                type=i["type"],
+                                all_time=i["allTime"],
+                                format=i["format"],
+                                rank=i["rank"],
+                                year=i["year"],
+                                season=i["season"],
+                            )
+                            for i in media["rankings"]
+                        ],
                     )
 
                     result.append(
@@ -429,6 +454,17 @@ class Client:
                     trailer=item["trailer"],
                     staff=item["staff"],
                     characters=item["characters"],
+                    rankings=[
+                        Ranking(
+                            type=i["type"],
+                            all_time=i["allTime"],
+                            format=i["format"],
+                            rank=i["rank"],
+                            year=i["year"],
+                            season=i["season"],
+                        )
+                        for i in item["rankings"]
+                    ],
                 )
             except:
                 pass
@@ -674,6 +710,51 @@ class Client:
                     staff=item["staff"],
                     characters=item["characters"],
                     volumes=item["volumes"],
+                    rankings=[
+                        Ranking(
+                            type=i["type"],
+                            all_time=i["allTime"],
+                            format=i["format"],
+                            rank=i["rank"],
+                            year=i["year"],
+                            season=i["season"],
+                        )
+                        for i in item["rankings"]
+                    ],
+                )
+            except:
+                pass
+        return None
+
+    def get_list_item(self, name: str, id: int) -> Optional[MediaList]:
+        if not self.httpx:
+            self.httpx = httpx.Client()
+        response = self.httpx.post(
+            url=API_URL,
+            json=dict(
+                query=LIST_ITEM_GET_QUERY,
+                variables=dict(
+                    name=name,
+                    id=id,
+                ),
+            ),
+            headers=HEADERS,
+        )
+        data = response.json()
+        if data["data"]:
+            try:
+                item = data["data"]["MediaList"]
+                return MediaList(
+                    id=item["id"],
+                    status=item["status"],
+                    score=item["score"],
+                    progress=item["progress"],
+                    repeat=item["repeat"],
+                    priority=item["priority"],
+                    start_date=item["startedAt"],
+                    complete_date=item["completedAt"],
+                    update_date=item["updatedAt"],
+                    create_date=item["createdAt"],
                 )
             except:
                 pass
