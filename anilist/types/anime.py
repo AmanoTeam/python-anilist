@@ -61,6 +61,7 @@ class Anime:
         trailer: Dict = None,
         staff: Dict = None,
         characters: Dict = None,
+        popularity: int = None,
         rankings: List[Ranking] = None
     ):
         self.id = id
@@ -145,6 +146,8 @@ class Anime:
                 )
                 for character in characters["edges"]
             ]
+        if popularity:
+            self.popularity = popularity
         if rankings:
             self.rankings = rankings
 

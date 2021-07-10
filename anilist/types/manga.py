@@ -60,6 +60,7 @@ class Manga:
         staff: Dict = None,
         characters: Dict = None,
         volumes: int = None,
+        popularity: int = None,
         rankings: List[Ranking] = None
     ):
         self.id = id
@@ -142,6 +143,8 @@ class Manga:
             ]
         if volumes:
             self.volumes = volumes
+        if popularity:
+            self.popularity = popularity
         if rankings:
             self.rankings = rankings
 

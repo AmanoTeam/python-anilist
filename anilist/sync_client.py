@@ -287,6 +287,7 @@ class Client:
                         trailer=media["trailer"],
                         staff=media["staff"],
                         characters=media["characters"],
+                        popularity=media["popularity"],
                         rankings=[
                             Ranking(
                                 type=i["type"],
@@ -374,6 +375,7 @@ class Client:
                         staff=media["staff"],
                         characters=media["characters"],
                         volumes=media["volumes"],
+                        popularity=media["popularity"],
                         rankings=[
                             Ranking(
                                 type=i["type"],
@@ -454,6 +456,7 @@ class Client:
                     trailer=item["trailer"],
                     staff=item["staff"],
                     characters=item["characters"],
+                    popularity=item["popularity"],
                     rankings=[
                         Ranking(
                             type=i["type"],
@@ -710,6 +713,7 @@ class Client:
                     staff=item["staff"],
                     characters=item["characters"],
                     volumes=item["volumes"],
+                    popularity=item["popularity"],
                     rankings=[
                         Ranking(
                             type=i["type"],
