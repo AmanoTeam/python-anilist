@@ -587,6 +587,7 @@ class Client:
                     about=item["about"],
                     donator_tier=item["donatorTier"],
                     donator_badge=item["donatorBadge"],
+                    profile_color=item["options"]["profileColor"],
                     favourites=favourites,
                     statistics=statistics,
                 )

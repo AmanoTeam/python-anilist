@@ -25,7 +25,29 @@ from .image import Image
 from .date import Date
 from .favourites import FavouritesUnion
 from .statistics import StatisticsUnion
-from typing import Callable, Dict
+from typing import Callable, Dict, Tuple
+
+
+def get_profile_color(color: str) -> Tuple[int, int, int]:
+    if color == "blue":
+        return 61, 180, 242
+    elif color == "purple":
+        return 192, 99, 255
+    elif color == "green":
+        return 76, 202, 81
+    elif color == "orange":
+        return 239, 136, 26
+    elif color == "red":
+        return 255, 51, 51
+    elif color == "pink":
+        return 252, 157, 214
+    elif color == "gray":
+        return 103, 123, 148
+    elif "#" in color:
+        color = color.replace("#", "")
+        return tuple(int(color[i : i + 2], 16) for i in (0, 2, 4))
+    else:
+        return 255, 255, 255
 
 
 class User:
@@ -43,6 +65,7 @@ class User:
         url: str = None,
         donator_tier: int = None,
         donator_badge: str = None,
+        profile_color: str = None,
     ):
         self.id = id
         self.name = name
@@ -62,6 +85,8 @@ class User:
             self.donator_tier = donator_tier
         if donator_badge:
             self.donator_badge = donator_badge
+        if profile_color:
+            self.profile_color = get_profile_color(profile_color)
 
     def raw(self) -> Dict:
         return self.__dict__

@@ -265,6 +265,9 @@ query ($name: String) {
         donatorBadge
         createdAt
         updatedAt
+        options {
+            profileColor
+        }
     }
 }
 """
@@ -274,7 +277,7 @@ query ($name: String, $id: Int) {
     MediaList(userName: $name, mediaId: $id) {
         id
         status
-        score
+        score(format: POINT_100)
         progress
         repeat
         priority
@@ -506,6 +509,7 @@ query($id: Int) {
             synonyms
             meanScore
             averageScore
+            popularity
             rankings {
                 type
                 allTime
@@ -617,6 +621,7 @@ query ($userId: Int, $ActivityType: ActivityType, $perPage: Int = 25) {
                     synonyms
                     meanScore
                     averageScore
+                    popularity
                     rankings {
                         type
                         allTime
