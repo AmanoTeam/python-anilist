@@ -338,7 +338,7 @@ query($id: Int) {
             }
             siteUrl
             episodes
-            descriptione
+            description
             format
             status
             duration
