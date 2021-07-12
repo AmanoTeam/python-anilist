@@ -100,7 +100,7 @@ class ListActivity:
         self.date = Date.from_timestamp(date)
         if status or progress:
             self.status = ListActivityStatus(status=status, progress=progress)
-        if self.url:
+        if url:
             self.url = url
         if media:
             self.media = media
