@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from .date import Date
 from typing import Callable, Dict
 
 
@@ -34,7 +35,7 @@ class NextAiring:
         if time_until:
             self.time_until = time_until
         if at:
-            self.at = at
+            self.at = Date.from_timestamp(at)
         if episode:
             self.episode = episode
 
