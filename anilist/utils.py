@@ -790,6 +790,8 @@ query ($user_id: Int, $activity_type: ActivityType, $page: Int = 1, $per_page: I
                     }
                     siteUrl
                     episodes
+                    chapters
+                    volumes
                     description
                     format
                     status
@@ -884,7 +886,7 @@ query ($user_id: Int, $activity_type: ActivityType, $page: Int = 1, $per_page: I
 TEXT_ACTIVITY_QUERY = """
 query ($user_id: Int, $activity_type: ActivityType, $page: Int = 1, $per_page: Int = 25) {
     Page(page: $page, perPage: $per_page) {
-        activities(userId: $userId, type: $ActivityType, sort: ID_DESC) {
+        activities(userId: $user_id, type: $activity_type, sort: ID_DESC) {
             ... on TextActivity {
                 id
                 replyCount
