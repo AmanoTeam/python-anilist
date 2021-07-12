@@ -36,7 +36,7 @@ from .staff import Staff, Studio
 from .favourites import FavouritesUnion
 from .statistics import Statistic, StatisticsUnion, Ranking
 from .user import User
-from .activity import ListActivity, ListActivityStatus
+from .activity import ListActivity, ListActivityStatus, TextActivity
 from .medialist import MediaList
 
 __all__ = [
@@ -53,6 +53,7 @@ __all__ = [
     "Manga",
     "MediaList",
     "Ranking",
+    "TextActivity",
     "Title",
     "Trailer",
     "Score",

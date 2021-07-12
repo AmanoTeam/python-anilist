@@ -39,8 +39,10 @@ class Ranking:
         self.format = format
         self.rank = rank
         self.all_time = all_time
-        self.year = year
-        self.season = season
+        if year:
+            self.year = year
+        if season:
+            self.season = season
 
     def raw(self) -> Dict:
         return self.__dict__
@@ -56,28 +58,22 @@ class Statistic:
     def __init__(
         self,
         *,
-        count: int = None,
-        mean_score: int = None,
-        minutes_watched: int = None,
-        episodes_watched: int = None,
-        chapters_read: int = None,
-        volumes_read: int = None,
+        count: int,
+        mean_score: int,
+        minutes_watched: int,
+        episodes_watched: int,
+        chapters_read: int,
+        volumes_read: int,
         statuses: List[Dict[str, int]] = None,
         genres: List[Dict[str, int]] = None,
         tags: List[Dict[str, int]] = None,
     ) -> None:
-        if count:
-            self.count = count
-        if mean_score:
-            self.mean_score = mean_score
-        if minutes_watched:
-            self.minutes_watched = minutes_watched
-        if episodes_watched:
-            self.episodes_watched = episodes_watched
-        if chapters_read:
-            self.chapters_read = chapters_read
-        if volumes_read:
-            self.volumes_read = volumes_read
+        self.count = count
+        self.mean_score = mean_score
+        self.minutes_watched = minutes_watched
+        self.episodes_watched = episodes_watched
+        self.chapters_read = chapters_read
+        self.volumes_read = volumes_read
         if statuses:
             self.statuses = statuses
         if genres:

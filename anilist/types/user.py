@@ -56,8 +56,8 @@ class User:
         *,
         id: int,
         name: str,
-        created_at: int,
-        updated_at: int,
+        created_at: int = None,
+        updated_at: int = None,
         about: str = None,
         image: Dict = None,
         favourites: FavouritesUnion = None,
@@ -69,8 +69,10 @@ class User:
     ):
         self.id = id
         self.name = name
-        self.created_at = Date.from_timestamp(created_at)
-        self.updated_at = Date.from_timestamp(updated_at)
+        if created_at:
+            self.created_at = Date.from_timestamp(created_at)
+        if updated_at:
+            self.updated_at = Date.from_timestamp(updated_at)
         if about:
             self.about = about
         if image:

@@ -28,8 +28,8 @@ HEADERS = {
 
 # Search
 USER_SEARCH_QUERY = """
-query ($name: String, $perPage: Int = 5) {
-    Page(page: 0, perPage: $perPage) {
+query ($name: String, $page: Int = 1, $per_page: Int = 10) {
+    Page(page: $page, perPage: $perPage) {
         users(search: $name, sort: SEARCH_MATCH) {
             id
         }
@@ -38,8 +38,8 @@ query ($name: String, $perPage: Int = 5) {
 """
 
 ANIME_SEARCH_QUERY = """
-query($id: Int, $per_page: Int, $search: String) {
-    Page(page: 1, perPage: $per_page) {
+query($id: Int, $search: String, $page: Int = 1, $per_page: Int = 10) {
+    Page(page: $page, perPage: $per_page) {
         media(id: $id, search: $search, type: ANIME, sort: POPULARITY_DESC) {
             id
             title {
@@ -54,8 +54,8 @@ query($id: Int, $per_page: Int, $search: String) {
 """
 
 CHARACTER_SEARCH_QUERY = """
-query($per_page: Int, $search: String) {
-    Page(page: 1, perPage: $per_page) {
+query($search: String, $page: Int = 1, $per_page: Int = 10) {
+    Page(page: $page, perPage: $per_page) {
         characters(search: $search) {
             id
             name {
@@ -70,8 +70,8 @@ query($per_page: Int, $search: String) {
 """
 
 MANGA_SEARCH_QUERY = """
-query($id: Int, $per_page: Int, $search: String) {
-    Page(page: 1, perPage: $per_page) {
+query($id: Int, $search: String, $page: Int = 1, $per_page: Int = 10) {
+    Page(page: $page, perPage: $per_page) {
         media(id: $id, search: $search, type: MANGA, sort: POPULARITY_DESC) {
             id
             title {
@@ -298,28 +298,235 @@ query ($name: String, $id: Int) {
 """
 
 LIST_GET_QUERY = """
-query ($userId: Int, $perPage: Int) {
-    anime: Page(page: 0, perPage: $perPage) {
+query ($userId: Int, $page: Int = 1, $per_page: Int = 25) {
+    anime: Page(page: $page, perPage: $per_page) {
         mediaList(userId: $userId, sort: UPDATED_TIME_DESC, type: ANIME) {
+            id
+            status
+            score(format: POINT_100)
+            progress
+            repeat
+            priority
+            startedAt {
+                year
+                month
+                day
+            }
+            completedAt {
+                year
+                month
+                day
+            }
+            updatedAt
+            createdAt
             media {
+                id
                 title {
                     romaji
                     english
                     native
-                    userPreferred
+                }
+                siteUrl
+                episodes
+                description
+                format
+                status
+                duration
+                genres
+                tags {
+                    name
+                }
+                studios {
+                    nodes {
+                        name
+                    }
+                }
+                startDate {
+                    year
+                    month
+                    day
+                }
+                endDate {
+                    year
+                    month
+                    day
+                }
+                season
+                seasonYear
+                seasonInt
+                countryOfOrigin
+                coverImage {
+                    medium
+                    large
+                    extraLarge
+                }
+                bannerImage
+                source
+                hashtag
+                synonyms
+                meanScore
+                averageScore
+                popularity
+                rankings {
+                    type
+                    allTime
+                    format
+                    rank
+                    year
+                    season
+                }
+                nextAiringEpisode {
+                    timeUntilAiring
+                    airingAt
+                    episode
+                }
+                trailer {
+                    id
+                    thumbnail
+                    site
+                }
+                staff(sort: FAVOURITES_DESC) {
+                    edges {
+                        node {
+                            name {
+                                first
+                                full
+                                native
+                                last
+                            }
+                            id
+                        }
+                    }
+                }
+                characters(sort: FAVOURITES_DESC) {
+                    edges {
+                        node {
+                            name {
+                                first
+                                full
+                                native
+                                last
+                            }
+                            id
+                        }
+                        role
+                    }
                 }
             }
         }
     }
-    manga: Page(page: 0, perPage: $perPage) {
+    manga: Page(page: $page, perPage: $per_page) {
         mediaList(userId: $userId, sort: UPDATED_TIME_DESC, type: MANGA) {
+            id
+            status
+            score(format: POINT_100)
+            progress
+            repeat
+            priority
+            startedAt {
+                year
+                month
+                day
+            }
+            completedAt {
+                year
+                month
+                day
+            }
+            updatedAt
+            createdAt
             media {
+                id
                 title {
                     romaji
                     english
                     native
-                    userPreferred
                 }
+                siteUrl
+                chapters
+                description
+                status
+                genres
+                tags {
+                    name
+                }
+                studios {
+                    nodes {
+                        name
+                    }
+                }
+                startDate {
+                    year
+                    month
+                    day
+                }
+                endDate {
+                    year
+                    month
+                    day
+                }
+                season
+                seasonYear
+                seasonInt
+                countryOfOrigin
+                coverImage {
+                    medium
+                    large
+                    extraLarge
+                }
+                bannerImage
+                source
+                hashtag
+                synonyms
+                meanScore
+                averageScore
+                popularity
+                rankings {
+                    type
+                    allTime
+                    format
+                    rank
+                    year
+                    season
+                }
+                nextAiringEpisode {
+                    timeUntilAiring
+                    airingAt
+                    episode
+                }
+                trailer {
+                    id
+                    thumbnail
+                    site
+                }
+                staff(sort: FAVOURITES_DESC) {
+                    edges {
+                        node {
+                            name {
+                                first
+                                full
+                                native
+                                last
+                            }
+                            id
+                        }
+                    }
+                }
+                characters(sort: FAVOURITES_DESC) {
+                    edges {
+                        node {
+                            name {
+                                first
+                                full
+                                native
+                                last
+                            }
+                            id
+                        }
+                        role
+                    }
+                }
+                volumes
             }
         }
     }
@@ -563,9 +770,9 @@ query($id: Int) {
 
 # Activity
 LIST_ACTIVITY_QUERY = """
-query ($userId: Int, $ActivityType: ActivityType, $perPage: Int = 25) {
-    Page(page: 0, perPage: $perPage) {
-        activities(userId: $userId, type: $ActivityType, sort: ID_DESC) {
+query ($user_id: Int, $activity_type: ActivityType, $page: Int = 1, $per_page: Int = 25) {
+    Page(page: $page, perPage: $per_page) {
+        activities(userId: $user_id, type: $activity_type, sort: ID_DESC) {
             ... on ListActivity {
                 type
                 id
@@ -668,6 +875,23 @@ query ($userId: Int, $ActivityType: ActivityType, $perPage: Int = 25) {
                         }
                     }
                 }
+            }
+        }
+    }
+}
+"""
+
+TEXT_ACTIVITY_QUERY = """
+query ($user_id: Int, $activity_type: ActivityType, $page: Int = 1, $per_page: Int = 25) {
+    Page(page: $page, perPage: $per_page) {
+        activities(userId: $userId, type: $ActivityType, sort: ID_DESC) {
+            ... on TextActivity {
+                id
+                replyCount
+                text(asHtml: false)
+                textHtml: text(asHtml: true)
+                siteUrl
+                createdAt
             }
         }
     }

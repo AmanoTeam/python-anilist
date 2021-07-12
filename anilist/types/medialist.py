@@ -29,34 +29,43 @@ class MediaList:
         self,
         *,
         id: int,
-        status: str,
-        score: float,
-        progress: int,
-        repeat: int,
-        priority: int,
-        start_date: Dict,
-        complete_date: Dict,
-        update_date: int,
-        create_date: int
+        status: str = None,
+        score: float = None,
+        progress: int = None,
+        repeat: int = None,
+        priority: int = None,
+        start_date: Dict = None,
+        complete_date: Dict = None,
+        update_date: int = None,
+        create_date: int = None
     ) -> None:
         self.id = id
-        self.status = status
-        self.score = score
-        self.progress = progress
-        self.repeat = repeat
-        self.priority = priority
-        self.start_date = Date(
-            year=start_date["year"],
-            month=start_date["month"],
-            day=start_date["day"],
-        )
-        self.complete_date = Date(
-            year=complete_date["year"],
-            month=complete_date["month"],
-            day=complete_date["day"],
-        )
-        self.update_date = Date.from_timestamp(update_date)
-        self.create_date = Date.from_timestamp(create_date)
+        if status:
+            self.status = status
+        if score:
+            self.score = score
+        if progress:
+            self.progress = progress
+        if repeat:
+            self.repeat = repeat
+        if priority:
+            self.priority = priority
+        if start_date:
+            self.start_date = Date(
+                year=start_date["year"],
+                month=start_date["month"],
+                day=start_date["day"],
+            )
+        if complete_date:
+            self.complete_date = Date(
+                year=complete_date["year"],
+                month=complete_date["month"],
+                day=complete_date["day"],
+            )
+        if update_date:
+            self.update_date = Date.from_timestamp(update_date)
+        if create_date:
+            self.create_date = Date.from_timestamp(create_date)
 
     def raw(self) -> Dict:
         return self.__dict__

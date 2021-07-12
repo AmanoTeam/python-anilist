@@ -20,7 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from anilist.types.medialist import MediaList
 import httpx
 from anilist.types import (
     Anime,
@@ -33,6 +32,8 @@ from anilist.types import (
     StatisticsUnion,
     Statistic,
     ListActivity,
+    TextActivity,
+    MediaList,
     Ranking,
 )
 from typing import List, Optional, Union
@@ -40,6 +41,7 @@ from anilist.utils import (
     ANIME_GET_QUERY,
     ANIME_SEARCH_QUERY,
     LIST_ACTIVITY_QUERY,
+    TEXT_ACTIVITY_QUERY,
     API_URL,
     CHARACTER_GET_QUERY,
     CHARACTER_SEARCH_QUERY,
@@ -64,7 +66,9 @@ class Client:
         self.httpx = None
         return None
 
-    def search(self, query: str, content_type: str = "anime", limit: int = 10):
+    def search(
+        self, query: str, content_type: str = "anime", page: int = 1, limit: int = 10
+    ):
         if isinstance(content_type, str):
             content_type = content_type.lower()
         else:
@@ -82,11 +86,11 @@ class Client:
                 f"limit argument must be a string, not '{limit.__class__.__name__}'"
             )
         if content_type == "anime":
-            return self.search_anime(query=query, limit=limit)
+            return self.search_anime(query=query, page=page, limit=limit)
         elif content_type in ["char", "character"]:
-            return self.search_character(query=query, limit=limit)
+            return self.search_character(query=query, page=page, limit=limit)
         elif content_type == "manga":
-            return self.search_manga(query=query, limit=limit)
+            return self.search_manga(query=query, page=page, limit=limit)
         else:
             raise TypeError("There is no such content type.")
 
@@ -115,7 +119,7 @@ class Client:
         else:
             raise TypeError("There is no such content type.")
 
-    def search_anime(self, query: str, limit: int) -> Optional[Anime]:
+    def search_anime(self, query: str, limit: int, page: int = 1) -> Optional[Anime]:
         if not self.httpx:
             self.httpx = httpx.Client()
         response = self.httpx.post(
@@ -124,6 +128,7 @@ class Client:
                 query=ANIME_SEARCH_QUERY,
                 variables=dict(
                     search=query,
+                    page=page,
                     per_page=limit,
                     MediaType="ANIME",
                 ),
@@ -143,7 +148,9 @@ class Client:
                 pass
         return None
 
-    def search_character(self, query: str, limit: int) -> Optional[Character]:
+    def search_character(
+        self, query: str, limit: int, page: int = 1
+    ) -> Optional[Character]:
         if not self.httpx:
             self.httpx = httpx.Client()
         response = self.httpx.post(
@@ -152,6 +159,7 @@ class Client:
                 query=CHARACTER_SEARCH_QUERY,
                 variables=dict(
                     search=query,
+                    page=page,
                     per_page=limit,
                 ),
             ),
@@ -169,7 +177,7 @@ class Client:
                 pass
         return None
 
-    def search_manga(self, query: str, limit: int) -> Optional[Manga]:
+    def search_manga(self, query: str, limit: int, page: int = 1) -> Optional[Manga]:
         if not self.httpx:
             self.httpx = httpx.Client()
         response = self.httpx.post(
@@ -178,6 +186,7 @@ class Client:
                 query=MANGA_SEARCH_QUERY,
                 variables=dict(
                     search=query,
+                    page=page,
                     per_page=limit,
                     MediaType="MANGA",
                 ),
@@ -198,7 +207,11 @@ class Client:
         return None
 
     def get_activity(
-        self, id: Union[int, str], content_type: str = "anime"
+        self,
+        id: Union[int, str],
+        content_type: str = "anime",
+        page: int = 1,
+        limit: int = 25,
     ) -> Optional[List[ListActivity]]:
         if isinstance(content_type, str):
             content_type = content_type.lower()
@@ -221,17 +234,18 @@ class Client:
                 f"id argument must be an int, not '{id.__class__.__name__}'"
             )
         if content_type == "anime":
-            return self.get_anime_activity(user_id=id)
+            return self.get_anime_activity(user_id=id, page=page, limit=limit)
         elif content_type == "manga":
-            return self.get_manga_activity(user_id=id)
+            return self.get_manga_activity(user_id=id, page=page, limit=limit)
         elif content_type == "text":
-            # TEXT
-            return None
+            return self.get_text_activity(user_id=id, page=page, limit=limit)
         elif content_type == "message":
             # MESSAGE
             return None
 
-    def get_anime_activity(self, user_id: int) -> Optional[List[ListActivity]]:
+    def get_anime_activity(
+        self, user_id: int, limit: int, page: int = 1
+    ) -> Optional[List[ListActivity]]:
         if not self.httpx:
             self.httpx = httpx.Client()
         response = self.httpx.post(
@@ -239,8 +253,10 @@ class Client:
             json=dict(
                 query=LIST_ACTIVITY_QUERY,
                 variables=dict(
-                    userId=user_id,
-                    ActivityType="ANIME_LIST",
+                    user_id=user_id,
+                    page=page,
+                    per_page=limit,
+                    activity_type="ANIME_LIST",
                 ),
             ),
             headers=HEADERS,
@@ -317,7 +333,9 @@ class Client:
                 pass
         return None
 
-    def get_manga_activity(self, user_id: int) -> Optional[List[ListActivity]]:
+    def get_manga_activity(
+        self, user_id: int, limit: int, page: int = 1
+    ) -> Optional[List[ListActivity]]:
         if not self.httpx:
             self.httpx = httpx.Client()
         MANGA_ACTIVITY_QUERY = LIST_ACTIVITY_QUERY.replace(
@@ -328,8 +346,10 @@ class Client:
             json=dict(
                 query=MANGA_ACTIVITY_QUERY,
                 variables=dict(
-                    userId=user_id,
-                    ActivityType="MANGA_LIST",
+                    user_id=user_id,
+                    page=page,
+                    per_page=limit,
+                    activity_type="MANGA_LIST",
                 ),
             ),
             headers=HEADERS,
@@ -397,6 +417,47 @@ class Client:
                             url=item["siteUrl"],
                             date=item["createdAt"],
                             media=manga,
+                        )
+                    )
+
+                return result
+            except:
+                pass
+        return None
+
+    def get_text_activity(
+        self, user_id: int, limit: int, page: int = 1
+    ) -> Optional[List[TextActivity]]:
+        if not self.httpx:
+            self.httpx = httpx.Client()
+        response = self.httpx.post(
+            url=API_URL,
+            json=dict(
+                query=TEXT_ACTIVITY_QUERY,
+                variables=dict(
+                    user_id=user_id,
+                    page=page,
+                    per_page=limit,
+                    activity_type="TEXT",
+                ),
+            ),
+            headers=HEADERS,
+        )
+        data = response.json()
+        if data["data"]:
+            try:
+                items = data["data"]["Page"]["activities"]
+                result = []
+
+                for item in items:
+                    result.append(
+                        TextActivity(
+                            id=item["id"],
+                            reply_count=item["replyCount"],
+                            text=item["text"],
+                            text_html=item["textHtml"],
+                            url=item["siteUrl"],
+                            date=item["createdAt"],
                         )
                     )
 

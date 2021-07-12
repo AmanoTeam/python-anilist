@@ -20,7 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from os import stat
 from .anime import Anime
 from .manga import Manga
 from .date import Date
@@ -91,18 +90,48 @@ class ListActivity:
         self,
         *,
         id: int,
-        status: str,
-        progress: str,
-        url: str,
         date: int,
+        status: str = None,
+        progress: str = None,
+        url: str = None,
         media: Union[Anime, Manga] = None,
     ) -> None:
         self.id = id
-        self.status = ListActivityStatus(status=status, progress=progress)
-        self.url = url
         self.date = Date.from_timestamp(date)
+        if status or progress:
+            self.status = ListActivityStatus(status=status, progress=progress)
+        if self.url:
+            self.url = url
         if media:
             self.media = media
+
+    def raw(self) -> Dict:
+        return self.__dict__
+
+    def __repr__(self) -> Callable:
+        return self.__str__()
+
+    def __str__(self) -> str:
+        return str(self.raw())
+
+
+class TextActivity:
+    def __init__(
+        self,
+        *,
+        id: int,
+        reply_count: int,
+        date: int,
+        text: str = None,
+        url: str = None,
+    ) -> None:
+        self.id = id
+        self.reply_count = reply_count
+        self.date = Date.from_timestamp(date)
+        if text:
+            self.text = text
+        if url:
+            self.url = url
 
     def raw(self) -> Dict:
         return self.__dict__
