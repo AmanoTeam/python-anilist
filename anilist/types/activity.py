@@ -123,6 +123,7 @@ class TextActivity:
         reply_count: int,
         date: int,
         text: str = None,
+        text_html: str = None,
         url: str = None,
     ) -> None:
         self.id = id
@@ -130,6 +131,8 @@ class TextActivity:
         self.date = Date.from_timestamp(date)
         if text:
             self.text = text
+        if text_html:
+            self.text_hrml = text
         if url:
             self.url = url
 
