@@ -368,7 +368,7 @@ class Client:
         MANGA_ACTIVITY_QUERY = LIST_ACTIVITY_QUERY.replace(
             "episodes", "chapters\nvolumes"
         )
-        response = self.httpx.post(
+        response = await self.httpx.post(
             url=API_URL,
             json=dict(
                 query=MANGA_ACTIVITY_QUERY,
