@@ -23,7 +23,7 @@
 __author__ = "AmanoTeam"
 __email__ = "contact@amanoteam.com"
 __license__ = "MIT"
-__version__ = "1.0.5"
+__version__ = "1.0.6"
 
 from . import types
 

@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from .user import User
 from .anime import Anime
 from .manga import Manga
 from .date import Date
@@ -125,6 +126,7 @@ class TextActivity:
         text: str = None,
         text_html: str = None,
         url: str = None,
+        user: User = None,
     ) -> None:
         self.id = id
         self.reply_count = reply_count
@@ -135,6 +137,8 @@ class TextActivity:
             self.text_hrml = text
         if url:
             self.url = url
+        if user:
+            self.user = user
 
     def raw(self) -> Dict:
         return self.__dict__

@@ -894,6 +894,14 @@ query ($user_id: Int, $activity_type: ActivityType, $page: Int = 1, $per_page: I
                 textHtml: text(asHtml: true)
                 siteUrl
                 createdAt
+                user {
+                    id
+                    name
+                    avatar {
+                        large
+                        medium
+                    }
+                }
             }
         }
     }

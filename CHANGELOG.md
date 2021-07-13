@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 1.0.6 (July 13th, 2021)
+
+### Changed
+
+- Added user object to text activities.
+
 ## 1.0.5 (July 12th, 2021)
 
 ### Added

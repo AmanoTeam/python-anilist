@@ -492,6 +492,11 @@ class Client:
                             text_html=item["textHtml"],
                             url=item["siteUrl"],
                             date=item["createdAt"],
+                            user=User(
+                                id=item["user"]["id"],
+                                name=item["user"]["name"],
+                                image=item["avatar"],
+                            ),
                         )
                     )
 
