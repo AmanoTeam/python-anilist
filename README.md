@@ -23,7 +23,7 @@ python3 -m pip install python-anilist
 
 For the latest development version:<br>
 ```
-python3 -m pip install git+https://github.com/AmanoTeam/python-anilist.git#egg=python-anilist
+python3 -m pip install git+https://github.com/0x16c3/python-anilist.git#egg=python-anilist
 ```
 
 ## What's left to do?
