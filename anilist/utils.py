@@ -108,6 +108,7 @@ query ($name: String) {
                     }
                     siteUrl
                     genres
+                    isAdult
                     coverImage {
                         medium
                         large
@@ -132,6 +133,7 @@ query ($name: String) {
                     }
                     siteUrl
                     genres
+                    isAdult
                     coverImage {
                         medium
                         large
@@ -448,6 +450,7 @@ query ($userId: Int, $page: Int = 1, $per_page: Int = 25) {
                 description
                 status
                 genres
+                isAdult
                 tags {
                     name
                 }
