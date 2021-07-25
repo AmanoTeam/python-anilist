@@ -42,6 +42,8 @@ from anilist.utils import (
     ANIME_SEARCH_QUERY,
     LIST_ACTIVITY_QUERY,
     TEXT_ACTIVITY_QUERY,
+    MESSAGE_ACTIVITY_QUERY,
+    MESSAGE_ACTIVITY_QUERY_SENT,
     API_URL,
     CHARACTER_GET_QUERY,
     CHARACTER_SEARCH_QUERY,
@@ -240,8 +242,7 @@ class Client:
         elif content_type == "text":
             return self.get_text_activity(user_id=id, page=page, limit=limit)
         elif content_type == "message":
-            # MESSAGE
-            return None
+            return self.get_message_activity(user_id=id, page=page, limit=limit)
 
     def get_anime_activity(
         self, user_id: int, limit: int, page: int = 1
@@ -438,7 +439,6 @@ class Client:
                     user_id=user_id,
                     page=page,
                     per_page=limit,
-                    activity_type="TEXT",
                 ),
             ),
             headers=HEADERS,
@@ -461,7 +461,74 @@ class Client:
                             user=User(
                                 id=item["user"]["id"],
                                 name=item["user"]["name"],
-                                image=item["avatar"],
+                                image=item["user"]["avatar"],
+                            ),
+                        )
+                    )
+
+                return result
+            except:
+                pass
+        return None
+
+    def get_message_activity(
+        self, user_id: int, limit: int, page: int = 1
+    ) -> Optional[List[TextActivity]]:
+        if not self.httpx:
+            self.httpx = httpx.Client()
+        response = self.httpx.post(
+            url=API_URL,
+            json=dict(
+                query=MESSAGE_ACTIVITY_QUERY,
+                variables=dict(
+                    user_id=user_id,
+                    page=page,
+                    per_page=limit,
+                ),
+            ),
+            headers=HEADERS,
+        )
+        data = response.json()
+
+        if not self.httpx:
+            self.httpx = httpx.Client()
+        response = self.httpx.post(
+            url=API_URL,
+            json=dict(
+                query=MESSAGE_ACTIVITY_QUERY_SENT,
+                variables=dict(
+                    user_id=user_id,
+                    page=page,
+                    per_page=limit,
+                ),
+            ),
+            headers=HEADERS,
+        )
+        data = response.json()
+
+        if data["data"]:
+            try:
+                items = data["data"]["Page"]["activities"]
+                result = []
+
+                for item in items:
+                    result.append(
+                        TextActivity(
+                            id=item["id"],
+                            reply_count=item["replyCount"],
+                            text=item["text"],
+                            text_html=item["textHtml"],
+                            url=item["siteUrl"],
+                            date=item["createdAt"],
+                            user=User(
+                                id=item["messenger"]["id"],
+                                name=item["messenger"]["name"],
+                                image=item["messenger"]["avatar"],
+                            ),
+                            recipient=User(
+                                id=item["recipient"]["id"],
+                                name=item["recipient"]["name"],
+                                image=item["recipient"]["avatar"],
                             ),
                         )
                     )

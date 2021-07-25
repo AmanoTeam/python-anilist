@@ -45,6 +45,7 @@ class Anime:
         status: str = None,
         duration: int = None,
         genres: List[str] = None,
+        is_adult: bool = False,
         tags: Dict = None,
         studios: Dict = None,
         start_date: Dict = None,
@@ -84,6 +85,8 @@ class Anime:
             self.duration = duration
         if genres:
             self.genres = genres
+        if is_adult:
+            self.is_adult = is_adult
         if tags and len(tags) > 0:
             self.tags = [tag["name"] for tag in tags]
         if studios and len(studios["nodes"]) > 0:

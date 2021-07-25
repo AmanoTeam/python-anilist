@@ -127,6 +127,7 @@ class TextActivity:
         text_html: str = None,
         url: str = None,
         user: User = None,
+        recipient: User = None,
     ) -> None:
         self.id = id
         self.reply_count = reply_count
@@ -134,11 +135,13 @@ class TextActivity:
         if text:
             self.text = text
         if text_html:
-            self.text_hrml = text
+            self.text_html = text
         if url:
             self.url = url
         if user:
             self.user = user
+        if recipient:
+            self.recipient = recipient
 
     def raw(self) -> Dict:
         return self.__dict__

@@ -333,6 +333,7 @@ query ($userId: Int, $page: Int = 1, $per_page: Int = 25) {
                 status
                 duration
                 genres
+                isAdult
                 tags {
                     name
                 }
@@ -550,6 +551,7 @@ query($id: Int) {
             status
             duration
             genres
+            isAdult
             tags {
                 name
             }
@@ -660,6 +662,7 @@ query($id: Int) {
                         native
                     }
                     id
+                    type
                 }
             }
         }
@@ -683,6 +686,7 @@ query($id: Int) {
             description
             status
             genres
+            isAdult
             tags {
                 name
             }
@@ -797,6 +801,7 @@ query ($user_id: Int, $activity_type: ActivityType, $page: Int = 1, $per_page: I
                     status
                     duration
                     genres
+                    isAdult
                     tags {
                         name
                     }
@@ -884,9 +889,9 @@ query ($user_id: Int, $activity_type: ActivityType, $page: Int = 1, $per_page: I
 """
 
 TEXT_ACTIVITY_QUERY = """
-query ($user_id: Int, $activity_type: ActivityType, $page: Int = 1, $per_page: Int = 25) {
+query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
     Page(page: $page, perPage: $per_page) {
-        activities(userId: $user_id, type: $activity_type, sort: ID_DESC) {
+        activities(userId: $user_id, type: TEXT, sort: ID_DESC) {
             ... on TextActivity {
                 id
                 replyCount
@@ -902,6 +907,72 @@ query ($user_id: Int, $activity_type: ActivityType, $page: Int = 1, $per_page: I
                         medium
                     }
                 }
+            }
+        }
+    }
+}
+"""
+
+MESSAGE_ACTIVITY_QUERY = """
+query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
+    Page(page: $page, perPage: $per_page) {
+        activities(userId: $user_id, type: MESSAGE, sort: ID_DESC) {
+            ... on MessageActivity {
+                id
+              	recipient {
+                  id
+                  name
+                  avatar {
+                    large
+                    medium
+                  }
+                }
+              	messenger {
+                  id
+                  name
+                  avatar {
+                    large
+                    medium
+                  }
+                }
+                replyCount
+                text: message(asHtml: false)
+              	textHtml: message(asHtml: true)
+              	siteUrl
+              	createdAt
+            }
+        }
+    }
+}
+"""
+
+MESSAGE_ACTIVITY_QUERY_SENT = """
+query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
+    Page(page: $page, perPage: $per_page) {
+        activities(messengerId: $user_id, type: MESSAGE, sort: ID_DESC) {
+            ... on MessageActivity {
+                id
+              	recipient {
+                  id
+                  name
+                  avatar {
+                    large
+                    medium
+                  }
+                }
+              	messenger {
+                  id
+                  name
+                  avatar {
+                    large
+                    medium
+                  }
+                }
+                replyCount
+                text: message(asHtml: false)
+              	textHtml: message(asHtml: true)
+              	siteUrl
+              	createdAt
             }
         }
     }
