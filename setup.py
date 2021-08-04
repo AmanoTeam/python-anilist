@@ -9,7 +9,7 @@ with open("CHANGELOG.md", "r") as file:
 
 setup(
     name="python-anilist",
-    version="1.0.7",
+    version="1.0.8",
     packages=find_packages(),
     install_requires=["httpx[http2]>=0.14"],
     url="https://github.com/AmanoTeam/python-anilist",

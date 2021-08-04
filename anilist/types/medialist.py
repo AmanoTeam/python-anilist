@@ -21,7 +21,9 @@
 # SOFTWARE.
 
 from .date import Date
-from typing import Dict, Callable
+from .anime import Anime
+from .manga import Manga
+from typing import Dict, Callable, Union
 
 
 class MediaList:
@@ -37,7 +39,8 @@ class MediaList:
         start_date: Dict = None,
         complete_date: Dict = None,
         update_date: int = None,
-        create_date: int = None
+        create_date: int = None,
+        media: Union[Anime, Manga] = None,
     ) -> None:
         self.id = id
         if status:
@@ -66,6 +69,8 @@ class MediaList:
             self.update_date = Date.from_timestamp(update_date)
         if create_date:
             self.create_date = Date.from_timestamp(create_date)
+        if media:
+            self.media = media
 
     def raw(self) -> Dict:
         return self.__dict__

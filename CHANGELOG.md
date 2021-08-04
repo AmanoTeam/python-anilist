@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 1.0.8 (August 4th, 2021)
+
+### Added
+
+- List get query.
+
+### Changed
+
+- Fixed message activity.
+- Added `alternative` attribute to the Name object.
+
 ## 1.0.7 (July 25th, 2021)
 
 ### Added

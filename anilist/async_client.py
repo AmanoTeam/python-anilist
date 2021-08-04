@@ -36,8 +36,9 @@ from anilist.types import (
     TextActivity,
     MediaList,
     Ranking,
+    user,
 )
-from typing import Optional, Union, List
+from typing import Optional, Union, List, Tuple
 from anilist.utils import (
     ANIME_GET_QUERY,
     ANIME_SEARCH_QUERY,
@@ -98,7 +99,13 @@ class Client:
         else:
             raise TypeError("There is no such content type.")
 
-    async def get(self, id: Union[int, str], content_type: str = "anime"):
+    async def get(
+        self,
+        id: Union[int, str],
+        content_type: str = "anime",
+        page: int = 1,
+        limit: int = 25,
+    ):
         if isinstance(content_type, str):
             content_type = content_type.lower()
         else:
@@ -110,16 +117,26 @@ class Client:
         elif not isinstance(id, int):
             if content_type == "user":
                 return await self.get_user(name=id)
-
-            raise TypeError(
-                f"id argument must be a string, not '{id.__class__.__name__}'"
-            )
+            elif content_type == "list":
+                try:
+                    user = self.get_user(name=id)
+                    id = user.id
+                except:
+                    raise TypeError(
+                        f"id argument must be an int, not '{id.__class__.__name__}'"
+                    )
+            else:
+                raise TypeError(
+                    f"id argument must be a string, not '{id.__class__.__name__}'"
+                )
         if content_type == "anime":
             return await self.get_anime(id=id)
         elif content_type in ["char", "character"]:
             return await self.get_character(id=id)
         elif content_type == "manga":
             return await self.get_manga(id=id)
+        elif content_type == "list":
+            return await self.get_list(user_id=id, limit=limit, page=page)
         else:
             raise TypeError("There is no such content type.")
 
@@ -510,6 +527,9 @@ class Client:
     async def get_message_activity(
         self, user_id: int, limit: int, page: int = 1
     ) -> Optional[List[TextActivity]]:
+
+        result = []
+
         need_to_close = False
         if not self.httpx:
             self.httpx = httpx.AsyncClient(http2=True)
@@ -530,6 +550,34 @@ class Client:
         if need_to_close:
             await self.httpx.aclose()
             self.httpx = None
+
+        if data["data"]:
+            try:
+                items = data["data"]["Page"]["activities"]
+
+                for item in items:
+                    result.append(
+                        TextActivity(
+                            id=item["id"],
+                            reply_count=item["replyCount"],
+                            text=item["text"],
+                            text_html=item["textHtml"],
+                            url=item["siteUrl"],
+                            date=item["createdAt"],
+                            user=User(
+                                id=item["messenger"]["id"],
+                                name=item["messenger"]["name"],
+                                image=item["messenger"]["avatar"],
+                            ),
+                            recipient=User(
+                                id=item["recipient"]["id"],
+                                name=item["recipient"]["name"],
+                                image=item["recipient"]["avatar"],
+                            ),
+                        )
+                    )
+            except:
+                pass
 
         if not self.httpx:
             self.httpx = httpx.AsyncClient(http2=True)
@@ -554,7 +602,6 @@ class Client:
         if data["data"]:
             try:
                 items = data["data"]["Page"]["activities"]
-                result = []
 
                 for item in items:
                     result.append(
@@ -577,10 +624,12 @@ class Client:
                             ),
                         )
                     )
-
-                return result
             except:
                 pass
+
+        if len(result):
+            return result
+
         return None
 
     async def get_user(self, name: str) -> Optional[User]:
@@ -968,6 +1017,175 @@ class Client:
                         for i in item["rankings"]
                     ],
                 )
+            except:
+                pass
+        return None
+
+    async def get_list(
+        self, user_id: int, limit: int, page: int = 1
+    ) -> Optional[Tuple[List[MediaList], List[MediaList]]]:
+        need_to_close = False
+        if not self.httpx:
+            self.httpx = httpx.AsyncClient(http2=True)
+            need_to_close = True
+        response = await self.httpx.post(
+            url=API_URL,
+            json=dict(
+                query=LIST_GET_QUERY,
+                variables=dict(
+                    user_id=user_id,
+                    page=page,
+                    per_page=limit,
+                ),
+            ),
+            headers=HEADERS,
+        )
+        data = response.json()
+        if need_to_close:
+            await self.httpx.aclose()
+            self.httpx = None
+
+        anime_list = []
+        manga_list = []
+        if data["data"]:
+            try:
+                item = data["data"]["anime"]["mediaList"]
+
+                for item in data["data"]["anime"]["mediaList"]:
+                    media = item["media"]
+
+                    anime = Anime(
+                        id=media["id"],
+                        title=media["title"],
+                        url=media["siteUrl"],
+                        episodes=media["episodes"],
+                        description=media["description"],
+                        format=media["format"],
+                        status=media["status"],
+                        duration=media["duration"],
+                        genres=media["genres"],
+                        is_adult=media["isAdult"],
+                        tags=media["tags"],
+                        studios=media["studios"],
+                        start_date=media["startDate"],
+                        end_date=media["endDate"],
+                        season=dict(
+                            name=media["season"],
+                            year=media["seasonYear"],
+                            number=media["seasonInt"],
+                        ),
+                        country=media["countryOfOrigin"],
+                        cover=media["coverImage"],
+                        banner=media["bannerImage"],
+                        source=media["source"],
+                        hashtag=media["hashtag"],
+                        synonyms=media["synonyms"],
+                        score=dict(
+                            mean=media["meanScore"],
+                            average=media["averageScore"],
+                        ),
+                        next_airing=media["nextAiringEpisode"],
+                        trailer=media["trailer"],
+                        staff=media["staff"],
+                        characters=media["characters"],
+                        popularity=media["popularity"],
+                        rankings=[
+                            Ranking(
+                                type=i["type"],
+                                all_time=i["allTime"],
+                                format=i["format"],
+                                rank=i["rank"],
+                                year=i["year"],
+                                season=i["season"],
+                            )
+                            for i in media["rankings"]
+                        ],
+                    )
+
+                    anime_list.append(
+                        MediaList(
+                            id=item["id"],
+                            status=item["status"],
+                            score=item["score"],
+                            progress=item["progress"],
+                            repeat=item["repeat"],
+                            priority=item["priority"],
+                            start_date=item["startedAt"],
+                            complete_date=item["completedAt"],
+                            update_date=item["updatedAt"],
+                            create_date=item["createdAt"],
+                            media=anime,
+                        )
+                    )
+
+                for item in data["data"]["manga"]["mediaList"]:
+                    media = item["media"]
+
+                    manga = Manga(
+                        id=media["id"],
+                        title=media["title"],
+                        url=media["siteUrl"],
+                        chapters=media["chapters"],
+                        description=media["description"],
+                        status=media["status"],
+                        genres=media["genres"],
+                        is_adult=media["isAdult"],
+                        tags=media["tags"],
+                        studios=media["studios"],
+                        start_date=media["startDate"],
+                        end_date=media["endDate"],
+                        season=dict(
+                            name=media["season"],
+                            year=media["seasonYear"],
+                            number=media["seasonInt"],
+                        ),
+                        country=media["countryOfOrigin"],
+                        cover=media["coverImage"],
+                        banner=media["bannerImage"],
+                        source=media["source"],
+                        hashtag=media["hashtag"],
+                        synonyms=media["synonyms"],
+                        score=dict(
+                            mean=media["meanScore"],
+                            average=media["averageScore"],
+                        ),
+                        next_airing=media["nextAiringEpisode"],
+                        trailer=media["trailer"],
+                        staff=media["staff"],
+                        characters=media["characters"],
+                        volumes=media["volumes"],
+                        popularity=media["popularity"],
+                        rankings=[
+                            Ranking(
+                                type=i["type"],
+                                all_time=i["allTime"],
+                                format=i["format"],
+                                rank=i["rank"],
+                                year=i["year"],
+                                season=i["season"],
+                            )
+                            for i in media["rankings"]
+                        ],
+                    )
+
+                    manga_list.append(
+                        MediaList(
+                            id=item["id"],
+                            status=item["status"],
+                            score=item["score"],
+                            progress=item["progress"],
+                            repeat=item["repeat"],
+                            priority=item["priority"],
+                            start_date=item["startedAt"],
+                            complete_date=item["completedAt"],
+                            update_date=item["updatedAt"],
+                            create_date=item["createdAt"],
+                            media=manga,
+                        )
+                    )
+
+                return anime_list, manga_list
+
             except:
                 pass
         return None

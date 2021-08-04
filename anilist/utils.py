@@ -29,7 +29,7 @@ HEADERS = {
 # Search
 USER_SEARCH_QUERY = """
 query ($name: String, $page: Int = 1, $per_page: Int = 10) {
-    Page(page: $page, perPage: $perPage) {
+    Page(page: $page, perPage: $per_page) {
         users(search: $name, sort: SEARCH_MATCH) {
             id
         }
@@ -80,6 +80,22 @@ query($id: Int, $search: String, $page: Int = 1, $per_page: Int = 10) {
                 native
             }
             siteUrl
+        }
+    }
+}
+"""
+
+STAFF_SEARCH_QUERY = """
+query ($name: String, $page: Int = 1, $per_page: Int = 10) {
+    Page(page: $page, perPage: $per_page) {
+        staff(search: $name, sort: SEARCH_MATCH) {
+            id
+            name {
+                first
+                full
+                native
+                last
+            }
         }
     }
 }
@@ -293,16 +309,16 @@ query ($name: String, $id: Int) {
             month
             day
         }
-        updatedAt
+        updatedAt 
         createdAt
     }
 }
 """
 
 LIST_GET_QUERY = """
-query ($userId: Int, $page: Int = 1, $per_page: Int = 25) {
+query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
     anime: Page(page: $page, perPage: $per_page) {
-        mediaList(userId: $userId, sort: UPDATED_TIME_DESC, type: ANIME) {
+        mediaList(userId: $user_id, sort: UPDATED_TIME_DESC, type: ANIME) {
             id
             status
             score(format: POINT_100)
@@ -322,6 +338,7 @@ query ($userId: Int, $page: Int = 1, $per_page: Int = 25) {
             updatedAt
             createdAt
             media {
+                type
                 id
                 title {
                     romaji
@@ -419,7 +436,7 @@ query ($userId: Int, $page: Int = 1, $per_page: Int = 25) {
         }
     }
     manga: Page(page: $page, perPage: $per_page) {
-        mediaList(userId: $userId, sort: UPDATED_TIME_DESC, type: MANGA) {
+        mediaList(userId: $user_id, sort: UPDATED_TIME_DESC, type: MANGA) {
             id
             status
             score(format: POINT_100)
@@ -439,6 +456,7 @@ query ($userId: Int, $page: Int = 1, $per_page: Int = 25) {
             updatedAt
             createdAt
             media {
+                type
                 id
                 title {
                     romaji
@@ -447,8 +465,11 @@ query ($userId: Int, $page: Int = 1, $per_page: Int = 25) {
                 }
                 siteUrl
                 chapters
+                volumes
                 description
+                format
                 status
+                duration
                 genres
                 isAdult
                 tags {
@@ -530,7 +551,6 @@ query ($userId: Int, $page: Int = 1, $per_page: Int = 25) {
                         role
                     }
                 }
-                volumes
             }
         }
     }
@@ -670,6 +690,45 @@ query($id: Int) {
             }
         }
         isFavourite
+    }
+}
+"""
+
+STAFF_GET_QUERY = """
+query($id: Int) {
+    Staff(id: $id, sort: FAVOURITES_DESC) {
+        id
+        name {
+            first
+            middle
+            last
+            full
+            native
+            userPreferred
+        }
+        languageV2
+        image {
+            large
+            medium
+        }
+        description
+        primaryOccupations
+        gender
+        dateOfBirth {
+            year
+            month
+            day
+        }
+        dateOfDeath {
+            year
+            month
+            day
+        }
+        age
+        yearsActive
+        homeTown
+        siteUrl
+        favourites
     }
 }
 """

@@ -31,6 +31,7 @@ class Name:
         full: str,
         native: str,
         last: str,
+        alternative: str = None,
     ):
         if first:
             self.first = first
@@ -40,6 +41,8 @@ class Name:
             self.native = native
         if last:
             self.last = last
+        if alternative:
+            self.alternative = alternative
 
     def raw(self) -> Dict:
         return self.__dict__
