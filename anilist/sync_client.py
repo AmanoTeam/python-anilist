@@ -241,7 +241,8 @@ class Client:
             id = int(id)
         elif isinstance(id, str):
             try:
-                user = self.get_user(name=id).id
+                user = self.get_user(name=id)
+                id = user.id
             except:
                 raise TypeError(
                     f"id argument must be an int, not '{id.__class__.__name__}'"
@@ -581,7 +582,7 @@ class Client:
                             ),
                         )
                     )
-            except:
+            except ex:
                 pass
 
         if len(result):

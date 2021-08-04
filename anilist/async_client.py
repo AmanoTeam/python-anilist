@@ -582,7 +582,7 @@ class Client:
         if not self.httpx:
             self.httpx = httpx.AsyncClient(http2=True)
             need_to_close = True
-        response = self.httpx.post(
+        response = await self.httpx.post(
             url=API_URL,
             json=dict(
                 query=MESSAGE_ACTIVITY_QUERY_SENT,
