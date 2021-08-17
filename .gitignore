@@ -1,5 +1,13 @@
+# Copyright (C) 2021 Amano Team <https://amanoteam.com/>, nfitzen
+#
+# SPDX-License-Identifier: MIT
+
 # Personal files
 test.py
+
+# VSCode related stuff
+vscode/
+*.code-workspace
 
 # Byte pre-compiled
 *.egg*
