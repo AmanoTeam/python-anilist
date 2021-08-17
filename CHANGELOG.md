@@ -1,3 +1,9 @@
+<!--
+  ~ Copyright (C) 2021 Amano Team <https://amanoteam.com/>
+  ~ 
+  ~ SPDX-License-Identifier: MIT
+  -->
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
