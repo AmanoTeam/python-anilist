@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+# Copyright (C) 2021 Amano Team <https://amanoteam.com/>
+#
+# SPDX-License-Identifier: MIT
+
 from setuptools import find_packages, setup
 
 with open("README.md", "r") as file:
