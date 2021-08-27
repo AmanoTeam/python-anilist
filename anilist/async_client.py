@@ -67,7 +67,7 @@ class Client:
                 f"limit argument must be a string, not '{limit.__class__.__name__}'"
             )
         if content_type == "anime":
-            return await self.search_anime(query=query, limit=limit)
+            return await self.search_anime(query=query, limit=limit, avg_score=avg_score)
         elif content_type in ["char", "character"]:
             return await self.search_character(query=query, limit=limit)
         elif content_type == "manga":
