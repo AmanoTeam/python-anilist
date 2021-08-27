@@ -48,7 +48,7 @@ class Client:
         self.httpx = None
         return None
 
-    def search(self, query: str, content_type: str = "anime", limit: int = 10):
+    def search(self, query: str, content_type: str = "anime", limit: int = 10, avg_score: int = 0):
         if isinstance(content_type, str):
             content_type = content_type.lower()
         else:
@@ -66,7 +66,7 @@ class Client:
                 f"limit argument must be a string, not '{limit.__class__.__name__}'"
             )
         if content_type == "anime":
-            return self.search_anime(query=query, limit=limit)
+            return self.search_anime(query=query, limit=limit, avg_score=avg_score)
         elif content_type in ["char", "character"]:
             return self.search_character(query=query, limit=limit)
         elif content_type == "manga":
@@ -96,7 +96,7 @@ class Client:
         else:
             raise TypeError("There is no such content type.")
 
-    def search_anime(self, query: str, limit: int) -> Optional[Anime]:
+    def search_anime(self, query: str, limit: int, avg_score: int = 0) -> Optional[Anime]:
         if not self.httpx:
             self.httpx = httpx.Client()
         response = self.httpx.post(
@@ -105,12 +105,14 @@ class Client:
                 query=ANIME_SEARCH_QUERY,
                 variables=dict(
                     search=query,
+                    score=avg_score,
                     per_page=limit,
                     MediaType="ANIME",
                 ),
             ),
             headers=HEADERS,
         )
+
         data = response.json()
         if data["data"]:
             try:

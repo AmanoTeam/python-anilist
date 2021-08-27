@@ -97,7 +97,7 @@ class Client:
         else:
             raise TypeError("There is no such content type.")
 
-    async def search_anime(self, query: str, limit: int) -> Optional[Anime]:
+    async def search_anime(self, query: str, limit: int, avg_score: int) -> Optional[Anime]:
         need_to_close = False
         if not self.httpx:
             self.httpx = httpx.AsyncClient(http2=True)
@@ -108,6 +108,7 @@ class Client:
                 query=ANIME_SEARCH_QUERY,
                 variables=dict(
                     search=query,
+                    score=avg_score,
                     per_page=limit,
                     MediaType="ANIME",
                 ),

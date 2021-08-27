@@ -28,9 +28,9 @@ HEADERS = {
 
 # Search
 ANIME_SEARCH_QUERY = """
-query($id: Int, $per_page: Int, $search: String) {
+query($id: Int, $per_page: Int, $search: String, $score: Int) {
     Page(page: 1, perPage: $per_page) {
-        media(id: $id, search: $search, type: ANIME, sort: POPULARITY_DESC) {
+        media(id: $id, search: $search, averageScore_greater: $score, type: ANIME, sort: POPULARITY_DESC) {
             id
             title {
                 romaji
