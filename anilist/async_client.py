@@ -50,7 +50,7 @@ class Client:
                 f"limit argument must be a string, not '{limit.__class__.__name__}'"
             )
         if content_type == "anime":
-            return await self.search_anime(query=query, limit=limit)
+            return await self.search_anime(query=query, limit=limit, avg_score=avg_score)
         elif content_type in ["char", "character"]:
             return await self.search_character(query=query, limit=limit)
         elif content_type == "manga":
@@ -80,7 +80,7 @@ class Client:
         else:
             raise TypeError("There is no such content type.")
 
-    async def search_anime(self, query: str, limit: int) -> Optional[Anime]:
+    async def search_anime(self, query: str, limit: int, avg_score: int) -> Optional[Anime]:
         need_to_close = False
         if not self.httpx:
             self.httpx = httpx.AsyncClient(http2=True)
@@ -91,6 +91,7 @@ class Client:
                 query=ANIME_SEARCH_QUERY,
                 variables=dict(
                     search=query,
+                    score=avg_score,
                     per_page=limit,
                     MediaType="ANIME",
                 ),
