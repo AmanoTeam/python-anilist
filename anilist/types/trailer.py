@@ -3,6 +3,9 @@
 #
 # SPDX-License-Identifier: MIT
 
+from typing import Dict, Callable
+
+
 class Trailer:
     def __init__(
         self,

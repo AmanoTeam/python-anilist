@@ -15,7 +15,7 @@ with open("CHANGELOG.md", "r") as file:
 setup(
     name="python-anilist",
     version="1.0.5",
-    packages=find_packages(),
+    packages=find_packages(exclude=["tests*"]),
     install_requires=["httpx[http2]>=0.14"],
     url="https://github.com/AmanoTeam/python-anilist",
     python_requires=">=3.6",

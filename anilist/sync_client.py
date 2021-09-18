@@ -108,7 +108,7 @@ class Client:
                 try:
                     user = self.get_user(name=id)
                     id = user.id
-                except:
+                except Exception:
                     raise TypeError(
                         f"id argument must be an int, not '{id.__class__.__name__}'"
                     )
@@ -159,7 +159,7 @@ class Client:
                     for item in items
                 ]
                 return results
-            except:
+            except Exception:
                 pass
         return None
 
@@ -188,7 +188,7 @@ class Client:
                     for item in items
                 ]
                 return results
-            except:
+            except Exception:
                 pass
         return None
 
@@ -217,7 +217,7 @@ class Client:
                     Character(id=item["id"], name=item["name"]) for item in items
                 ]
                 return results
-            except:
+            except Exception:
                 pass
         return None
 
@@ -242,7 +242,7 @@ class Client:
                 items = data["data"]["Page"]["staff"]
                 results = [Staff(id=item["id"], name=item["name"]) for item in items]
                 return results
-            except:
+            except Exception:
                 pass
         return None
 
@@ -270,7 +270,7 @@ class Client:
                     for item in items
                 ]
                 return results
-            except:
+            except Exception:
                 pass
         return None
 
@@ -339,7 +339,7 @@ class Client:
                         for i in item["rankings"]
                     ],
                 )
-            except:
+            except Exception:
                 pass
         return None
 
@@ -407,7 +407,7 @@ class Client:
                         for i in item["rankings"]
                     ],
                 )
-            except:
+            except Exception:
                 pass
         return None
 
@@ -438,7 +438,7 @@ class Client:
                     media=item["media"],
                     is_favorite=item["isFavourite"],
                 )
-            except:
+            except Exception:
                 pass
         return None
 
@@ -475,7 +475,7 @@ class Client:
                     years_active=item["yearsActive"],
                     home_town=item["homeTown"],
                 )
-            except:
+            except Exception:
                 pass
         return None
 
@@ -637,7 +637,7 @@ class Client:
                     favourites=favourites,
                     statistics=statistics,
                 )
-            except:
+            except Exception:
                 pass
         return None
 
@@ -801,7 +801,7 @@ class Client:
 
                 return anime_list, manga_list
 
-            except:
+            except Exception:
                 pass
         return None
 
@@ -835,7 +835,7 @@ class Client:
                     update_date=item["updatedAt"],
                     create_date=item["createdAt"],
                 )
-            except:
+            except Exception:
                 pass
         return None
 
@@ -858,7 +858,7 @@ class Client:
             try:
                 user = self.get_user(name=id)
                 id = user.id
-            except:
+            except Exception:
                 raise TypeError(
                     f"id argument must be an int, not '{id.__class__.__name__}'"
                 )
@@ -962,7 +962,7 @@ class Client:
                     )
 
                 return result
-            except:
+            except Exception:
                 pass
         return None
 
@@ -1055,7 +1055,7 @@ class Client:
                     )
 
                 return result
-            except:
+            except Exception:
                 pass
         return None
 
@@ -1100,7 +1100,7 @@ class Client:
                     )
 
                 return result
-            except:
+            except Exception:
                 pass
         return None
 
@@ -1152,7 +1152,7 @@ class Client:
                             ),
                         )
                     )
-            except:
+            except Exception:
                 pass
 
         if not self.httpx:
@@ -1197,7 +1197,7 @@ class Client:
                             ),
                         )
                     )
-            except:
+            except Exception:
                 pass
 
         if len(result):
