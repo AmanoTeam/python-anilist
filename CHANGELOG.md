@@ -4,43 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## 1.0.8 (August 4th, 2021)
+## 1.0.5 (August 4th, 2021)
 
 ### Added
 
 - List get query.
-
-### Changed
-
+- Staff get query.
+- Staff search query.
+- User search query.
 - Fixed message activity.
 - Added `alternative` attribute to the Name object.
-
-## 1.0.7 (July 25th, 2021)
-
-### Added
-
 - Message activities.
-
-### Changed
-
-- Fixed typos & bugs.
-- Added `is_adult` to both anime and manga objects.
-
-## 1.0.6 (July 13th, 2021)
-
-### Changed
-
-- Added user object to text activities.
-
-## 1.0.5 (July 12th, 2021)
-
-### Added
-
 - Support for users, favourites, staff, statistics, rankings, and studios.
 - Support for user list and text activities.
 
 ### Changed
 
+- Fixed typos & bugs.
+- Added `is_adult` to both anime and manga objects.
+- Added user object to text activities.
 - Added profile colors and other fields to the user object.
 - Added timestamps to the date object.
 - Tidied up and organized required fields in every object.
