@@ -27,20 +27,26 @@ HEADERS = {
 }
 
 # Search
-USER_SEARCH_QUERY = """
-query ($name: String, $page: Int = 1, $per_page: Int = 10) {
+ANIME_SEARCH_QUERY = """
+query($id: Int, $search: String, $page: Int = 1, $per_page: Int = 10) {
     Page(page: $page, perPage: $per_page) {
-        users(search: $name, sort: SEARCH_MATCH) {
+        media(id: $id, search: $search, type: ANIME, sort: POPULARITY_DESC) {
             id
+            title {
+                romaji
+                english
+                native
+            }
+            siteUrl
         }
     }
 }
 """
 
-ANIME_SEARCH_QUERY = """
+MANGA_SEARCH_QUERY = """
 query($id: Int, $search: String, $page: Int = 1, $per_page: Int = 10) {
     Page(page: $page, perPage: $per_page) {
-        media(id: $id, search: $search, type: ANIME, sort: POPULARITY_DESC) {
+        media(id: $id, search: $search, type: MANGA, sort: POPULARITY_DESC) {
             id
             title {
                 romaji
@@ -69,22 +75,6 @@ query($search: String, $page: Int = 1, $per_page: Int = 10) {
 }
 """
 
-MANGA_SEARCH_QUERY = """
-query($id: Int, $search: String, $page: Int = 1, $per_page: Int = 10) {
-    Page(page: $page, perPage: $per_page) {
-        media(id: $id, search: $search, type: MANGA, sort: POPULARITY_DESC) {
-            id
-            title {
-                romaji
-                english
-                native
-            }
-            siteUrl
-        }
-    }
-}
-"""
-
 STAFF_SEARCH_QUERY = """
 query ($name: String, $page: Int = 1, $per_page: Int = 10) {
     Page(page: $page, perPage: $per_page) {
@@ -101,7 +91,299 @@ query ($name: String, $page: Int = 1, $per_page: Int = 10) {
 }
 """
 
+USER_SEARCH_QUERY = """
+    query ($name: String, $page: Int = 1, $per_page: Int = 10) {
+        Page(page: $page, perPage: $per_page) {
+            users(search: $name, sort: SEARCH_MATCH) {
+                id
+                name
+                avatar {
+                    large
+                    medium
+                }
+            }
+        }
+    }
+"""
+
 # Get
+ANIME_GET_QUERY = """
+query($id: Int) {
+    Page(page: 1, perPage: 1) {
+        media(id: $id, type: ANIME) {
+            id
+            title {
+                romaji
+                english
+                native
+            }
+            siteUrl
+            episodes
+            description
+            format
+            status
+            duration
+            genres
+            isAdult
+            tags {
+                name
+            }
+            studios {
+                nodes {
+                    name
+                }
+            }
+            startDate {
+                year
+                month
+                day
+            }
+            endDate {
+                year
+                month
+                day
+            }
+            season
+            seasonYear
+            seasonInt
+            countryOfOrigin
+            coverImage {
+                medium
+                large
+                extraLarge
+            }
+            bannerImage
+            source
+            hashtag
+            synonyms
+            meanScore
+            averageScore
+            popularity
+            rankings {
+                type
+                allTime
+                format
+                rank
+                year
+                season
+            }
+            nextAiringEpisode {
+                timeUntilAiring
+                airingAt
+                episode
+            }
+            trailer {
+                id
+                thumbnail
+                site
+            }
+            staff(sort: FAVOURITES_DESC) {
+                edges {
+                    node {
+                        name {
+                            first
+                            full
+                            native
+                            last
+                        }
+                        id
+                    }
+                }
+            }
+            characters(sort: FAVOURITES_DESC) {
+                edges {
+                    node {
+                        name {
+                            first
+                            full
+                            native
+                            last
+                        }
+                        id
+                    }
+                    role
+                }
+            }
+        }
+    }
+}
+"""
+
+MANGA_GET_QUERY = """
+query($id: Int) {
+    Page(page: 1, perPage: 1) {
+        media(id: $id, type: MANGA) {
+            id
+            title {
+                romaji
+                english
+                native
+            }
+            siteUrl
+            chapters
+            description
+            status
+            genres
+            isAdult
+            tags {
+                name
+            }
+            studios {
+                nodes {
+                    name
+                }
+            }
+            startDate {
+                year
+                month
+                day
+            }
+            endDate {
+                year
+                month
+                day
+            }
+            season
+            seasonYear
+            seasonInt
+            countryOfOrigin
+            coverImage {
+                medium
+                large
+                extraLarge
+            }
+            bannerImage
+            source
+            hashtag
+            synonyms
+            meanScore
+            averageScore
+            popularity
+            rankings {
+                type
+                allTime
+                format
+                rank
+                year
+                season
+            }
+            nextAiringEpisode {
+                timeUntilAiring
+                airingAt
+                episode
+            }
+            trailer {
+                id
+                thumbnail
+                site
+            }
+            staff(sort: FAVOURITES_DESC) {
+                edges {
+                    node {
+                        name {
+                            first
+                            full
+                            native
+                            last
+                        }
+                        id
+                    }
+                }
+            }
+            characters(sort: FAVOURITES_DESC) {
+                edges {
+                    node {
+                        name {
+                            first
+                            full
+                            native
+                            last
+                        }
+                        id
+                    }
+                    role
+                }
+            }
+            volumes
+        }
+    }
+}
+"""
+
+CHARACTER_GET_QUERY = """
+query($id: Int) {
+    Character(id: $id, sort: FAVOURITES_DESC) {
+        id
+        name {
+            first
+            full
+            native
+            last
+        }
+        image {
+            medium
+            large
+        }
+        siteUrl
+        favourites
+        description
+        media {
+            edges {
+                node {
+                    title {
+                        romaji
+                        english
+                        native
+                    }
+                    id
+                    type
+                }
+            }
+        }
+        isFavourite
+    }
+}
+"""
+
+STAFF_GET_QUERY = """
+query($id: Int) {
+    Staff(id: $id, sort: FAVOURITES_DESC) {
+        id
+        name {
+            first
+            middle
+            last
+            full
+            native
+            userPreferred
+        }
+        languageV2
+        image {
+            large
+            medium
+        }
+        description
+        primaryOccupations
+        gender
+        dateOfBirth {
+            year
+            month
+            day
+        }
+        dateOfDeath {
+            year
+            month
+            day
+        }
+        age
+        yearsActive
+        homeTown
+        siteUrl
+        favourites
+    }
+}
+"""
+
 USER_GET_QUERY = """
 query ($name: String) {
     User(name: $name) {
@@ -286,31 +568,6 @@ query ($name: String) {
         options {
             profileColor
         }
-    }
-}
-"""
-
-LIST_ITEM_GET_QUERY = """
-query ($name: String, $id: Int) {
-    MediaList(userName: $name, mediaId: $id) {
-        id
-        status
-        score(format: POINT_100)
-        progress
-        repeat
-        priority
-        startedAt {
-            year
-            month
-            day
-        }
-        completedAt {
-            year
-            month
-            day
-        }
-        updatedAt 
-        createdAt
     }
 }
 """
@@ -557,279 +814,27 @@ query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
 }
 """
 
-ANIME_GET_QUERY = """
-query($id: Int) {
-    Page(page: 1, perPage: 1) {
-        media(id: $id, type: ANIME) {
-            id
-            title {
-                romaji
-                english
-                native
-            }
-            siteUrl
-            episodes
-            description
-            format
-            status
-            duration
-            genres
-            isAdult
-            tags {
-                name
-            }
-            studios {
-                nodes {
-                    name
-                }
-            }
-            startDate {
-                year
-                month
-                day
-            }
-            endDate {
-                year
-                month
-                day
-            }
-            season
-            seasonYear
-            seasonInt
-            countryOfOrigin
-            coverImage {
-                medium
-                large
-                extraLarge
-            }
-            bannerImage
-            source
-            hashtag
-            synonyms
-            meanScore
-            averageScore
-            popularity
-            rankings {
-                type
-                allTime
-                format
-                rank
-                year
-                season
-            }
-            nextAiringEpisode {
-                timeUntilAiring
-                airingAt
-                episode
-            }
-            trailer {
-                id
-                thumbnail
-                site
-            }
-            staff(sort: FAVOURITES_DESC) {
-                edges {
-                    node {
-                        name {
-                            first
-                            full
-                            native
-                            last
-                        }
-                        id
-                    }
-                }
-            }
-            characters(sort: FAVOURITES_DESC) {
-                edges {
-                    node {
-                        name {
-                            first
-                            full
-                            native
-                            last
-                        }
-                        id
-                    }
-                    role
-                }
-            }
-        }
-    }
-}
-"""
-
-CHARACTER_GET_QUERY = """
-query($id: Int) {
-    Character(id: $id, sort: FAVOURITES_DESC) {
+LIST_ITEM_GET_QUERY = """
+query ($name: String, $id: Int) {
+    MediaList(userName: $name, mediaId: $id) {
         id
-        name {
-            first
-            full
-            native
-            last
-        }
-        image {
-            medium
-            large
-        }
-        siteUrl
-        favourites
-        description
-        media {
-            edges {
-                node {
-                    title {
-                        romaji
-                        english
-                        native
-                    }
-                    id
-                    type
-                }
-            }
-        }
-        isFavourite
-    }
-}
-"""
-
-STAFF_GET_QUERY = """
-query($id: Int) {
-    Staff(id: $id, sort: FAVOURITES_DESC) {
-        id
-        name {
-            first
-            middle
-            last
-            full
-            native
-            userPreferred
-        }
-        languageV2
-        image {
-            large
-            medium
-        }
-        description
-        primaryOccupations
-        gender
-        dateOfBirth {
+        status
+        score(format: POINT_100)
+        progress
+        repeat
+        priority
+        startedAt {
             year
             month
             day
         }
-        dateOfDeath {
+        completedAt {
             year
             month
             day
         }
-        age
-        yearsActive
-        homeTown
-        siteUrl
-        favourites
-    }
-}
-"""
-
-MANGA_GET_QUERY = """
-query($id: Int) {
-    Page(page: 1, perPage: 1) {
-        media(id: $id, type: MANGA) {
-            id
-            title {
-                romaji
-                english
-                native
-            }
-            siteUrl
-            chapters
-            description
-            status
-            genres
-            isAdult
-            tags {
-                name
-            }
-            studios {
-                nodes {
-                    name
-                }
-            }
-            startDate {
-                year
-                month
-                day
-            }
-            endDate {
-                year
-                month
-                day
-            }
-            season
-            seasonYear
-            seasonInt
-            countryOfOrigin
-            coverImage {
-                medium
-                large
-                extraLarge
-            }
-            bannerImage
-            source
-            hashtag
-            synonyms
-            meanScore
-            averageScore
-            popularity
-            rankings {
-                type
-                allTime
-                format
-                rank
-                year
-                season
-            }
-            nextAiringEpisode {
-                timeUntilAiring
-                airingAt
-                episode
-            }
-            trailer {
-                id
-                thumbnail
-                site
-            }
-            staff(sort: FAVOURITES_DESC) {
-                edges {
-                    node {
-                        name {
-                            first
-                            full
-                            native
-                            last
-                        }
-                        id
-                    }
-                }
-            }
-            characters(sort: FAVOURITES_DESC) {
-                edges {
-                    node {
-                        name {
-                            first
-                            full
-                            native
-                            last
-                        }
-                        id
-                    }
-                    role
-                }
-            }
-            volumes
-        }
+        updatedAt 
+        createdAt
     }
 }
 """
