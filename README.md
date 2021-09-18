@@ -1,3 +1,9 @@
+<!--
+  ~ Copyright (C) 2021 Amano Team <https://amanoteam.com/>, nfitzen
+  ~ 
+  ~ SPDX-License-Identifier: MIT
+  -->
+
 # python-anilist
 
 [![License](https://img.shields.io/github/license/AmanoTeam/aiodown)](https://github.com/AmanoTeam/python-anilist/raw/main/LICENSE)
@@ -38,4 +44,8 @@ python3 -m pip install git+https://github.com/0x16c3/python-anilist.git#egg=pyth
 
 ## License
 
-MIT © 2021 [AmanoTeam](//github.com/AmanoTeam)
+Copyright © 2021 [AmanoTeam](https://github.com/AmanoTeam)
+
+Licensed under the [Expat/MIT license](LICENSE).
+This project is also [REUSE compliant](https://reuse.software/).
+See individual files for more copyright information.
