@@ -7,6 +7,8 @@ from typing import Callable, Dict
 
 
 class Score:
+    """Mean and average score union."""
+
     def __init__(
         self,
         *,

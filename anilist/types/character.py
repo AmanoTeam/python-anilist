@@ -10,6 +10,8 @@ from typing import Callable, Dict
 
 
 class Character:
+    """Character object."""
+
     def __init__(
         self,
         *,

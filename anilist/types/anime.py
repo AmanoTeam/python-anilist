@@ -16,6 +16,8 @@ from typing import Callable, Dict, List
 
 
 class Anime:
+    """Anime object."""
+
     def __init__(
         self,
         *,
@@ -48,7 +50,7 @@ class Anime:
         popularity: int = None,
         rankings: List[Ranking] = None
     ):
-        self.id = id
+        self.id: int = id
         self.title = Title(
             romaji=title["romaji"], english=title["english"], native=title["native"]
         )

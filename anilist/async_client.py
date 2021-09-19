@@ -59,6 +59,23 @@ class Client:
     async def search(
         self, query: str, content_type: str = "anime", page: int = 1, limit: int = 10
     ):
+        """Used to search specified content type with the given query.
+
+        Args:
+            query (str): Search query.
+            content_type (str, optional): anime, manga, character, staff or user. Defaults to "anime".
+            page (int, optional): Current page. Defaults to 1.
+            limit (int, optional): Maximum items per page. Defaults to 10.
+
+        Raises:
+            TypeError: If content type is not a string.
+            TypeError: If query type is not a string.
+            TypeError: If limit argument is not an int.
+            TypeError: If the content type is invalid.
+
+        Returns:
+            Union[Anime, Manga, Character, Staff, User], optional: Search results.
+        """
         if isinstance(content_type, str):
             content_type = content_type.lower()
         else:
@@ -73,7 +90,7 @@ class Client:
             limit = int(limit)
         elif not isinstance(limit, int):
             raise TypeError(
-                f"limit argument must be a string, not '{limit.__class__.__name__}'"
+                f"limit argument must be an int, not '{limit.__class__.__name__}'"
             )
         if content_type == "anime":
             return await self.search_anime(query=query, page=page, limit=limit)
@@ -95,6 +112,24 @@ class Client:
         page: int = 1,
         limit: int = 25,
     ):
+        """Gets specified item from given id.
+
+        Args:
+            id (Union[int, str]): Item id.
+            content_type (str, optional): anime, manga, character, staff, list or user. Defaults to "anime".
+            page (int, optional): Current page. Defaults to 1. Only used for lists.
+            limit (int, optional): Maximum items per page. Defaults to 25. Only used for lists.
+
+        Raises:
+            TypeError: If content type is not a string.
+            TypeError: If the list author is not found.
+            TypeError: If id is not an int or a valid user.
+            TypeError: If id is not a string for a user.
+            TypeError: If the content type is invalid.
+
+        Returns:
+            Union[Anime, Manga, Character, Staff, List[MediaList], User], optional: Returned items.
+        """
         if isinstance(content_type, str):
             content_type = content_type.lower()
         else:
@@ -112,9 +147,7 @@ class Client:
                     user = await self.get_user(name=id)
                     id = user.id
                 except Exception:
-                    raise TypeError(
-                        f"id argument must be an int, not '{id.__class__.__name__}'"
-                    )
+                    raise TypeError(f"user not found")
             else:
                 raise TypeError(
                     f"id argument must be a string, not '{id.__class__.__name__}'"
@@ -131,8 +164,6 @@ class Client:
             return await self.get_list(user_id=id, limit=limit, page=page)
         elif content_type == "user":
             raise TypeError("id argument must be a string for the user object.")
-        elif content_type == "list":
-            raise TypeError("id argument must be a string for the list object.")
         else:
             raise TypeError("There is no such content type.")
 
@@ -871,6 +902,15 @@ class Client:
         return None
 
     async def get_list_item(self, name: str, id: int) -> Optional[MediaList]:
+        """Returns list item from user.
+
+        Args:
+            name (str): Username.
+            id (int): Media id.
+
+        Returns:
+            Optional[MediaList]: List item.
+        """
         need_to_close = False
         if not self.httpx:
             self.httpx = httpx.AsyncClient(http2=True)
@@ -916,6 +956,21 @@ class Client:
         page: int = 1,
         limit: int = 25,
     ) -> Optional[List[ListActivity]]:
+        """Returns activity of a user.
+
+        Args:
+            id (Union[int, str]): Username or userid.
+            content_type (str, optional): anime, manga, text or message. Defaults to "anime".
+            page (int, optional): Current page. Defaults to 1.
+            limit (int, optional): Maximum items per page. Defaults to 25.
+
+        Raises:
+            TypeError: If content type is not a string.
+            TypeError: If id is invalid.
+
+        Returns:
+            Optional[List[ListActivity]]: User activity.
+        """
         if isinstance(content_type, str):
             content_type = content_type.lower()
         else:

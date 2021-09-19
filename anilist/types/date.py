@@ -8,6 +8,8 @@ from typing import Callable, Dict
 
 
 class Date:
+    """Date object containing year, month and day."""
+
     def __init__(
         self,
         *,
@@ -27,10 +29,23 @@ class Date:
 
     @staticmethod
     def from_timestamp(timestamp: int) -> "Date":
+        """Creates a Date object from a timestamp.
+
+        Args:
+            timestamp (int): Timestamp.
+
+        Returns:
+            Date: Date object.
+        """
         time = datetime.fromtimestamp(timestamp)
         return Date(year=time.year, month=time.month, day=time.day, timestamp=timestamp)
 
     def get_timestamp(self) -> int:
+        """Formats and returns timestamp.
+
+        Returns:
+            int: Formatted timestamp.
+        """
         if hasattr(self, "timestamp"):
             return self.timestamp
 

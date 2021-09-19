@@ -16,6 +16,8 @@ from typing import Callable, Dict, List
 
 
 class Manga:
+    """Manga object."""
+
     def __init__(
         self,
         *,

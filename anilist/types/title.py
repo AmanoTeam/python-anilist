@@ -7,6 +7,8 @@ from typing import Callable, Dict
 
 
 class Title:
+    """Title object."""
+
     def __init__(
         self,
         *,

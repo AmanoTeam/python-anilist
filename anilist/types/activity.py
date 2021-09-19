@@ -1,24 +1,7 @@
-# MIT License
+#!/usr/bin/env python3
+# Copyright (C) 2021 Amano Team <https://amanoteam.com/>
 #
-# Copyright (c) 2021 Amano Team
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
+# SPDX-License-Identifier: MIT
 
 from .user import User
 from .anime import Anime
@@ -29,6 +12,18 @@ from typing import List, Union, Dict, Callable, Optional
 
 
 class ListActivityStatus:
+    """Status object for list activities.
+
+    Args:
+        status (str): Status string.
+        progress (str): Progress string. Defaults to None.
+
+    Attributes:
+        MAP (Dict[str, int]): Map of text statuses that represent status codes.
+        string (str): Formatted status string.
+        type (int): Status code.
+        progress (Union[List[int], int], optional): Activity progress.
+    """
 
     MAP = {
         "PLANS TO WATCH": 0,
@@ -87,6 +82,24 @@ class ListActivityStatus:
 
 
 class ListActivity:
+    """List activity object.
+
+    Args:
+        id (int): Activity id.
+        date (int): Activity timestamp.
+        status (str, optional): Activity status text. Defaults to None.
+        progress (str, optional): Activity progress. Defaults to None.
+        url (str, optional): Activity URL. Defaults to None.
+        media (Union[Anime, Manga], optional): Activity media. Defaults to None.
+
+    Attributes:
+        id (int): Activity id.
+        date (Date): Activity date.
+        status (ListActivityStatus, optional): Activity status text.
+        url (str, optional): Activity URL.
+        media (Union[Anime, Manga], optional): Activity media.
+    """
+
     def __init__(
         self,
         *,
@@ -117,29 +130,51 @@ class ListActivity:
 
 
 class TextActivity:
+    """Text activity object.
+
+    Args:
+        id (int): Activity id.
+        reply_count (int): Total reply count.
+        date (int): Activity timestamp.
+        user (User): Activity author.
+        text (str, optional): Activity content. Defaults to None.
+        text_html (str, optional): Activity content in HTML. Defaults to None.
+        url (str, optional): Activity URL. Defaults to None.
+        recipient (User, optional): Activity recipient. Defaults to None.
+
+    Attributes:
+        id (int): Activity id.
+        reply_count (int): Total reply count.
+        date (Date): Activity date.
+        user (User): Activity author.
+        text (str, optional): Activity content.
+        text_html (str, optional): Activity content in HTML.
+        url (str, optional): Activity URL.
+        recipient (User, optional): Activity recipient.
+    """
+
     def __init__(
         self,
         *,
         id: int,
         reply_count: int,
         date: int,
+        user: User,
         text: str = None,
         text_html: str = None,
         url: str = None,
-        user: User = None,
         recipient: User = None,
     ) -> None:
         self.id = id
         self.reply_count = reply_count
         self.date = Date.from_timestamp(date)
+        self.user = user
         if text:
             self.text = text
         if text_html:
             self.text_html = text
         if url:
             self.url = url
-        if user:
-            self.user = user
         if recipient:
             self.recipient = recipient
 

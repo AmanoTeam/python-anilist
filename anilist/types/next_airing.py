@@ -8,6 +8,8 @@ from typing import Callable, Dict
 
 
 class NextAiring:
+    """Status of an airing anime."""
+
     def __init__(
         self,
         *,
