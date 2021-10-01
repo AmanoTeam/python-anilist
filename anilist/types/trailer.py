@@ -3,7 +3,12 @@
 #
 # SPDX-License-Identifier: MIT
 
+from typing import Dict, Callable
+
+
 class Trailer:
+    """Contains data for anime trailers."""
+
     def __init__(
         self,
         *,

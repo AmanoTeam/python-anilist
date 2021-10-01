@@ -3,6 +3,7 @@
 #
 # SPDX-License-Identifier: MIT
 
+from .statistics import Ranking
 from .character import Character
 from .cover import Cover
 from .date import Date
@@ -15,6 +16,8 @@ from typing import Callable, Dict, List
 
 
 class Anime:
+    """Anime object."""
+
     def __init__(
         self,
         *,
@@ -27,6 +30,7 @@ class Anime:
         status: str = None,
         duration: int = None,
         genres: List[str] = None,
+        is_adult: bool = False,
         tags: Dict = None,
         studios: Dict = None,
         start_date: Dict = None,
@@ -43,8 +47,10 @@ class Anime:
         trailer: Dict = None,
         staff: Dict = None,
         characters: Dict = None,
+        popularity: int = None,
+        rankings: List[Ranking] = None
     ):
-        self.id = id
+        self.id: int = id
         self.title = Title(
             romaji=title["romaji"], english=title["english"], native=title["native"]
         )
@@ -64,6 +70,8 @@ class Anime:
             self.duration = duration
         if genres:
             self.genres = genres
+        if is_adult:
+            self.is_adult = is_adult
         if tags and len(tags) > 0:
             self.tags = [tag["name"] for tag in tags]
         if studios and len(studios["nodes"]) > 0:
@@ -126,6 +134,10 @@ class Anime:
                 )
                 for character in characters["edges"]
             ]
+        if popularity:
+            self.popularity = popularity
+        if rankings:
+            self.rankings = rankings
 
     def raw(self) -> Dict:
         return self.__dict__

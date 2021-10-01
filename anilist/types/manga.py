@@ -3,6 +3,7 @@
 #
 # SPDX-License-Identifier: MIT
 
+from .statistics import Ranking
 from .character import Character
 from .cover import Cover
 from .date import Date
@@ -15,6 +16,8 @@ from typing import Callable, Dict, List
 
 
 class Manga:
+    """Manga object."""
+
     def __init__(
         self,
         *,
@@ -25,6 +28,7 @@ class Manga:
         description: str = None,
         status: str = None,
         genres: List[str] = None,
+        is_adult: bool = False,
         tags: Dict = None,
         studios: Dict = None,
         start_date: Dict = None,
@@ -42,6 +46,8 @@ class Manga:
         staff: Dict = None,
         characters: Dict = None,
         volumes: int = None,
+        popularity: int = None,
+        rankings: List[Ranking] = None
     ):
         self.id = id
         self.title = Title(
@@ -59,6 +65,8 @@ class Manga:
             self.status = status
         if genres:
             self.genres = genres
+        if is_adult:
+            self.is_adult = is_adult
         if tags and len(tags) > 0:
             self.tags = [tag["name"] for tag in tags]
         if studios and len(studios["nodes"]) > 0:
@@ -123,6 +131,10 @@ class Manga:
             ]
         if volumes:
             self.volumes = volumes
+        if popularity:
+            self.popularity = popularity
+        if rankings:
+            self.rankings = rankings
 
     def raw(self) -> Dict:
         return self.__dict__

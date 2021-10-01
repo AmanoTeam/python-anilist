@@ -7,6 +7,8 @@ from typing import Callable, Dict
 
 
 class Season:
+    """Season object that represents a seson."""
+
     def __init__(
         self,
         *,

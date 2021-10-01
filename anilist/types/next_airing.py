@@ -3,10 +3,13 @@
 #
 # SPDX-License-Identifier: MIT
 
+from .date import Date
 from typing import Callable, Dict
 
 
 class NextAiring:
+    """Status of an airing anime."""
+
     def __init__(
         self,
         *,
@@ -17,7 +20,7 @@ class NextAiring:
         if time_until:
             self.time_until = time_until
         if at:
-            self.at = at
+            self.at = Date.from_timestamp(at)
         if episode:
             self.episode = episode
 

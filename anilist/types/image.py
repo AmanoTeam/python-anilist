@@ -7,6 +7,8 @@ from typing import Callable, Dict
 
 
 class Image:
+    """Image object."""
+
     def __init__(
         self,
         *,

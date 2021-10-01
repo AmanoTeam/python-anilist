@@ -7,6 +7,8 @@ from typing import Callable, Dict
 
 
 class Cover:
+    """Cover object. Contains URL's for each size."""
+
     def __init__(
         self,
         *,
