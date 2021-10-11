@@ -46,6 +46,7 @@ python3 -m pip install git+https://github.com/0x16c3/python-anilist.git#egg=pyth
 ## License
 
 Copyright © 2021 [AmanoTeam](https://github.com/AmanoTeam)
+and the python-anilist contributors
 
 Licensed under the [Expat/MIT license](LICENSE).
 This project is also [REUSE compliant](https://reuse.software/).
