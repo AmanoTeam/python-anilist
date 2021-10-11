@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-# Copyright (C) 2021 Amano Team <https://amanoteam.com/>
-#
 # SPDX-License-Identifier: MIT
+# Copyright (C) 2021 Amano Team <https://amanoteam.com/> and the python-anilist contributors
 
 from setuptools import find_packages, setup
 
