@@ -23,14 +23,14 @@
 
 **NOTE:** If `python3` is "not a recognized command" try using `python` instead.
 
-For the latest stable version:<br>
-```
+For the latest stable version:
+```sh
 python3 -m pip install python-anilist
 ```
 
-For the latest development version:<br>
-```
-python3 -m pip install git+https://github.com/0x16c3/python-anilist.git#egg=python-anilist
+For the latest development version:
+```sh
+python3 -m pip install git+https://github.com/AmanoTeam/python-anilist.git#egg=python-anilist
 ```
 
 ## What's left to do?
