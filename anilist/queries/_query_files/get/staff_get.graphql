@@ -1,0 +1,39 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2021 Amano Team <https://amanoteam.com/> and the python-anilist contributors
+
+query($id: Int) {
+    Staff(id: $id, sort: FAVOURITES_DESC) {
+        id
+        name {
+            first
+            middle
+            last
+            full
+            native
+            userPreferred
+        }
+        languageV2
+        image {
+            large
+            medium
+        }
+        description
+        primaryOccupations
+        gender
+        dateOfBirth {
+            year
+            month
+            day
+        }
+        dateOfDeath {
+            year
+            month
+            day
+        }
+        age
+        yearsActive
+        homeTown
+        siteUrl
+        favourites
+    }
+}

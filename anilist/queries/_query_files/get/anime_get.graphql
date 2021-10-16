@@ -1,0 +1,102 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2021 Amano Team <https://amanoteam.com/> and the python-anilist contributors
+
+query($id: Int) {
+    Page(page: 1, perPage: 1) {
+        media(id: $id, type: ANIME) {
+            id
+            title {
+                romaji
+                english
+                native
+            }
+            siteUrl
+            episodes
+            description
+            format
+            status
+            duration
+            genres
+            isAdult
+            tags {
+                name
+            }
+            studios {
+                nodes {
+                    name
+                }
+            }
+            startDate {
+                year
+                month
+                day
+            }
+            endDate {
+                year
+                month
+                day
+            }
+            season
+            seasonYear
+            seasonInt
+            countryOfOrigin
+            coverImage {
+                medium
+                large
+                extraLarge
+            }
+            bannerImage
+            source
+            hashtag
+            synonyms
+            meanScore
+            averageScore
+            popularity
+            rankings {
+                type
+                allTime
+                format
+                rank
+                year
+                season
+            }
+            nextAiringEpisode {
+                timeUntilAiring
+                airingAt
+                episode
+            }
+            trailer {
+                id
+                thumbnail
+                site
+            }
+            staff(sort: FAVOURITES_DESC) {
+                edges {
+                    node {
+                        name {
+                            first
+                            full
+                            native
+                            last
+                        }
+                        id
+                    }
+                }
+            }
+            characters(sort: FAVOURITES_DESC) {
+                edges {
+                    node {
+                        name {
+                            first
+                            full
+                            native
+                            last
+                        }
+                        id
+                    }
+                    role
+                }
+            }
+        }
+    }
+}

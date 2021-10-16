@@ -1,0 +1,188 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2021 Amano Team <https://amanoteam.com/> and the python-anilist contributors
+
+query ($name: String) {
+    User(name: $name) {
+        id
+        name
+        about
+        avatar {
+            large
+            medium
+        }
+        bannerImage
+        favourites {
+            anime {
+                nodes {
+                    id
+                    title {
+                        romaji
+                        english
+                        native
+                    }
+                    siteUrl
+                    genres
+                    isAdult
+                    coverImage {
+                        medium
+                        large
+                        extraLarge
+                    }
+                    bannerImage
+                    source
+                    hashtag
+                    synonyms
+                    averageScore
+                    meanScore
+                }
+            }
+            manga {
+                nodes {
+                    id
+                    title {
+                        romaji
+                        english
+                        native
+                        userPreferred
+                    }
+                    siteUrl
+                    genres
+                    isAdult
+                    coverImage {
+                        medium
+                        large
+                        extraLarge
+                    }
+                    bannerImage
+                    source
+                    hashtag
+                    synonyms
+                    averageScore
+                    meanScore
+                }
+            }
+            characters {
+                nodes {
+                    id
+                    name {
+                        first
+                        middle
+                        last
+                        full
+                        native
+                        userPreferred
+                    }
+                    image {
+                        large
+                        medium
+                    }
+                    description
+                    gender
+                    dateOfBirth {
+                        year
+                        month
+                        day
+                    }
+                    age
+                    siteUrl
+                    favourites
+                }
+            }
+            staff {
+                nodes {
+                    id
+                    name {
+                        first
+                        middle
+                        last
+                        full
+                        native
+                        userPreferred
+                    }
+                    languageV2
+                    image {
+                        large
+                        medium
+                    }
+                    description
+                    primaryOccupations
+                    gender
+                    dateOfBirth {
+                        year
+                        month
+                        day
+                    }
+                    dateOfDeath {
+                        year
+                        month
+                        day
+                    }
+                    age
+                    yearsActive
+                    homeTown
+                    siteUrl
+                    favourites
+                }
+            }
+            studios {
+                nodes {
+                    id
+                    name
+                    isAnimationStudio
+                    siteUrl
+                    favourites
+                }
+            }
+        }
+        statistics {
+            anime {
+                count
+                meanScore
+                minutesWatched
+                episodesWatched
+                statuses {
+                    status
+                    count
+                }
+                genres(sort: COUNT_DESC) {
+                    genre
+                    count
+                }
+                tags(sort: COUNT_DESC) {
+                    tag {
+                        name
+                    }
+                    count
+                }
+            }
+            manga {
+                count
+                meanScore
+                chaptersRead
+                volumesRead
+                statuses {
+                    status
+                    count
+                }
+                genres(sort: COUNT_DESC) {
+                    genre
+                    count
+                }
+                tags(sort: COUNT_DESC) {
+                    tag {
+                        name
+                    }
+                    count
+                }
+            }
+        }
+        siteUrl
+        donatorTier
+        donatorBadge
+        createdAt
+        updatedAt
+        options {
+            profileColor
+        }
+    }
+}
