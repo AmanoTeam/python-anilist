@@ -18,7 +18,8 @@ import anilist
 )
 async def test_search(query, content_type):
     client = anilist.AsyncClient()
-    assert await client.search(query, content_type) is not None
+    assert await client.search(query, content_type, pagination=True) is not None
+    assert await client.search(query, content_type, pagination=False) is not None
 
 
 @pytest.mark.asyncio
@@ -30,12 +31,17 @@ async def test_search(query, content_type):
         ("22037", "character"),
         ("95061", "staff"),
         ("travis", "user"),
-        ("travis", "list"),
+        ("travis", "list_anime"),
+        ("travis", "list_manga"),
     ],
 )
 async def test_get(id, content_type):
     client = anilist.AsyncClient()
-    assert await client.get(id, content_type) is not None
+    if "list" in content_type:
+        assert await client.get(id, content_type, pagination=True) is not None
+        assert await client.get(id, content_type, pagination=False) is not None
+    else:
+        assert await client.get(id, content_type) is not None
 
 
 @pytest.mark.asyncio

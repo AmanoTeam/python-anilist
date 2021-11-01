@@ -17,7 +17,8 @@ import anilist
 )
 def test_search(query, content_type):
     client = anilist.Client()
-    assert client.search(query, content_type) is not None
+    assert client.search(query, content_type, pagination=True) is not None
+    assert client.search(query, content_type, pagination=False) is not None
 
 
 @pytest.mark.parametrize(
@@ -28,12 +29,17 @@ def test_search(query, content_type):
         ("22037", "character"),
         ("95061", "staff"),
         ("travis", "user"),
-        ("travis", "list"),
+        ("travis", "list_anime"),
+        ("travis", "list_manga"),
     ],
 )
 def test_get(id, content_type):
     client = anilist.Client()
-    assert client.get(id, content_type) is not None
+    if "list" in content_type:
+        assert client.get(id, content_type, pagination=True) is not None
+        assert client.get(id, content_type, pagination=False) is not None
+    else:
+        assert client.get(id, content_type) is not None
 
 
 def test_get_list_item():
