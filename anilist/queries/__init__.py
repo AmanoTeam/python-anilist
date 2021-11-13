@@ -40,7 +40,7 @@ LIST_GET_QUERY = read_text(get, "list_get.graphql")
 LIST_ITEM_GET_QUERY = read_text(get, "list_item_get.graphql")
 
 # I wonder if the activity queries should be lumped under "get" instead.
-# They function pretty much exactly the same. - nfitzen
+# They function pretty much exactly the same.
 
 LIST_ACTIVITY_QUERY = read_text(activity, "list_activity.graphql")
 TEXT_ACTIVITY_QUERY = read_text(activity, "text_activity.graphql")
