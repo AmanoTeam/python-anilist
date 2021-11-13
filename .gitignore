@@ -6,7 +6,7 @@
 test.py
 
 # VSCode related stuff
-vscode/
+.vscode/
 *.code-workspace
 
 # Environments
