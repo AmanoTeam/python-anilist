@@ -1,18 +1,22 @@
 # SPDX-License-Identifier: MIT
 # Copyright (C) 2021 Amano Team <https://amanoteam.com/> and the python-anilist contributors
 
-from typing import TYPE_CHECKING, Union
+# Provides compatibility functions and values for older Python versions.
+
+from typing import Union
 from pkgutil import get_data
+from types import ModuleType
+from os import PathLike
 
-if TYPE_CHECKING:
-    from types import ModuleType
+__all__ = ("read_text",)
 
-    Package = Union[str, ModuleType]
+Package = Union[str, ModuleType]
+Resource = Union[str, PathLike]
 
 
 def read_text(
     package: Package,
-    resource: str,
+    resource: Resource,
     encoding: str = "utf-8",
     errors: str = "strict",
 ) -> str:
@@ -21,9 +25,12 @@ def read_text(
     The decoding-related arguments have the same semantics as those of
     bytes.decode().
 
-    This function is essentially a "polyfill" for
-    importlib.resources.read_text.
+    This function is a shim for importlib.resources.read_text.
     """
+
+    if isinstance(resource, PathLike):
+        resource = str(resource.__fspath__())
+
     if isinstance(package, str):
         data = get_data(package=package, resource=resource)
     else:
