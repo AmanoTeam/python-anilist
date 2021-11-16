@@ -8,7 +8,11 @@ from pkgutil import get_data
 from types import ModuleType
 from os import PathLike
 
-__all__ = ("read_text",)
+__all__ = (
+    "read_text",
+    "Package",
+    "Resource"
+)
 
 Package = Union[str, ModuleType]
 Resource = Union[str, PathLike]
