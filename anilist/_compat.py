@@ -11,7 +11,7 @@ from os import PathLike
 __all__ = (
     "read_text",
     "Package",
-    "Resource"
+    "Resource",
 )
 
 Package = Union[str, ModuleType]
