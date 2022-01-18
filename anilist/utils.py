@@ -81,7 +81,7 @@ query ($search: String, $page: Int = 1, $per_page: Int = 10) {
             currentPage
             lastPage
         }
-        staff(search: $name, sort: SEARCH_MATCH) {
+        staff(search: $search, sort: SEARCH_MATCH) {
             id
             name {
                 first
@@ -95,14 +95,14 @@ query ($search: String, $page: Int = 1, $per_page: Int = 10) {
 """
 
 USER_SEARCH_QUERY = """
-    query ($name: String, $page: Int = 1, $per_page: Int = 10) {
+    query ($search: String, $page: Int = 1, $per_page: Int = 10) {
         Page(page: $page, perPage: $per_page) {
             pageInfo {
                 total
                 currentPage
                 lastPage
             }
-            users(search: $name, sort: SEARCH_MATCH) {
+            users(name: $search, sort: SEARCH_MATCH) {
                 id
                 name
                 avatar {
