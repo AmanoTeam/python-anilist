@@ -11,6 +11,7 @@ from .image import Image
 from .name import Name
 from .next_airing import NextAiring
 from .manga import Manga
+from .page import PageInfo
 from .title import Title
 from .trailer import Trailer
 from .score import Score
@@ -34,6 +35,7 @@ __all__ = [
     "Name",
     "NextAiring",
     "Manga",
+    "PageInfo",
     "MediaList",
     "Ranking",
     "TextActivity",

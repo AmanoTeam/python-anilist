@@ -36,6 +36,8 @@ class ListActivityStatus:
         "PAUSED READING": 3,
         "DROPPED": 4,
         "COMPLETED": 5,
+        "REWATCHED": 6,
+        "REREAD": 7,
     }
 
     def __init__(self, *, status: str, progress: str = None) -> None:

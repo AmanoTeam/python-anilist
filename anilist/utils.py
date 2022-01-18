@@ -13,6 +13,11 @@ HEADERS = {
 ANIME_SEARCH_QUERY = """
 query($id: Int, $search: String, $page: Int = 1, $per_page: Int = 10) {
     Page(page: $page, perPage: $per_page) {
+        pageInfo {
+            total
+            currentPage
+            lastPage
+        }
         media(id: $id, search: $search, type: ANIME, sort: POPULARITY_DESC) {
             id
             title {
@@ -29,6 +34,11 @@ query($id: Int, $search: String, $page: Int = 1, $per_page: Int = 10) {
 MANGA_SEARCH_QUERY = """
 query($id: Int, $search: String, $page: Int = 1, $per_page: Int = 10) {
     Page(page: $page, perPage: $per_page) {
+        pageInfo {
+            total
+            currentPage
+            lastPage
+        }
         media(id: $id, search: $search, type: MANGA, sort: POPULARITY_DESC) {
             id
             title {
@@ -45,6 +55,11 @@ query($id: Int, $search: String, $page: Int = 1, $per_page: Int = 10) {
 CHARACTER_SEARCH_QUERY = """
 query($search: String, $page: Int = 1, $per_page: Int = 10) {
     Page(page: $page, perPage: $per_page) {
+        pageInfo {
+            total
+            currentPage
+            lastPage
+        }
         characters(search: $search) {
             id
             name {
@@ -59,9 +74,14 @@ query($search: String, $page: Int = 1, $per_page: Int = 10) {
 """
 
 STAFF_SEARCH_QUERY = """
-query ($name: String, $page: Int = 1, $per_page: Int = 10) {
+query ($search: String, $page: Int = 1, $per_page: Int = 10) {
     Page(page: $page, perPage: $per_page) {
-        staff(search: $name, sort: SEARCH_MATCH) {
+        pageInfo {
+            total
+            currentPage
+            lastPage
+        }
+        staff(search: $search, sort: SEARCH_MATCH) {
             id
             name {
                 first
@@ -75,9 +95,14 @@ query ($name: String, $page: Int = 1, $per_page: Int = 10) {
 """
 
 USER_SEARCH_QUERY = """
-    query ($name: String, $page: Int = 1, $per_page: Int = 10) {
+    query ($search: String, $page: Int = 1, $per_page: Int = 10) {
         Page(page: $page, perPage: $per_page) {
-            users(search: $name, sort: SEARCH_MATCH) {
+            pageInfo {
+                total
+                currentPage
+                lastPage
+            }
+            users(name: $search, sort: SEARCH_MATCH) {
                 id
                 name
                 avatar {
@@ -555,9 +580,14 @@ query ($name: String) {
 }
 """
 
-LIST_GET_QUERY = """
+LIST_GET_QUERY_ANIME = """
 query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
     anime: Page(page: $page, perPage: $per_page) {
+        pageInfo {
+            total
+            currentPage
+            lastPage
+        }
         mediaList(userId: $user_id, sort: UPDATED_TIME_DESC, type: ANIME) {
             id
             status
@@ -675,7 +705,17 @@ query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
             }
         }
     }
+}
+"""
+
+LIST_GET_QUERY_MANGA = """
+query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
     manga: Page(page: $page, perPage: $per_page) {
+        pageInfo {
+            total
+            currentPage
+            lastPage
+        }
         mediaList(userId: $user_id, sort: UPDATED_TIME_DESC, type: MANGA) {
             id
             status
@@ -826,6 +866,11 @@ query ($name: String, $id: Int) {
 LIST_ACTIVITY_QUERY = """
 query ($user_id: Int, $activity_type: ActivityType, $page: Int = 1, $per_page: Int = 25) {
     Page(page: $page, perPage: $per_page) {
+        pageInfo {
+            total
+            currentPage
+            lastPage
+        }
         activities(userId: $user_id, type: $activity_type, sort: ID_DESC) {
             ... on ListActivity {
                 type
@@ -941,6 +986,11 @@ query ($user_id: Int, $activity_type: ActivityType, $page: Int = 1, $per_page: I
 TEXT_ACTIVITY_QUERY = """
 query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
     Page(page: $page, perPage: $per_page) {
+        pageInfo {
+            total
+            currentPage
+            lastPage
+        }
         activities(userId: $user_id, type: TEXT, sort: ID_DESC) {
             ... on TextActivity {
                 id
@@ -966,6 +1016,11 @@ query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
 MESSAGE_ACTIVITY_QUERY = """
 query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
     Page(page: $page, perPage: $per_page) {
+        pageInfo {
+            total
+            currentPage
+            lastPage
+        }
         activities(userId: $user_id, type: MESSAGE, sort: ID_DESC) {
             ... on MessageActivity {
                 id
@@ -999,6 +1054,11 @@ query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
 MESSAGE_ACTIVITY_QUERY_SENT = """
 query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
     Page(page: $page, perPage: $per_page) {
+        pageInfo {
+            total
+            currentPage
+            lastPage
+        }
         activities(messengerId: $user_id, type: MESSAGE, sort: ID_DESC) {
             ... on MessageActivity {
                 id

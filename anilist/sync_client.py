@@ -18,6 +18,7 @@ from anilist.types import (
     TextActivity,
     MediaList,
     Ranking,
+    PageInfo,
 )
 from typing import List, Optional, Union, Tuple
 from anilist.utils import (
@@ -33,7 +34,8 @@ from anilist.utils import (
     STAFF_SEARCH_QUERY,
     USER_GET_QUERY,
     USER_SEARCH_QUERY,
-    LIST_GET_QUERY,
+    LIST_GET_QUERY_ANIME,
+    LIST_GET_QUERY_MANGA,
     LIST_ITEM_GET_QUERY,
     LIST_ACTIVITY_QUERY,
     TEXT_ACTIVITY_QUERY,
@@ -55,7 +57,12 @@ class Client:
         return None
 
     def search(
-        self, query: str, content_type: str = "anime", page: int = 1, limit: int = 10
+        self,
+        query: str,
+        content_type: str = "anime",
+        page: int = 1,
+        limit: int = 10,
+        pagination: bool = False,
     ):
         """Used to search specified content type with the given query.
 
@@ -64,6 +71,7 @@ class Client:
             content_type (str, optional): anime, manga, character, staff or user. Defaults to "anime".
             page (int, optional): Current page. Defaults to 1.
             limit (int, optional): Maximum items per page. Defaults to 10.
+            pagination (bool, optional): Option to return pagination info. Defaults to False.
 
         Raises:
             TypeError: If content type is not a string.
@@ -90,18 +98,23 @@ class Client:
             raise TypeError(
                 f"limit argument must be an int, not '{limit.__class__.__name__}'"
             )
+
         if content_type == "anime":
-            return self.search_anime(query=query, page=page, limit=limit)
+            search, pages = self.search_anime(query=query, page=page, limit=limit)
         elif content_type == "manga":
-            return self.search_manga(query=query, page=page, limit=limit)
+            search, pages = self.search_manga(query=query, page=page, limit=limit)
         elif content_type in ["char", "character"]:
-            return self.search_character(query=query, page=page, limit=limit)
+            search, pages = self.search_character(query=query, page=page, limit=limit)
         elif content_type == "staff":
-            return self.search_staff(query=query, page=page, limit=limit)
+            search, pages = self.search_staff(query=query, page=page, limit=limit)
         elif content_type == "user":
-            return self.search_user(query=query, page=page, limit=limit)
+            search, pages = self.search_user(query=query, page=page, limit=limit)
         else:
             raise TypeError("There is no such content type.")
+
+        if pagination:
+            return search, pages
+        return search
 
     def get(
         self,
@@ -109,14 +122,16 @@ class Client:
         content_type: str = "anime",
         page: int = 1,
         limit: int = 25,
+        pagination: bool = False,
     ):
         """Gets specified item from given id.
 
         Args:
             id (Union[int, str]): Item id.
-            content_type (str, optional): anime, manga, character, staff, list or user. Defaults to "anime".
+            content_type (str, optional): anime, manga, character, staff, list_anime, list_manga or user. Defaults to "anime".
             page (int, optional): Current page. Defaults to 1. Only used for lists.
             limit (int, optional): Maximum items per page. Defaults to 25. Only used for lists.
+            pagination (bool, optional): Option to return pagination info. Only used for lists. Defaults to False.
 
         Raises:
             TypeError: If content type is not a string.
@@ -139,7 +154,7 @@ class Client:
         elif not isinstance(id, int):
             if content_type == "user":
                 return self.get_user(name=id)
-            elif content_type == "list":
+            elif content_type == "list_anime" or content_type == "list_manga":
                 try:
                     user = self.get_user(name=id)
                     id = user.id
@@ -157,8 +172,20 @@ class Client:
             return self.get_character(id=id)
         elif content_type == "staff":
             return self.get_staff(id=id)
-        elif content_type == "list":
-            return self.get_list(user_id=id, limit=limit, page=page)
+        elif content_type == "list_anime":
+            anime, pages = self.get_list(
+                user_id=id, limit=limit, page=page, content_type="anime"
+            )
+            if pagination:
+                return anime, pages
+            return anime
+        elif content_type == "list_manga":
+            manga, pages = self.get_list(
+                user_id=id, limit=limit, page=page, content_type="manga"
+            )
+            if pagination:
+                return manga, pages
+            return manga
         elif content_type == "user":
             raise TypeError("id argument must be a string for the user object.")
         else:
@@ -185,11 +212,18 @@ class Client:
         if data["data"]:
             try:
                 items = data["data"]["Page"]["media"]
+                page = data["data"]["Page"]["pageInfo"]
+                pagination = PageInfo(
+                    total_items=page["total"],
+                    current=page["currentPage"],
+                    last=page["lastPage"],
+                )
+
                 results = [
                     Anime(id=item["id"], title=item["title"], url=item["siteUrl"])
                     for item in items
                 ]
-                return results
+                return results, pagination
             except Exception:
                 pass
         return None
@@ -214,11 +248,18 @@ class Client:
         if data["data"]:
             try:
                 items = data["data"]["Page"]["media"]
+                page = data["data"]["Page"]["pageInfo"]
+                pagination = PageInfo(
+                    total_items=page["total"],
+                    current=page["currentPage"],
+                    last=page["lastPage"],
+                )
+
                 results = [
                     Manga(id=item["id"], title=item["title"], url=item["siteUrl"])
                     for item in items
                 ]
-                return results
+                return results, pagination
             except Exception:
                 pass
         return None
@@ -244,10 +285,17 @@ class Client:
         if data["data"]:
             try:
                 items = data["data"]["Page"]["characters"]
+                page = data["data"]["Page"]["pageInfo"]
+                pagination = PageInfo(
+                    total_items=page["total"],
+                    current=page["currentPage"],
+                    last=page["lastPage"],
+                )
+
                 results = [
                     Character(id=item["id"], name=item["name"]) for item in items
                 ]
-                return results
+                return results, pagination
             except Exception:
                 pass
         return None
@@ -271,8 +319,15 @@ class Client:
         if data["data"]:
             try:
                 items = data["data"]["Page"]["staff"]
+                page = data["data"]["Page"]["pageInfo"]
+                pagination = PageInfo(
+                    total_items=page["total"],
+                    current=page["currentPage"],
+                    last=page["lastPage"],
+                )
+
                 results = [Staff(id=item["id"], name=item["name"]) for item in items]
-                return results
+                return results, pagination
             except Exception:
                 pass
         return None
@@ -296,11 +351,18 @@ class Client:
         if data["data"]:
             try:
                 items = data["data"]["Page"]["users"]
+                page = data["data"]["Page"]["pageInfo"]
+                pagination = PageInfo(
+                    total_items=page["total"],
+                    current=page["currentPage"],
+                    last=page["lastPage"],
+                )
+
                 results = [
                     User(id=item["id"], name=item["name"], image=item["avatar"])
                     for item in items
                 ]
-                return results
+                return results, pagination
             except Exception:
                 pass
         return None
@@ -673,14 +735,17 @@ class Client:
         return None
 
     def get_list(
-        self, user_id: int, limit: int, page: int = 1
+        self, user_id: int, limit: int, page: int = 1, content_type: str = "anime"
     ) -> Optional[Tuple[List[MediaList], List[MediaList]]]:
         if not self.httpx:
             self.httpx = httpx.Client()
+
+        is_manga = "manga" in content_type
+
         response = self.httpx.post(
             url=API_URL,
             json=dict(
-                query=LIST_GET_QUERY,
+                query=LIST_GET_QUERY_ANIME if not is_manga else LIST_GET_QUERY_MANGA,
                 variables=dict(
                     user_id=user_id,
                     page=page,
@@ -691,146 +756,156 @@ class Client:
         )
         data = response.json()
 
-        anime_list = []
-        manga_list = []
+        res = []
+        pagination = None
         if data["data"]:
             try:
-                item = data["data"]["anime"]["mediaList"]
+                if not is_manga:
+                    pg = data["data"]["anime"]["pageInfo"]
+                else:
+                    pg = data["data"]["manga"]["pageInfo"]
+                pagination = PageInfo(
+                    total_items=pg["total"],
+                    current=pg["currentPage"],
+                    last=pg["lastPage"],
+                )
 
-                for item in data["data"]["anime"]["mediaList"]:
-                    media = item["media"]
+                if not is_manga:
+                    for item in data["data"]["anime"]["mediaList"]:
+                        media = item["media"]
 
-                    anime = Anime(
-                        id=media["id"],
-                        title=media["title"],
-                        url=media["siteUrl"],
-                        episodes=media["episodes"],
-                        description=media["description"],
-                        format=media["format"],
-                        status=media["status"],
-                        duration=media["duration"],
-                        genres=media["genres"],
-                        is_adult=media["isAdult"],
-                        tags=media["tags"],
-                        studios=media["studios"],
-                        start_date=media["startDate"],
-                        end_date=media["endDate"],
-                        season=dict(
-                            name=media["season"],
-                            year=media["seasonYear"],
-                            number=media["seasonInt"],
-                        ),
-                        country=media["countryOfOrigin"],
-                        cover=media["coverImage"],
-                        banner=media["bannerImage"],
-                        source=media["source"],
-                        hashtag=media["hashtag"],
-                        synonyms=media["synonyms"],
-                        score=dict(
-                            mean=media["meanScore"],
-                            average=media["averageScore"],
-                        ),
-                        next_airing=media["nextAiringEpisode"],
-                        trailer=media["trailer"],
-                        staff=media["staff"],
-                        characters=media["characters"],
-                        popularity=media["popularity"],
-                        rankings=[
-                            Ranking(
-                                type=i["type"],
-                                all_time=i["allTime"],
-                                format=i["format"],
-                                rank=i["rank"],
-                                year=i["year"],
-                                season=i["season"],
-                            )
-                            for i in media["rankings"]
-                        ],
-                    )
-
-                    anime_list.append(
-                        MediaList(
-                            id=item["id"],
-                            status=item["status"],
-                            score=item["score"],
-                            progress=item["progress"],
-                            repeat=item["repeat"],
-                            priority=item["priority"],
-                            start_date=item["startedAt"],
-                            complete_date=item["completedAt"],
-                            update_date=item["updatedAt"],
-                            create_date=item["createdAt"],
-                            media=anime,
+                        anime = Anime(
+                            id=media["id"],
+                            title=media["title"],
+                            url=media["siteUrl"],
+                            episodes=media["episodes"],
+                            description=media["description"],
+                            format=media["format"],
+                            status=media["status"],
+                            duration=media["duration"],
+                            genres=media["genres"],
+                            is_adult=media["isAdult"],
+                            tags=media["tags"],
+                            studios=media["studios"],
+                            start_date=media["startDate"],
+                            end_date=media["endDate"],
+                            season=dict(
+                                name=media["season"],
+                                year=media["seasonYear"],
+                                number=media["seasonInt"],
+                            ),
+                            country=media["countryOfOrigin"],
+                            cover=media["coverImage"],
+                            banner=media["bannerImage"],
+                            source=media["source"],
+                            hashtag=media["hashtag"],
+                            synonyms=media["synonyms"],
+                            score=dict(
+                                mean=media["meanScore"],
+                                average=media["averageScore"],
+                            ),
+                            next_airing=media["nextAiringEpisode"],
+                            trailer=media["trailer"],
+                            staff=media["staff"],
+                            characters=media["characters"],
+                            popularity=media["popularity"],
+                            rankings=[
+                                Ranking(
+                                    type=i["type"],
+                                    all_time=i["allTime"],
+                                    format=i["format"],
+                                    rank=i["rank"],
+                                    year=i["year"],
+                                    season=i["season"],
+                                )
+                                for i in media["rankings"]
+                            ],
                         )
-                    )
 
-                for item in data["data"]["manga"]["mediaList"]:
-                    media = item["media"]
-
-                    manga = Manga(
-                        id=media["id"],
-                        title=media["title"],
-                        url=media["siteUrl"],
-                        chapters=media["chapters"],
-                        description=media["description"],
-                        status=media["status"],
-                        genres=media["genres"],
-                        is_adult=media["isAdult"],
-                        tags=media["tags"],
-                        studios=media["studios"],
-                        start_date=media["startDate"],
-                        end_date=media["endDate"],
-                        season=dict(
-                            name=media["season"],
-                            year=media["seasonYear"],
-                            number=media["seasonInt"],
-                        ),
-                        country=media["countryOfOrigin"],
-                        cover=media["coverImage"],
-                        banner=media["bannerImage"],
-                        source=media["source"],
-                        hashtag=media["hashtag"],
-                        synonyms=media["synonyms"],
-                        score=dict(
-                            mean=media["meanScore"],
-                            average=media["averageScore"],
-                        ),
-                        next_airing=media["nextAiringEpisode"],
-                        trailer=media["trailer"],
-                        staff=media["staff"],
-                        characters=media["characters"],
-                        volumes=media["volumes"],
-                        popularity=media["popularity"],
-                        rankings=[
-                            Ranking(
-                                type=i["type"],
-                                all_time=i["allTime"],
-                                format=i["format"],
-                                rank=i["rank"],
-                                year=i["year"],
-                                season=i["season"],
+                        res.append(
+                            MediaList(
+                                id=item["id"],
+                                status=item["status"],
+                                score=item["score"],
+                                progress=item["progress"],
+                                repeat=item["repeat"],
+                                priority=item["priority"],
+                                start_date=item["startedAt"],
+                                complete_date=item["completedAt"],
+                                update_date=item["updatedAt"],
+                                create_date=item["createdAt"],
+                                media=anime,
                             )
-                            for i in media["rankings"]
-                        ],
-                    )
-
-                    manga_list.append(
-                        MediaList(
-                            id=item["id"],
-                            status=item["status"],
-                            score=item["score"],
-                            progress=item["progress"],
-                            repeat=item["repeat"],
-                            priority=item["priority"],
-                            start_date=item["startedAt"],
-                            complete_date=item["completedAt"],
-                            update_date=item["updatedAt"],
-                            create_date=item["createdAt"],
-                            media=manga,
                         )
-                    )
 
-                return anime_list, manga_list
+                if is_manga:
+                    for item in data["data"]["manga"]["mediaList"]:
+                        media = item["media"]
+
+                        manga = Manga(
+                            id=media["id"],
+                            title=media["title"],
+                            url=media["siteUrl"],
+                            chapters=media["chapters"],
+                            description=media["description"],
+                            status=media["status"],
+                            genres=media["genres"],
+                            is_adult=media["isAdult"],
+                            tags=media["tags"],
+                            studios=media["studios"],
+                            start_date=media["startDate"],
+                            end_date=media["endDate"],
+                            season=dict(
+                                name=media["season"],
+                                year=media["seasonYear"],
+                                number=media["seasonInt"],
+                            ),
+                            country=media["countryOfOrigin"],
+                            cover=media["coverImage"],
+                            banner=media["bannerImage"],
+                            source=media["source"],
+                            hashtag=media["hashtag"],
+                            synonyms=media["synonyms"],
+                            score=dict(
+                                mean=media["meanScore"],
+                                average=media["averageScore"],
+                            ),
+                            next_airing=media["nextAiringEpisode"],
+                            trailer=media["trailer"],
+                            staff=media["staff"],
+                            characters=media["characters"],
+                            volumes=media["volumes"],
+                            popularity=media["popularity"],
+                            rankings=[
+                                Ranking(
+                                    type=i["type"],
+                                    all_time=i["allTime"],
+                                    format=i["format"],
+                                    rank=i["rank"],
+                                    year=i["year"],
+                                    season=i["season"],
+                                )
+                                for i in media["rankings"]
+                            ],
+                        )
+
+                        res.append(
+                            MediaList(
+                                id=item["id"],
+                                status=item["status"],
+                                score=item["score"],
+                                progress=item["progress"],
+                                repeat=item["repeat"],
+                                priority=item["priority"],
+                                start_date=item["startedAt"],
+                                complete_date=item["completedAt"],
+                                update_date=item["updatedAt"],
+                                create_date=item["createdAt"],
+                                media=manga,
+                            )
+                        )
+
+                return res, pagination
 
             except Exception:
                 pass
@@ -885,6 +960,7 @@ class Client:
         content_type: str = "anime",
         page: int = 1,
         limit: int = 25,
+        pagination: bool = False,
     ) -> Optional[List[ListActivity]]:
         """Returns activity of a user.
 
@@ -893,6 +969,7 @@ class Client:
             content_type (str, optional): anime, manga, text or message. Defaults to "anime".
             page (int, optional): Current page. Defaults to 1.
             limit (int, optional): Maximum items per page. Defaults to 25.
+            pagination (bool, optional): Option to return pagination info. Defaults to False.
 
         Raises:
             TypeError: If content type is not a string.
@@ -914,21 +991,28 @@ class Client:
                 user = self.get_user(name=id)
                 id = user.id
             except Exception:
-                raise TypeError(
-                    f"id argument must be an int, not '{id.__class__.__name__}'"
-                )
+                raise TypeError(f"could not get userid from username '{id}'")
         elif not isinstance(id, int):
             raise TypeError(
                 f"id argument must be an int, not '{id.__class__.__name__}'"
             )
+
         if content_type == "anime":
-            return self.get_anime_activity(user_id=id, page=page, limit=limit)
+            activity, pages = self.get_anime_activity(
+                user_id=id, page=page, limit=limit
+            )
         elif content_type == "manga":
-            return self.get_manga_activity(user_id=id, page=page, limit=limit)
+            activity, pages = self.get_manga_activity(
+                user_id=id, page=page, limit=limit
+            )
         elif content_type == "text":
-            return self.get_text_activity(user_id=id, page=page, limit=limit)
+            activity, pages = self.get_text_activity(user_id=id, page=page, limit=limit)
         elif content_type == "message":
             return self.get_message_activity(user_id=id, page=page, limit=limit)
+
+        if pagination:
+            return activity, pages
+        return activity
 
     def get_anime_activity(
         self, user_id: int, limit: int, page: int = 1
@@ -952,6 +1036,13 @@ class Client:
         if data["data"]:
             try:
                 items = data["data"]["Page"]["activities"]
+                page = data["data"]["Page"]["pageInfo"]
+                pagination = PageInfo(
+                    total_items=page["total"],
+                    current=page["currentPage"],
+                    last=page["lastPage"],
+                )
+
                 result = []
 
                 for item in items:
@@ -1016,7 +1107,7 @@ class Client:
                         )
                     )
 
-                return result
+                return result, pagination
             except Exception:
                 pass
         return None
@@ -1046,6 +1137,13 @@ class Client:
         if data["data"]:
             try:
                 items = data["data"]["Page"]["activities"]
+                page = data["data"]["Page"]["pageInfo"]
+                pagination = PageInfo(
+                    total_items=page["total"],
+                    current=page["currentPage"],
+                    last=page["lastPage"],
+                )
+
                 result = []
 
                 for item in items:
@@ -1109,7 +1207,7 @@ class Client:
                         )
                     )
 
-                return result
+                return result, pagination
             except Exception:
                 pass
         return None
@@ -1135,6 +1233,13 @@ class Client:
         if data["data"]:
             try:
                 items = data["data"]["Page"]["activities"]
+                page = data["data"]["Page"]["pageInfo"]
+                pagination = PageInfo(
+                    total_items=page["total"],
+                    current=page["currentPage"],
+                    last=page["lastPage"],
+                )
+
                 result = []
 
                 for item in items:
@@ -1154,7 +1259,7 @@ class Client:
                         )
                     )
 
-                return result
+                return result, pagination
             except Exception:
                 pass
         return None
