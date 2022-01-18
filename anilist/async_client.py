@@ -116,7 +116,9 @@ class Client:
         else:
             raise TypeError("There is no such content type.")
 
-        return search if not pagination else search, pages
+        if pagination:
+            return search, pages
+        return search
 
     async def get(
         self,
@@ -179,12 +181,16 @@ class Client:
             anime, pages = await self.get_list(
                 user_id=id, limit=limit, page=page, content_type="anime"
             )
-            return anime if not pagination else anime, pages
+            if pagination:
+                return anime, pages
+            return anime
         elif content_type == "list_manga":
             manga, pages = await self.get_list(
                 user_id=id, limit=limit, page=page, content_type="manga"
             )
-            return manga if not pagination else manga, pages
+            if pagination:
+                return manga, pages
+            return manga
         elif content_type == "user":
             raise TypeError("id argument must be a string for the user object.")
         else:
@@ -1078,7 +1084,9 @@ class Client:
         elif content_type == "message":
             return await self.get_message_activity(user_id=id, page=page, limit=limit)
 
-        return activity if not pagination else activity, pages
+        if pagination:
+            return activity, pages
+        return activity
 
     async def get_anime_activity(
         self, user_id: int, limit: int, page: int = 1
