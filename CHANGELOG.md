@@ -10,6 +10,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 1.0.7 (January 18th, 2022)
+
+### Added
+
+- Pagination.
+- `rewatched` and `reread` activity status.
+
+### Changed
+
+- Fix .vscode gitignore.
+- Fix user and staff search queries.
+- Update get_activity type error.
+
 ## 1.0.6 (October 20th, 2021)
 
 ### Added
