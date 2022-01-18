@@ -1057,9 +1057,7 @@ class Client:
                 user = await self.get_user(name=id)
                 id = user.id
             except Exception:
-                raise TypeError(
-                    f"id argument must be an int, not '{id.__class__.__name__}'"
-                )
+                raise TypeError(f"could not get userid from username '{id}'")
         elif not isinstance(id, int):
             raise TypeError(
                 f"id argument must be an int, not '{id.__class__.__name__}'"

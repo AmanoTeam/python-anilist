@@ -74,7 +74,7 @@ query($search: String, $page: Int = 1, $per_page: Int = 10) {
 """
 
 STAFF_SEARCH_QUERY = """
-query ($name: String, $page: Int = 1, $per_page: Int = 10) {
+query ($search: String, $page: Int = 1, $per_page: Int = 10) {
     Page(page: $page, perPage: $per_page) {
         pageInfo {
             total
