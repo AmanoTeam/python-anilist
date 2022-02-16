@@ -1,0 +1,25 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2021 Amano Team <https://amanoteam.com/> and the python-anilist contributors
+
+query ($name: String, $id: Int) {
+    MediaList(userName: $name, mediaId: $id) {
+        id
+        status
+        score(format: POINT_100)
+        progress
+        repeat
+        priority
+        startedAt {
+            year
+            month
+            day
+        }
+        completedAt {
+            year
+            month
+            day
+        }
+        updatedAt
+        createdAt
+    }
+}

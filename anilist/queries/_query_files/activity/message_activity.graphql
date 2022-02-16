@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2021 Amano Team <https://amanoteam.com/> and the python-anilist contributors
+
+query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
+    Page(page: $page, perPage: $per_page) {
+        activities(userId: $user_id, type: MESSAGE, sort: ID_DESC) {
+            ... on MessageActivity {
+                id
+              	recipient {
+                  id
+                  name
+                  avatar {
+                    large
+                    medium
+                  }
+                }
+              	messenger {
+                  id
+                  name
+                  avatar {
+                    large
+                    medium
+                  }
+                }
+                replyCount
+                text: message(asHtml: false)
+              	textHtml: message(asHtml: true)
+              	siteUrl
+              	createdAt
+            }
+        }
+    }
+}
