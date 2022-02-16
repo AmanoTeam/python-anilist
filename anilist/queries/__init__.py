@@ -22,6 +22,8 @@ __all__ = (
     "USER_GET_QUERY",
     "LIST_GET_QUERY",
     "LIST_ITEM_GET_QUERY",
+    "LIST_GET_QUERY_ANIME",
+    "LIST_GET_QUERY_MANGA",
     "LIST_ACTIVITY_QUERY",
     "TEXT_ACTIVITY_QUERY",
     "MESSAGE_ACTIVITY_QUERY",
@@ -42,6 +44,8 @@ STAFF_GET_QUERY = read_text(get, "staff_get.graphql")
 USER_GET_QUERY = read_text(get, "user_get.graphql")
 LIST_GET_QUERY = read_text(get, "list_get.graphql")
 LIST_ITEM_GET_QUERY = read_text(get, "list_item_get.graphql")
+LIST_GET_QUERY_ANIME = read_text(get, "list_get_anime.graphql")
+LIST_GET_QUERY_MANGA = read_text(get, "list_get_manga.graphql")
 
 # I wonder if the activity queries should be lumped under "get" instead.
 # They function pretty much exactly the same.

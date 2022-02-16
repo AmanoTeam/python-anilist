@@ -1,0 +1,129 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2021 Amano Team <https://amanoteam.com/> and the python-anilist contributors
+
+query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
+    manga: Page(page: $page, perPage: $per_page) {
+        pageInfo {
+            total
+            currentPage
+            lastPage
+        }
+        mediaList(userId: $user_id, sort: UPDATED_TIME_DESC, type: MANGA) {
+            id
+            status
+            score(format: POINT_100)
+            progress
+            repeat
+            priority
+            startedAt {
+                year
+                month
+                day
+            }
+            completedAt {
+                year
+                month
+                day
+            }
+            updatedAt
+            createdAt
+            media {
+                type
+                id
+                title {
+                    romaji
+                    english
+                    native
+                }
+                siteUrl
+                chapters
+                volumes
+                description
+                format
+                status
+                duration
+                genres
+                isAdult
+                tags {
+                    name
+                }
+                studios {
+                    nodes {
+                        name
+                    }
+                }
+                startDate {
+                    year
+                    month
+                    day
+                }
+                endDate {
+                    year
+                    month
+                    day
+                }
+                season
+                seasonYear
+                seasonInt
+                countryOfOrigin
+                coverImage {
+                    medium
+                    large
+                    extraLarge
+                }
+                bannerImage
+                source
+                hashtag
+                synonyms
+                meanScore
+                averageScore
+                popularity
+                rankings {
+                    type
+                    allTime
+                    format
+                    rank
+                    year
+                    season
+                }
+                nextAiringEpisode {
+                    timeUntilAiring
+                    airingAt
+                    episode
+                }
+                trailer {
+                    id
+                    thumbnail
+                    site
+                }
+                staff(sort: FAVOURITES_DESC) {
+                    edges {
+                        node {
+                            name {
+                                first
+                                full
+                                native
+                                last
+                            }
+                            id
+                        }
+                    }
+                }
+                characters(sort: FAVOURITES_DESC) {
+                    edges {
+                        node {
+                            name {
+                                first
+                                full
+                                native
+                                last
+                            }
+                            id
+                        }
+                        role
+                    }
+                }
+            }
+        }
+    }
+}
