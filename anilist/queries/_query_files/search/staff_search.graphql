@@ -3,6 +3,11 @@
 
 query ($name: String, $page: Int = 1, $per_page: Int = 10) {
     Page(page: $page, perPage: $per_page) {
+        pageInfo {
+            total
+            currentPage
+            lastPage
+        }
         staff(search: $name, sort: SEARCH_MATCH) {
             id
             name {

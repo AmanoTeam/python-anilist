@@ -3,6 +3,11 @@
 
 query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
     Page(page: $page, perPage: $per_page) {
+        pageInfo {
+            total
+            currentPage
+            lastPage
+        }
         activities(userId: $user_id, type: TEXT, sort: ID_DESC) {
             ... on TextActivity {
                 id
