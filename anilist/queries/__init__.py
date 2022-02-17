@@ -3,12 +3,9 @@
 #
 # SPDX-License-Identifier: MIT
 
-from ._query_files import activity, get, search
+from importlib.resources import read_text
 
-try:  # because we're supposed to support Python 3.6. I don't get it, but ok.
-    from importlib.resources import read_text
-except ImportError:  # use the shim instead
-    from anilist._compat import read_text
+from ._query_files import activity, get, search
 
 
 __all__ = (
