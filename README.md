@@ -16,7 +16,7 @@
 
 ## Requirements
 
-- Python 3.6 or higher.
+- Python 3.7 or higher.
 - httpx 0.14 or higher.
 
 ## Installation
@@ -36,7 +36,6 @@ python3 -m pip install git+https://github.com/AmanoTeam/python-anilist.git#egg=p
 ## What's left to do?
 
 - Write the API Documentation.
-- Add support for more types of content.
 - Show some examples.
 
 ## Credits
@@ -45,7 +44,7 @@ python3 -m pip install git+https://github.com/AmanoTeam/python-anilist.git#egg=p
 
 ## License
 
-Copyright © 2021 [AmanoTeam](https://github.com/AmanoTeam)
+Copyright © 2021-2022 [AmanoTeam](https://github.com/AmanoTeam)
 and the python-anilist contributors
 
 Licensed under the [Expat/MIT license](LICENSE).

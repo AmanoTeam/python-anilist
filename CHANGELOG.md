@@ -10,6 +10,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 1.0.8 (February 16th, 2022)
+
+### Added
+
+- `.relations` for animes and mangas.
+
+### Changed
+
+- Separate queries into separate files.
+- Happy new year (late).
+
 ## 1.0.7 (January 18th, 2022)
 
 ### Added
