@@ -10,6 +10,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 1.0.9 (February 16th, 2022)
+
+### Added
+
+- hotfix: queries: add missing `pageInfo` from https://github.com/AmanoTeam/python-anilist/commit/2c9f7efd5127371fd09b6630c1564c13755131d1.
+
 ## 1.0.8 (February 16th, 2022)
 
 ### Added
