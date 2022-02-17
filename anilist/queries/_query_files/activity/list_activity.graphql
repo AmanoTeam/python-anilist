@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# Copyright (C) 2021 Amano Team <https://amanoteam.com/> and the python-anilist contributors
+# Copyright (C) 2021-2022 Amano Team <https://amanoteam.com/> and the python-anilist contributors
 
 query ($user_id: Int, $activity_type: ActivityType, $page: Int = 1, $per_page: Int = 25) {
     Page(page: $page, perPage: $per_page) {

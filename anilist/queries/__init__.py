@@ -1,5 +1,7 @@
+#!/usr/bin/env python3
+# Copyright (C) 2021-2022 Amano Team <https://amanoteam.com/>
+#
 # SPDX-License-Identifier: MIT
-# Copyright (C) 2021 Amano Team <https://amanoteam.com/> and the python-anilist contributors
 
 from ._query_files import activity, get, search
 

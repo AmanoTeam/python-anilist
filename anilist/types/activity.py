@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (C) 2021 Amano Team <https://amanoteam.com/>
+# Copyright (C) 2021-2022 Amano Team <https://amanoteam.com/>
 #
 # SPDX-License-Identifier: MIT
 

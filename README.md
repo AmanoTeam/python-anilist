@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2021 Amano Team <https://amanoteam.com/>, nfitzen
+  ~ Copyright (C) 2021-2022 Amano Team <https://amanoteam.com/>, nfitzen
   ~ 
   ~ SPDX-License-Identifier: MIT
   -->
