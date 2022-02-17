@@ -48,7 +48,8 @@ class Anime:
         staff: Dict = None,
         characters: Dict = None,
         popularity: int = None,
-        rankings: List[Ranking] = None
+        rankings: List[Ranking] = None,
+        relations: Dict = None
     ):
         self.id: int = id
         self.title = Title(
@@ -138,6 +139,32 @@ class Anime:
             self.popularity = popularity
         if rankings:
             self.rankings = rankings
+        if relations and len(relations["edges"]) > 0:
+            from .manga import Manga
+
+            self.relations = [(relation["relationType"], (Anime(
+                    id=relation["node"]["id"],
+                    title=relation["node"]["title"],
+                    url=relation["node"]["siteUrl"],
+                    episodes=relation["node"]["episodes"],
+                    description=relation["node"]["description"],
+                    format=relation["node"]["format"],
+                    status=relation["node"]["status"],
+                    is_adult=relation["node"]["isAdult"],
+                    cover=relation["node"]["coverImage"],
+                    banner=relation["node"]["bannerImage"],
+                ) if relation["node"]["type"] == "anime" else Manga(
+                    id=relation["node"]["id"],
+                    title=relation["node"]["title"],
+                    url=relation["node"]["siteUrl"],
+                    chapters=relation["node"]["chapters"],
+                    description=relation["node"]["description"],
+                    status=relation["node"]["status"],
+                    is_adult=relation["node"]["isAdult"],
+                    cover=relation["node"]["coverImage"],
+                    banner=relation["node"]["bannerImage"],
+                ))) for relation in relations["edges"]
+            ]
 
     def raw(self) -> Dict:
         return self.__dict__

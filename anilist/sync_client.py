@@ -431,6 +431,7 @@ class Client:
                         )
                         for i in item["rankings"]
                     ],
+                    relations=item["relations"],
                 )
             except Exception:
                 pass
@@ -499,6 +500,7 @@ class Client:
                         )
                         for i in item["rankings"]
                     ],
+                    relations=item["relations"],
                 )
             except Exception:
                 pass

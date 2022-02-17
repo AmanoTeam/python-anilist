@@ -96,6 +96,35 @@ query($id: Int) {
                 }
             }
             volumes
+            relations {
+                edges {
+                    node {
+                        id
+                        title {
+                            romaji
+                            english
+                            native
+                        }
+                        type
+                        siteUrl
+                        episodes
+                        chapters
+                        description
+                        format
+                        status
+                        duration
+                        genres
+                        isAdult
+                        coverImage {
+                            medium
+                            large
+                            extraLarge
+                        }
+                        bannerImage
+                    }
+                    relationType(version: 2)
+                }
+            }
         }
     }
 }
