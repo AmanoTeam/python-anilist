@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 
 import httpx
+
 from anilist.types import (
     Anime,
     Character,
@@ -20,7 +21,7 @@ from anilist.types import (
     Ranking,
     PageInfo,
 )
-from typing import List, Optional, Union, Tuple
+from typing import Optional, Union, List, Tuple
 from anilist.utils import (
     API_URL,
     HEADERS,
