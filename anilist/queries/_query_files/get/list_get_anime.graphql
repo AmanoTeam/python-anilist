@@ -106,6 +106,7 @@ query ($user_id: Int, $page: Int = 1, $per_page: Int = 25) {
                             }
                             id
                         }
+                        role
                     }
                 }
                 characters(sort: FAVOURITES_DESC) {
