@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-from typing import Dict, Callable
+from typing import Callable, Dict
 
 
 class Trailer:

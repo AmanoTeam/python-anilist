@@ -3,45 +3,46 @@
 #
 # SPDX-License-Identifier: MIT
 
+from typing import List, Optional, Tuple, Union
+
 import httpx
 
 from anilist.types import (
     Anime,
     Character,
-    Manga,
-    User,
     FavouritesUnion,
-    Staff,
-    Studio,
-    StatisticsUnion,
-    Statistic,
     ListActivity,
-    TextActivity,
+    Manga,
     MediaList,
-    Ranking,
     PageInfo,
+    Ranking,
+    Staff,
+    Statistic,
+    StatisticsUnion,
+    Studio,
+    TextActivity,
+    User,
 )
-from typing import Optional, Union, List, Tuple
 from anilist.utils import (
-    API_URL,
-    HEADERS,
     ANIME_GET_QUERY,
     ANIME_SEARCH_QUERY,
-    MANGA_GET_QUERY,
-    MANGA_SEARCH_QUERY,
+    API_URL,
     CHARACTER_GET_QUERY,
     CHARACTER_SEARCH_QUERY,
-    STAFF_GET_QUERY,
-    STAFF_SEARCH_QUERY,
-    USER_GET_QUERY,
-    USER_SEARCH_QUERY,
+    HEADERS,
+    LIST_ACTIVITY_QUERY,
     LIST_GET_QUERY_ANIME,
     LIST_GET_QUERY_MANGA,
     LIST_ITEM_GET_QUERY,
-    LIST_ACTIVITY_QUERY,
-    TEXT_ACTIVITY_QUERY,
+    MANGA_GET_QUERY,
+    MANGA_SEARCH_QUERY,
     MESSAGE_ACTIVITY_QUERY,
     MESSAGE_ACTIVITY_QUERY_SENT,
+    STAFF_GET_QUERY,
+    STAFF_SEARCH_QUERY,
+    TEXT_ACTIVITY_QUERY,
+    USER_GET_QUERY,
+    USER_SEARCH_QUERY,
 )
 
 

@@ -3,10 +3,11 @@
 #
 # SPDX-License-Identifier: MIT
 
-from .date import Date
+from typing import Callable, Dict, Union
+
 from .anime import Anime
+from .date import Date
 from .manga import Manga
-from typing import Dict, Callable, Union
 
 
 class MediaList:

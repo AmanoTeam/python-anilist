@@ -3,12 +3,13 @@
 #
 # SPDX-License-Identifier: MIT
 
-from .name import Name
-from .image import Image
+from typing import Callable, Dict, Tuple
+
 from .date import Date
 from .favourites import FavouritesUnion
+from .image import Image
+from .name import Name
 from .statistics import StatisticsUnion
-from typing import Callable, Dict, Tuple
 
 
 def get_profile_color(color: str) -> Tuple[int, int, int]:

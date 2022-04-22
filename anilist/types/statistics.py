@@ -3,8 +3,9 @@
 #
 # SPDX-License-Identifier: MIT
 
+from typing import Callable, Dict, List
+
 from .score import Score
-from typing import Dict, Callable, List
 
 
 class Ranking:

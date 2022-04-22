@@ -2,6 +2,7 @@
 # Copyright (C) 2021-2022 Amano Team <https://amanoteam.com/> and the python-anilist contributors
 
 import pytest
+
 import anilist
 
 

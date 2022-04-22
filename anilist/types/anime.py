@@ -3,16 +3,18 @@
 #
 # SPDX-License-Identifier: MIT
 
-from .statistics import Ranking
+from typing import Callable, Dict, List
+
 from .character import Character
 from .cover import Cover
 from .date import Date
 from .next_airing import NextAiring
-from .title import Title
-from .trailer import Trailer
 from .score import Score
 from .season import Season
-from typing import Callable, Dict, List
+from .staff import Staff
+from .statistics import Ranking
+from .title import Title
+from .trailer import Trailer
 
 
 class Anime:
@@ -123,8 +125,12 @@ class Anime:
             )
         if staff and len(staff["edges"]) > 0:
             self.staff = [
-                Character(id=character["node"]["id"], name=character["node"]["name"])
-                for character in staff["edges"]
+                Staff(
+                    id=person["node"]["id"],
+                    name=person["node"]["name"],
+                    role=person["role"],
+                )
+                for person in staff["edges"]
             ]
         if characters and len(characters["edges"]) > 0:
             self.characters = [
@@ -142,28 +148,37 @@ class Anime:
         if relations and len(relations["edges"]) > 0:
             from .manga import Manga
 
-            self.relations = [(relation["relationType"], (Anime(
-                    id=relation["node"]["id"],
-                    title=relation["node"]["title"],
-                    url=relation["node"]["siteUrl"],
-                    episodes=relation["node"]["episodes"],
-                    description=relation["node"]["description"],
-                    format=relation["node"]["format"],
-                    status=relation["node"]["status"],
-                    is_adult=relation["node"]["isAdult"],
-                    cover=relation["node"]["coverImage"],
-                    banner=relation["node"]["bannerImage"],
-                ) if relation["node"]["type"] == "anime" else Manga(
-                    id=relation["node"]["id"],
-                    title=relation["node"]["title"],
-                    url=relation["node"]["siteUrl"],
-                    chapters=relation["node"]["chapters"],
-                    description=relation["node"]["description"],
-                    status=relation["node"]["status"],
-                    is_adult=relation["node"]["isAdult"],
-                    cover=relation["node"]["coverImage"],
-                    banner=relation["node"]["bannerImage"],
-                ))) for relation in relations["edges"]
+            self.relations = [
+                (
+                    relation["relationType"],
+                    (
+                        Anime(
+                            id=relation["node"]["id"],
+                            title=relation["node"]["title"],
+                            url=relation["node"]["siteUrl"],
+                            episodes=relation["node"]["episodes"],
+                            description=relation["node"]["description"],
+                            format=relation["node"]["format"],
+                            status=relation["node"]["status"],
+                            is_adult=relation["node"]["isAdult"],
+                            cover=relation["node"]["coverImage"],
+                            banner=relation["node"]["bannerImage"],
+                        )
+                        if relation["node"]["type"] == "anime"
+                        else Manga(
+                            id=relation["node"]["id"],
+                            title=relation["node"]["title"],
+                            url=relation["node"]["siteUrl"],
+                            chapters=relation["node"]["chapters"],
+                            description=relation["node"]["description"],
+                            status=relation["node"]["status"],
+                            is_adult=relation["node"]["isAdult"],
+                            cover=relation["node"]["coverImage"],
+                            banner=relation["node"]["bannerImage"],
+                        )
+                    ),
+                )
+                for relation in relations["edges"]
             ]
 
     def raw(self) -> Dict:

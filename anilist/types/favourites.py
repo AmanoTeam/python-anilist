@@ -3,11 +3,12 @@
 #
 # SPDX-License-Identifier: MIT
 
+from typing import Callable, Dict, List
+
 from .anime import Anime
-from .manga import Manga
 from .character import Character
+from .manga import Manga
 from .staff import Staff, Studio
-from typing import List, Dict, Callable
 
 
 class FavouritesUnion:

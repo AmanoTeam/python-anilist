@@ -79,6 +79,7 @@ query($id: Int) {
                         }
                         id
                     }
+                    role
                 }
             }
             characters(sort: FAVOURITES_DESC) {

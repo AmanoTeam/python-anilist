@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-from datetime import datetime, date
+from datetime import date, datetime
 from typing import Callable, Dict
 
 

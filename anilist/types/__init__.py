@@ -3,25 +3,25 @@
 #
 # SPDX-License-Identifier: MIT
 
+from .activity import ListActivity, ListActivityStatus, TextActivity
 from .anime import Anime
 from .character import Character
 from .cover import Cover
 from .date import Date
+from .favourites import FavouritesUnion
 from .image import Image
+from .manga import Manga
+from .medialist import MediaList
 from .name import Name
 from .next_airing import NextAiring
-from .manga import Manga
 from .page import PageInfo
-from .title import Title
-from .trailer import Trailer
 from .score import Score
 from .season import Season
 from .staff import Staff, Studio
-from .favourites import FavouritesUnion
-from .statistics import Statistic, StatisticsUnion, Ranking
+from .statistics import Ranking, Statistic, StatisticsUnion
+from .title import Title
+from .trailer import Trailer
 from .user import User
-from .activity import ListActivity, ListActivityStatus, TextActivity
-from .medialist import MediaList
 
 __all__ = [
     "Anime",

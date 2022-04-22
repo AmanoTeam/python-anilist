@@ -3,12 +3,12 @@
 #
 # SPDX-License-Identifier: MIT
 
-from .user import User
-from .anime import Anime
-from .manga import Manga
-from .date import Date
+from typing import Callable, Dict, List, Optional, Union
 
-from typing import List, Union, Dict, Callable, Optional
+from .anime import Anime
+from .date import Date
+from .manga import Manga
+from .user import User
 
 
 class ListActivityStatus:

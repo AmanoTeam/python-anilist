@@ -3,8 +3,9 @@
 #
 # SPDX-License-Identifier: MIT
 
-from .date import Date
 from typing import Callable, Dict
+
+from .date import Date
 
 
 class NextAiring:

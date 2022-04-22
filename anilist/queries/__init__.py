@@ -7,7 +7,6 @@ from importlib.resources import read_text
 
 from ._query_files import activity, get, search
 
-
 __all__ = (
     "ANIME_SEARCH_QUERY",
     "MANGA_SEARCH_QUERY",

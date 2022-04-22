@@ -3,10 +3,11 @@
 #
 # SPDX-License-Identifier: MIT
 
-from .name import Name
-from .image import Image
-from .date import Date
 from typing import Callable, Dict
+
+from .date import Date
+from .image import Image
+from .name import Name
 
 
 class Character:
