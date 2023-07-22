@@ -5,8 +5,10 @@
 
 from typing import Callable, Dict
 
+from .object import Object
 
-class PageInfo:
+
+class PageInfo(Object):
     """Page object. Contains Pagination info."""
 
     def __init__(
@@ -19,12 +21,3 @@ class PageInfo:
         self.total_items = total_items
         self.current = current
         self.last = last
-
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())

@@ -5,8 +5,10 @@
 
 from typing import Callable, Dict
 
+from .object import Object
 
-class Cover:
+
+class Cover(Object):
     """Cover object. Contains URL's for each size."""
 
     def __init__(
@@ -23,11 +25,6 @@ class Cover:
         if extra_large:
             self.extra_large = extra_large
 
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())
+    def __eq__(self, other) -> bool:
+        if isinstance(other, self.__class__):
+            return self.__repr__() == other.__repr__()

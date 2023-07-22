@@ -5,10 +5,11 @@
 
 from typing import Callable, Dict, List
 
+from .object import Object
 from .score import Score
 
 
-class Ranking:
+class Ranking(Object):
     """Ranking of a media object."""
 
     def __init__(
@@ -30,17 +31,8 @@ class Ranking:
         if season:
             self.season = season
 
-    def raw(self) -> Dict:
-        return self.__dict__
 
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())
-
-
-class Statistic:
+class Statistic(Object):
     """Statistic object of a user."""
 
     def __init__(
@@ -69,28 +61,10 @@ class Statistic:
         if tags:
             self.tags = tags
 
-    def raw(self) -> Dict:
-        return self.__dict__
 
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())
-
-
-class StatisticsUnion:
+class StatisticsUnion(Object):
     """Union containing anime and manga statistics of a user."""
 
     def __init__(self, *, anime: Statistic, manga: Statistic) -> None:
         self.anime = anime
         self.manga = manga
-
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())
