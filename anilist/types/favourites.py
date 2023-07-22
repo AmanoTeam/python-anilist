@@ -17,14 +17,25 @@ class FavouritesUnion:
     favourites of a user."""
 
     def __init__(
-        self,
-        *,
-        anime: List[Anime] = [],
-        manga: List[Manga] = [],
-        characters: List[Character] = [],
-        staff: List[Staff] = [],
-        studios: List[Studio] = [],
+            self,
+            *,
+            anime: List[Anime] = None,
+            manga: List[Manga] = None,
+            characters: List[Character] = None,
+            staff: List[Staff] = None,
+            studios: List[Studio] = None,
     ) -> None:
+        if not anime:
+            anime = []
+        if not manga:
+            manga = []
+        if not characters:
+            characters = []
+        if not staff:
+            staff = []
+        if not studios:
+            studios = []
+
         self.anime = anime
         self.manga = manga
         self.characters = characters
