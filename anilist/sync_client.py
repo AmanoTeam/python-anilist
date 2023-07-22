@@ -7,7 +7,7 @@ from typing import List, Optional, Tuple, Union
 
 import httpx
 
-from anilist.types import (
+from .types import (
     Anime,
     Character,
     FavouritesUnion,
@@ -23,7 +23,7 @@ from anilist.types import (
     TextActivity,
     User,
 )
-from anilist.utils import (
+from .utils import (
     ANIME_GET_QUERY,
     ANIME_SEARCH_QUERY,
     API_URL,
