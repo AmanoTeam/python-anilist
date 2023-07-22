@@ -33,6 +33,44 @@ For the latest development version:
 python3 -m pip install git+https://github.com/AmanoTeam/python-anilist.git#egg=python-anilist
 ```
 
+## Basic starting guide
+
+First, import the module
+```py
+import anilist
+```
+
+Next, define the client to interact with the API
+
+```py
+client = anilist.Client()
+```
+
+You can search for the name of something on the site using:
+- `client.search_user(name, limit=10)`
+- `client.search_anime(name, limit=10)`
+- `client.search_manga(name, limit=10)`
+- `client.search_character(name, limit=10)`
+- `client.search_staff(name, limit=10)`
+
+If you know the ID of something, then use the get() commands instead:
+- `client.get_user(ID)`
+- `client.get_anime(ID)`
+etc.
+
+Example code usage:
+
+```py
+from pythonanilist import anilist
+
+client = anilist.Client()
+
+madoka_list = client.search_anime("madoka", limit=10)  # returns list of up to 10 Anime object results
+madoka = madoka_list[0][0][0]  # assume you want the first search result
+print(madoka.title, madoka.id)
+
+>>> {'romaji': 'Mahou Shoujo Madoka☆Magica', 'english': 'Puella Magi Madoka Magica', 'native': '魔法少女まどか☆マギカ'} 9756
+```
 ## What's left to do?
 
 - Write the API Documentation.
