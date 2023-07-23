@@ -48,8 +48,8 @@ async def test_get(id, content_type):
 @pytest.mark.asyncio
 async def test_get_list_item():
     client = anilist.AsyncClient()
-    assert await client.get_list_item("travis", "5081") is not None
-    assert await client.get_list_item("travis", "72451") is not None
+    assert await client.get_list_item("travis", 132405) is not None
+    assert await client.get_list_item("travis", 30) is not None
 
 
 @pytest.mark.asyncio
