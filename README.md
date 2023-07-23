@@ -65,9 +65,15 @@ import anilist
 
 client = anilist.Client()
 
-madoka_list = client.search_anime("madoka", limit=10)  # returns list of up to 10 Anime object results
-madoka = madoka_list[0][0][0]  # assuming you want the first search result
-print(madoka.title, madoka.id)
+# a search returns a tuple (A, B) with A being the main data of the search,
+# and B being a PageInfo object containing info about the page of the search result
+search_result: tuple[list, PageInfo] = client.search_anime("madoka", limit=10)
+
+madoka_list: list[Anime] = search_result[0]  # taking "A" from the above tuple, this is a list of "Anime" objects
+
+madoka_magica: Anime = madoka_list[0]  # this chooses the first anime in the list of search results
+
+print(madoka.title, madoka.id)  # print that anime's title and anilist.co ID
 
 >>> {'romaji': 'Mahou Shoujo Madoka☆Magica', 'english': 'Puella Magi Madoka Magica', 'native': '魔法少女まどか☆マギカ'} 9756
 ```
@@ -82,7 +88,7 @@ print(madoka.title, madoka.id)
 
 ## License
 
-Copyright © 2021-2022 [AmanoTeam](https://github.com/AmanoTeam)
+Copyright © 2021-2023 [AmanoTeam](https://github.com/AmanoTeam)
 and the python-anilist contributors
 
 Licensed under the [Expat/MIT license](LICENSE).
