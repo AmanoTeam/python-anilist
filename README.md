@@ -33,6 +33,50 @@ For the latest development version:
 python3 -m pip install git+https://github.com/AmanoTeam/python-anilist.git#egg=python-anilist
 ```
 
+## Basic starting guide
+
+First, import the module
+```py
+import anilist
+```
+
+Next, define the client to interact with the API
+
+```py
+client = anilist.Client()
+```
+
+You can search for the name of something on the site using:
+- `client.search_user(name, limit=10)`
+- `client.search_anime(name, limit=10)`
+- `client.search_manga(name, limit=10)`
+- `client.search_character(name, limit=10)`
+- `client.search_staff(name, limit=10)`
+
+If you know the ID of something, then use the get() commands instead:
+- `client.get_user(ID)`
+- `client.get_anime(ID)`
+etc.
+
+Example code usage:
+
+```py
+import anilist
+
+client = anilist.Client()
+
+# a search returns a tuple (A, B) with A being the main data of the search,
+# and B being a PageInfo object containing info about the page of the search result
+search_result: tuple[list, PageInfo] = client.search_anime("madoka", limit=10)
+
+madoka_list: list[Anime] = search_result[0]  # taking "A" from the above tuple, this is a list of "Anime" objects
+
+madoka_magica: Anime = madoka_list[0]  # this chooses the first anime in the list of search results
+
+print(madoka.title, madoka.id)  # print that anime's title and anilist.co ID
+
+>>> {'romaji': 'Mahou Shoujo Madoka☆Magica', 'english': 'Puella Magi Madoka Magica', 'native': '魔法少女まどか☆マギカ'} 9756
+```
 ## What's left to do?
 
 - Write the API Documentation.
@@ -44,7 +88,7 @@ python3 -m pip install git+https://github.com/AmanoTeam/python-anilist.git#egg=p
 
 ## License
 
-Copyright © 2021-2022 [AmanoTeam](https://github.com/AmanoTeam)
+Copyright © 2021-2023 [AmanoTeam](https://github.com/AmanoTeam)
 and the python-anilist contributors
 
 Licensed under the [Expat/MIT license](LICENSE).

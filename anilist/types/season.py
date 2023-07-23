@@ -5,9 +5,11 @@
 
 from typing import Callable, Dict
 
+from .object import Object
 
-class Season:
-    """Season object that represents a seson."""
+
+class Season(Object):
+    """Season object that represents a season."""
 
     def __init__(
         self,
@@ -23,11 +25,10 @@ class Season:
         if number:
             self.number = number
 
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())
+    def __eq__(self, other) -> bool:
+        if isinstance(other, self.__class__):
+            if (self.name, self.year, self.number) == (other.name, other.year, other.number):
+                return True
+            
+    def __hash__(self) -> int:
+        return hash((self.name, self.year, self.number))

@@ -8,6 +8,7 @@ from typing import Callable, Dict, List, Optional, Union
 from .anime import Anime
 from .date import Date
 from .manga import Manga
+from .object import Hashable
 from .user import User
 
 
@@ -83,7 +84,7 @@ class ListActivityStatus:
         )
 
 
-class ListActivity:
+class ListActivity(Hashable):
     """List activity object.
 
     Args:
@@ -121,17 +122,8 @@ class ListActivity:
         if media:
             self.media = media
 
-    def raw(self) -> Dict:
-        return self.__dict__
 
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())
-
-
-class TextActivity:
+class TextActivity(Hashable):
     """Text activity object.
 
     Args:
@@ -179,12 +171,3 @@ class TextActivity:
             self.url = url
         if recipient:
             self.recipient = recipient
-
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())

@@ -5,8 +5,10 @@
 
 from typing import Callable, Dict
 
+from .object import Object
 
-class Title:
+
+class Title(Object):
     """Title object."""
 
     def __init__(
@@ -23,11 +25,6 @@ class Title:
         if native:
             self.native = native
 
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())
+    def __eq__(self, other) -> bool:
+        if isinstance(other, self.__class__):
+            return str(self) == str(other)

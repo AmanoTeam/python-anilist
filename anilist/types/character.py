@@ -8,9 +8,10 @@ from typing import Callable, Dict
 from .date import Date
 from .image import Image
 from .name import Name
+from .object import Hashable
 
 
-class Character:
+class Character(Hashable):
     """Character object."""
 
     def __init__(
@@ -60,12 +61,3 @@ class Character:
             self.gender = gender
         if is_favorite is not None:
             self.is_favorite = is_favorite
-
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())

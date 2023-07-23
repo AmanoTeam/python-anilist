@@ -45,8 +45,8 @@ def test_get(id, content_type):
 
 def test_get_list_item():
     client = anilist.Client()
-    assert client.get_list_item("travis", "5081") is not None
-    assert client.get_list_item("travis", "72451") is not None
+    assert client.get_list_item("travis", 132405) is not None
+    assert client.get_list_item("travis", 30) is not None
 
 
 @pytest.mark.parametrize(

@@ -5,8 +5,10 @@
 
 from typing import Callable, Dict
 
+from .object import Hashable
 
-class Trailer:
+
+class Trailer(Hashable):
     """Contains data for anime trailers."""
 
     def __init__(
@@ -24,12 +26,3 @@ class Trailer:
             self.site = site
             if site == "youtube":
                 self.url = f"https://youtu.be/{id}"
-
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())

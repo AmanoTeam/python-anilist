@@ -8,7 +8,7 @@ from typing import Callable, Dict, Tuple
 from .date import Date
 from .favourites import FavouritesUnion
 from .image import Image
-from .name import Name
+from .object import Hashable
 from .statistics import StatisticsUnion
 
 
@@ -42,7 +42,7 @@ def get_profile_color(color: str) -> Tuple[int, int, int]:
         return 255, 255, 255
 
 
-class User:
+class User(Hashable):
     """User object."""
 
     def __init__(
@@ -83,12 +83,3 @@ class User:
             self.donator_badge = donator_badge
         if profile_color:
             self.profile_color = get_profile_color(profile_color)
-
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())

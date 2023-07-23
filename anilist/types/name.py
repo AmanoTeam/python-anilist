@@ -5,8 +5,10 @@
 
 from typing import Callable, Dict
 
+from .object import Object
 
-class Name:
+
+class Name(Object):
     """Name object."""
 
     def __init__(
@@ -28,12 +30,3 @@ class Name:
             self.last = last
         if alternative:
             self.alternative = alternative
-
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())

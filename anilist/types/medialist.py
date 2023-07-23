@@ -8,9 +8,10 @@ from typing import Callable, Dict, Union
 from .anime import Anime
 from .date import Date
 from .manga import Manga
+from .object import Hashable
 
 
-class MediaList:
+class MediaList(Hashable):
     """List item containing state of a entry in a user's list."""
 
     def __init__(
@@ -57,12 +58,3 @@ class MediaList:
             self.create_date = Date.from_timestamp(create_date)
         if media:
             self.media = media
-
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())

@@ -3,14 +3,15 @@
 #
 # SPDX-License-Identifier: MIT
 
-from typing import Callable, Dict, List
+from typing import Dict, List
 
 from .date import Date
 from .image import Image
 from .name import Name
+from .object import Hashable
 
 
-class Studio:
+class Studio(Hashable):
     """Studio object."""
 
     def __init__(
@@ -31,7 +32,7 @@ class Studio:
             self.favourites = favourites
 
 
-class Staff:
+class Staff(Hashable):
     """Staff object."""
 
     def __init__(
@@ -97,12 +98,3 @@ class Staff:
             self.home_town = home_town
         if is_favorite is not None:
             self.is_favorite = is_favorite
-
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())

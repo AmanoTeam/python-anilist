@@ -6,9 +6,10 @@
 from typing import Callable, Dict
 
 from .date import Date
+from .object import Object
 
 
-class NextAiring:
+class NextAiring(Object):
     """Status of an airing anime."""
 
     def __init__(
@@ -24,12 +25,3 @@ class NextAiring:
             self.at = Date.from_timestamp(at)
         if episode:
             self.episode = episode
-
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())

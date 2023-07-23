@@ -5,8 +5,10 @@
 
 from typing import Callable, Dict
 
+from .object import Object
 
-class Score:
+
+class Score(Object):
     """Mean and average score union."""
 
     def __init__(
@@ -19,12 +21,3 @@ class Score:
             self.mean = mean
         if average:
             self.average = average
-
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())

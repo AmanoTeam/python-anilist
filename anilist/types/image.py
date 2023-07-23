@@ -5,8 +5,10 @@
 
 from typing import Callable, Dict
 
+from .object import Object
 
-class Image:
+
+class Image(Object):
     """Image object."""
 
     def __init__(
@@ -20,11 +22,6 @@ class Image:
         if large:
             self.large = large
 
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.raw() == other.raw()
