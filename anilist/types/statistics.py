@@ -44,9 +44,9 @@ class Statistic(Object):
         episodes_watched: int = None,
         chapters_read: int = None,
         volumes_read: int = None,
-        statuses: List[Dict[str, int]] = None,
-        genres: List[Dict[str, int]] = None,
-        tags: List[Dict[str, int]] = None,
+        statuses: list[list[dict[str, int], dict[str, int]]] = None,
+        genres: list[list[dict[str, int], dict[str, int]]] = None,
+        tags: list[list[dict[str, int], dict[str, int]]] = None,
     ) -> None:
         self.count = count
         self.mean_score = mean_score
