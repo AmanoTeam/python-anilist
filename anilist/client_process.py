@@ -180,7 +180,7 @@ def process_search_anime(data: Optional[dict]) -> Optional[tuple[list[Anime], Pa
             ]
             return results, pagination
         except Exception:
-            pass
+            raise
     return None
 
 
@@ -201,7 +201,7 @@ def process_search_manga(data: Optional[dict]) -> Optional[tuple[list[Manga], Pa
             ]
             return results, pagination
         except Exception:
-            pass
+            raise
     return None
 
 
@@ -221,7 +221,7 @@ def process_search_character(data: dict) -> Optional[tuple[list[Character], Page
             ]
             return results, pagination
         except Exception:
-            pass
+            raise
     return None
 
 
@@ -239,7 +239,7 @@ def process_search_staff(data) -> Optional[tuple[list[Staff], PageInfo]]:
             results = [Staff(id=item["id"], name=item["name"]) for item in items]
             return results, pagination
         except Exception:
-            pass
+            raise
     return None
 
 
@@ -260,7 +260,7 @@ def process_search_user(data) -> Optional[tuple[list[User], PageInfo]]:
             ]
             return results, pagination
         except Exception:
-            pass
+            raise
     return None
 
 
@@ -317,7 +317,7 @@ def process_get_anime(data) -> Optional[Anime]:
                 relations=item["relations"],
             )
         except Exception:
-            pass
+            raise
     return None
 
 
@@ -373,7 +373,7 @@ def process_get_manga(data) -> Optional[Manga]:
                 relations=item["relations"],
             )
         except Exception:
-            pass
+            raise
     return None
 
 
@@ -383,7 +383,7 @@ def process_get_character(data) -> Optional[Character]:
             item = data["data"]["Character"]
             return construct_character_object(item)
         except Exception:
-            pass
+            raise
     return None
 
 
@@ -393,7 +393,7 @@ def process_get_staff(data) -> Optional[Staff]:
             item = data["data"]["Staff"]
             return construct_staff_object(item)
         except Exception:
-            pass
+            raise
     return None
 
 
@@ -467,7 +467,7 @@ def process_get_user(data) -> Optional[User]:
                 statistics=statistics,
             )
         except Exception:
-            pass
+            raise
     return None
 
 
@@ -531,7 +531,7 @@ def process_get_list(data: dict, content_type: str) -> Optional[tuple[list[Media
             return res, pagination
 
         except Exception:
-            pass
+            raise
     return None
 
 
@@ -552,7 +552,7 @@ def process_get_list_item(data: dict) -> Optional[MediaList]:
                 create_date=item["createdAt"],
             )
         except Exception:
-            pass
+            raise
     return None
 
 
@@ -587,7 +587,7 @@ def process_get_anime_activity(data) -> Optional[tuple[list[ListActivity], PageI
 
             return result, pagination
         except Exception:
-            pass
+            raise
     return None
 
 
@@ -621,7 +621,7 @@ def process_get_manga_activity(data: dict) -> Optional[tuple[list[ListActivity],
 
             return result, pagination
         except Exception:
-            pass
+            raise
     return None
 
 
@@ -657,11 +657,11 @@ def process_get_text_activity(data: dict) -> Optional[tuple[list[TextActivity], 
 
             return result, pagination
         except Exception:
-            pass
+            raise
     return None
 
 
-def process_get_message_activity(data: dict) -> Optional[tuple[list[TextActivity], PageInfo]]:
+def process_get_message_activity(data: dict) -> Optional[list[TextActivity]]:
     result = []
 
     if data["data"]:
@@ -691,7 +691,7 @@ def process_get_message_activity(data: dict) -> Optional[tuple[list[TextActivity
                     )
                 )
         except Exception:
-            pass
+            raise
 
     if len(result):
         return result
