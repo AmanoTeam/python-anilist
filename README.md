@@ -61,12 +61,12 @@ etc.
 Example code usage:
 
 ```py
-from pythonanilist import anilist
+import anilist
 
 client = anilist.Client()
 
 madoka_list = client.search_anime("madoka", limit=10)  # returns list of up to 10 Anime object results
-madoka = madoka_list[0][0][0]  # assume you want the first search result
+madoka = madoka_list[0][0][0]  # assuming you want the first search result
 print(madoka.title, madoka.id)
 
 >>> {'romaji': 'Mahou Shoujo Madoka☆Magica', 'english': 'Puella Magi Madoka Magica', 'native': '魔法少女まどか☆マギカ'} 9756
