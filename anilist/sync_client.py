@@ -43,6 +43,12 @@ from .utils import (
 )
 
 
+def api_query(query, variables, url=API_URL, headers=HEADERS):
+    with httpx.Client(http2=True) as session:
+        response = session.post(url=url, json=dict(query=query, variables=variables), headers=headers)
+    return response
+
+
 class Client:
     def __init__(self):
         self.httpx = None
@@ -195,208 +201,79 @@ class Client:
         else:
             raise TypeError("There is no such content type.")
 
-    def search_anime(self, query: str, limit: int, page: int = 1) -> Optional[tuple[list[Anime], PageInfo]]:
-        if not self.httpx:
-            self.httpx = httpx.Client()
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=ANIME_SEARCH_QUERY,
-                variables=dict(
-                    search=query,
-                    page=page,
-                    per_page=limit,
-                    MediaType="ANIME",
-                ),
-            ),
-            headers=HEADERS,
-        )
-
+    @staticmethod
+    def search_anime(query: str, limit: int, page: int = 1) -> Optional[tuple[list[Anime], PageInfo]]:
+        response = api_query(ANIME_SEARCH_QUERY, dict(search=query, page=page, per_page=limit, MediaType="ANIME"))
         data: Optional[dict] = response.json()
         return process_search_anime(data)
 
-    def search_manga(self, query: str, limit: int, page: int = 1) -> Optional[tuple[list[Manga], PageInfo]]:
-        if not self.httpx:
-            self.httpx = httpx.Client()
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=MANGA_SEARCH_QUERY,
-                variables=dict(
-                    search=query,
-                    page=page,
-                    per_page=limit,
-                    MediaType="MANGA",
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    def search_manga(query: str, limit: int, page: int = 1) -> Optional[tuple[list[Manga], PageInfo]]:
+        response = api_query(MANGA_SEARCH_QUERY, dict(search=query, page=page, per_page=limit, MediaType="MANGA"))
         data = response.json()
         return process_search_manga(data)
 
-    def search_character(
-            self, query: str, limit: int, page: int = 1
-    ) -> Optional[tuple[list[Character], PageInfo]]:
-        if not self.httpx:
-            self.httpx = httpx.Client()
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=CHARACTER_SEARCH_QUERY,
-                variables=dict(
-                    search=query,
-                    page=page,
-                    per_page=limit,
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    def search_character(query: str, limit: int, page: int = 1) -> Optional[tuple[list[Character], PageInfo]]:
+        response = api_query(CHARACTER_SEARCH_QUERY, dict(search=query, page=page, per_page=limit))
         data = response.json()
         return process_search_character(data)
 
-    def search_staff(self, query: str, limit: int, page: int = 1) -> Optional[tuple[list[Staff], PageInfo]]:
-        if not self.httpx:
-            self.httpx = httpx.Client()
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=STAFF_SEARCH_QUERY,
-                variables=dict(
-                    search=query,
-                    page=page,
-                    per_page=limit,
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    def search_staff(query: str, limit: int, page: int = 1) -> Optional[tuple[list[Staff], PageInfo]]:
+        response = api_query(STAFF_SEARCH_QUERY, dict(search=query, page=page, per_page=limit))
         data = response.json()
         return process_search_staff(data)
 
-    def search_user(self, query: str, limit: int, page: int = 1) -> Optional[tuple[list[User], PageInfo]]:
-        if not self.httpx:
-            self.httpx = httpx.Client()
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=USER_SEARCH_QUERY,
-                variables=dict(
-                    search=query,
-                    page=page,
-                    per_page=limit,
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    def search_user(query: str, limit: int, page: int = 1) -> Optional[tuple[list[User], PageInfo]]:
+        response = api_query(USER_SEARCH_QUERY, dict(search=query, page=page, per_page=limit))
         data = response.json()
         return process_search_user(data)
 
-    def get_anime(self, id: int) -> Optional[Anime]:
-        if not self.httpx:
-            self.httpx = httpx.Client()
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=ANIME_GET_QUERY,
-                variables=dict(
-                    id=id,
-                    MediaType="ANIME",
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    def get_anime(id: int) -> Optional[Anime]:
+        response = api_query(ANIME_GET_QUERY, dict(id=id, MediaType="ANIME"))
         data = response.json()
         return process_get_anime(data)
 
-    def get_manga(self, id: int) -> Optional[Manga]:
-        if not self.httpx:
-            self.httpx = httpx.Client()
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=MANGA_GET_QUERY,
-                variables=dict(
-                    id=id,
-                    MediaType="MANGA",
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    def get_manga(id: int) -> Optional[Manga]:
+        response = api_query(MANGA_GET_QUERY, dict(id=id, MediaType="MANGA"))
         data = response.json()
         return process_get_manga(data)
 
-    def get_character(self, id: int) -> Optional[Character]:
-        if not self.httpx:
-            self.httpx = httpx.Client()
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=CHARACTER_GET_QUERY,
-                variables=dict(
-                    id=id,
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    def get_character(id: int) -> Optional[Character]:
+        response = api_query(CHARACTER_GET_QUERY, dict(id=id))
         data = response.json()
         return process_get_character(data)
 
-    def get_staff(self, id: int) -> Optional[Staff]:
-        if not self.httpx:
-            self.httpx = httpx.Client()
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=STAFF_GET_QUERY,
-                variables=dict(
-                    id=id,
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    def get_staff(id: int) -> Optional[Staff]:
+        response = api_query(STAFF_GET_QUERY, dict(id=id))
         data = response.json()
         return process_get_staff(data)
 
-    def get_user(self, name: str) -> Optional[User]:
-        if not self.httpx:
-            self.httpx = httpx.Client()
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=USER_GET_QUERY,
-                variables=dict(
-                    name=name,
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    def get_user(name: str) -> Optional[User]:
+        response = api_query(USER_GET_QUERY, dict(name=name))
         data = response.json()
         return process_get_user(data)
 
+    @staticmethod
     def get_list(
-            self, user_id: int, limit: int, page: int = 1, content_type: str = "anime"
+            user_id: int, limit: int, page: int = 1, content_type: str = "anime"
     ) -> Optional[tuple[list[MediaList], PageInfo]]:
-        if not self.httpx:
-            self.httpx = httpx.Client()
-
         is_manga = "manga" in content_type
-
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=LIST_GET_QUERY_ANIME if not is_manga else LIST_GET_QUERY_MANGA,
-                variables=dict(
-                    user_id=user_id,
-                    page=page,
-                    per_page=limit,
-                ),
-            ),
-            headers=HEADERS,
-        )
+        response = api_query(LIST_GET_QUERY_ANIME if not is_manga else LIST_GET_QUERY_MANGA,
+                             dict(user_id=user_id, page=page, per_page=limit))
         data = response.json()
         return process_get_list(data, content_type)
 
-    def get_list_item(self, name: str, id: int) -> Optional[MediaList]:
-        """Returns list item from user.
+    @staticmethod
+    def get_list_item(name: str, id: int) -> Optional[MediaList]:
+        """Returns an item in a list item from user.
 
         Args:
             name (str): Username.
@@ -405,19 +282,7 @@ class Client:
         Returns:
             Optional[MediaList]: List item.
         """
-        if not self.httpx:
-            self.httpx = httpx.Client()
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=LIST_ITEM_GET_QUERY,
-                variables=dict(
-                    name=name,
-                    id=id,
-                ),
-            ),
-            headers=HEADERS,
-        )
+        response = api_query(LIST_ITEM_GET_QUERY, dict(name=name, d=id))
         data = response.json()
         return process_get_list_item(data)
 
@@ -481,108 +346,45 @@ class Client:
             return activity, pages
         return activity
 
-    def get_anime_activity(
-            self, user_id: int, limit: int, page: int = 1
-    ) -> Optional[tuple[list[ListActivity], PageInfo]]:
-        if not self.httpx:
-            self.httpx = httpx.Client()
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=LIST_ACTIVITY_QUERY,
-                variables=dict(
-                    user_id=user_id,
-                    page=page,
-                    per_page=limit,
-                    activity_type="ANIME_LIST",
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    def get_anime_activity(user_id: int, limit: int, page: int = 1) \
+            -> Optional[tuple[list[ListActivity], PageInfo]]:
+        response = api_query(LIST_ACTIVITY_QUERY,
+                             dict(user_id=user_id, page=page, per_page=limit, activity_type="ANIME_LIST"))
         data = response.json()
         return process_get_anime_activity(data)
 
-    def get_manga_activity(
-            self, user_id: int, limit: int, page: int = 1
-    ) -> Optional[tuple[list[ListActivity], PageInfo]]:
-        if not self.httpx:
-            self.httpx = httpx.Client()
+    @staticmethod
+    def get_manga_activity(user_id: int, limit: int, page: int = 1) \
+            -> Optional[tuple[list[ListActivity], PageInfo]]:
         MANGA_ACTIVITY_QUERY = LIST_ACTIVITY_QUERY.replace(
             "episodes", "chapters\nvolumes"
         )
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=MANGA_ACTIVITY_QUERY,
-                variables=dict(
-                    user_id=user_id,
-                    page=page,
-                    per_page=limit,
-                    activity_type="MANGA_LIST",
-                ),
-            ),
-            headers=HEADERS,
-        )
+        response = api_query(MANGA_ACTIVITY_QUERY,
+                             dict(user_id=user_id, page=page, per_page=limit, activity_type="MANGA_LIST"))
         data = response.json()
         return process_get_manga_activity(data)
 
+    @staticmethod
     def get_text_activity(
-            self, user_id: int, limit: int, page: int = 1
+            user_id: int, limit: int, page: int = 1
     ) -> Optional[tuple[list[TextActivity], PageInfo]]:
-        if not self.httpx:
-            self.httpx = httpx.Client()
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=TEXT_ACTIVITY_QUERY,
-                variables=dict(
-                    user_id=user_id,
-                    page=page,
-                    per_page=limit,
-                ),
-            ),
-            headers=HEADERS,
-        )
+        response = api_query(TEXT_ACTIVITY_QUERY, dict(user_id=user_id, page=page, per_page=limit))
         data = response.json()
         return process_get_text_activity(data)
 
+    @staticmethod
     def get_message_activity(
-            self, user_id: int, limit: int, page: int = 1
+            user_id: int, limit: int, page: int = 1
     ) -> Optional[tuple[list[TextActivity], PageInfo]]:
-        if not self.httpx:
-            self.httpx = httpx.Client()
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=MESSAGE_ACTIVITY_QUERY,
-                variables=dict(
-                    user_id=user_id,
-                    page=page,
-                    per_page=limit,
-                ),
-            ),
-            headers=HEADERS,
-        )
+        response = api_query(MESSAGE_ACTIVITY_QUERY, dict(user_id=user_id, page=page, per_page=limit))
         data = response.json()
         return process_get_message_activity(data)
 
+    @staticmethod
     def get_message_activity_sent(
-            self, user_id: int, limit: int, page: int = 1
+            user_id: int, limit: int, page: int = 1
     ) -> Optional[tuple[list[TextActivity], PageInfo]]:
-        if not self.httpx:
-            self.httpx = httpx.Client()
-        response = self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=MESSAGE_ACTIVITY_QUERY_SENT,
-                variables=dict(
-                    user_id=user_id,
-                    page=page,
-                    per_page=limit,
-                ),
-            ),
-            headers=HEADERS,
-        )
-
+        response = api_query(MESSAGE_ACTIVITY_QUERY_SENT, dict(user_id=user_id, page=page, per_page=limit))
         data = response.json()
         return process_get_message_activity_sent(data)

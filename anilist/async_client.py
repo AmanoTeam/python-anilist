@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Union
 
 import httpx
 
@@ -43,6 +43,12 @@ from .utils import (
 )
 
 
+async def api_query(query, variables, url=API_URL, headers=HEADERS):
+    async with httpx.AsyncClient(http2=True) as session:
+        response = await session.post(url=url, json=dict(query=query, variables=variables), headers=headers)
+    return response
+
+
 class Client:
     def __init__(self):
         self.httpx = None
@@ -57,12 +63,12 @@ class Client:
         return None
 
     async def search(
-        self,
-        query: str,
-        content_type: str = "anime",
-        page: int = 1,
-        limit: int = 10,
-        pagination: bool = False,
+            self,
+            query: str,
+            content_type: str = "anime",
+            page: int = 1,
+            limit: int = 10,
+            pagination: bool = False,
     ) -> Optional[
         Union[
             tuple[Union[Anime, Manga, Character, Staff, User], PageInfo],
@@ -123,12 +129,12 @@ class Client:
         return search
 
     async def get(
-        self,
-        id: Union[int, str],
-        content_type: str = "anime",
-        page: int = 1,
-        limit: int = 25,
-        pagination: bool = False,
+            self,
+            id: Union[int, str],
+            content_type: str = "anime",
+            page: int = 1,
+            limit: int = 25,
+            pagination: bool = False,
     ) -> Optional[tuple[Union[Anime, Manga, Character, Staff, List[MediaList], User], PageInfo]]:
         """Gets specified item from given id.
 
@@ -198,270 +204,90 @@ class Client:
         else:
             raise TypeError("There is no such content type.")
 
+    @staticmethod
     async def search_anime(
-        self, query: str, limit: int, page: int = 1
+            query: str, limit: int, page: int = 1
     ) -> Optional[tuple[list[Anime], PageInfo]]:
-        need_to_close = False
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=ANIME_SEARCH_QUERY,
-                variables=dict(
-                    search=query,
-                    page=page,
-                    per_page=limit,
-                    MediaType="ANIME",
-                ),
-            ),
-            headers=HEADERS,
-        )
+        response = await api_query(ANIME_SEARCH_QUERY,
+                                   dict(search=query, page=page, per_page=limit, MediaType="ANIME"))
         data: Optional[dict] = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
         return process_search_anime(data)
 
+    @staticmethod
     async def search_manga(
-        self, query: str, limit: int, page: int = 1
+            query: str, limit: int, page: int = 1
     ) -> Optional[tuple[list[Manga], PageInfo]]:
-        need_to_close = False
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=MANGA_SEARCH_QUERY,
-                variables=dict(
-                    search=query,
-                    page=page,
-                    per_page=limit,
-                    MediaType="MANGA",
-                ),
-            ),
-            headers=HEADERS,
-        )
+        response = await api_query(MANGA_SEARCH_QUERY,
+                                   dict(search=query, page=page, per_page=limit, MediaType="MANGA"))
         data: dict = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
         return process_search_manga(data)
 
+    @staticmethod
     async def search_character(
-        self, query: str, limit: int, page: int = 1
+            query: str, limit: int, page: int = 1
     ) -> Optional[tuple[list[Character], PageInfo]]:
-        need_to_close = False
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=CHARACTER_SEARCH_QUERY,
-                variables=dict(
-                    search=query,
-                    page=page,
-                    per_page=limit,
-                ),
-            ),
-            headers=HEADERS,
-        )
+        response = await api_query(CHARACTER_SEARCH_QUERY, dict(search=query, page=page, per_page=limit))
         data = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
         return process_search_character(data)
 
+    @staticmethod
     async def search_staff(
-        self, query: str, limit: int, page: int = 1
+            query: str, limit: int, page: int = 1
     ) -> Optional[tuple[list[Staff], PageInfo]]:
-        need_to_close = False
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=STAFF_SEARCH_QUERY,
-                variables=dict(
-                    search=query,
-                    page=page,
-                    per_page=limit,
-                ),
-            ),
-            headers=HEADERS,
-        )
+        response = await api_query(STAFF_SEARCH_QUERY, dict(search=query, page=page, per_page=limit))
         data = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
         return process_search_staff(data)
 
+    @staticmethod
     async def search_user(
-        self, query: str, limit: int, page: int = 1
+            query: str, limit: int, page: int = 1
     ) -> Optional[tuple[list[User], PageInfo]]:
-        need_to_close = False
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=USER_SEARCH_QUERY,
-                variables=dict(
-                    search=query,
-                    page=page,
-                    per_page=limit,
-                ),
-            ),
-            headers=HEADERS,
-        )
+        response = await api_query(USER_SEARCH_QUERY, dict(search=query, page=page, per_page=limit))
         data = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
         return process_search_user(data)
 
-    async def get_anime(self, id: int) -> Optional[Anime]:
-        need_to_close = False
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=ANIME_GET_QUERY,
-                variables=dict(
-                    id=id,
-                    MediaType="ANIME",
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    async def get_anime(id: int) -> Optional[Anime]:
+        response = await api_query(ANIME_GET_QUERY, dict(id=id, MediaType="ANIME"))
         data = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
         return process_get_anime(data)
 
-    async def get_manga(self, id: int) -> Optional[Manga]:
-        need_to_close = False
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=MANGA_GET_QUERY,
-                variables=dict(
-                    id=id,
-                    MediaType="MANGA",
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    async def get_manga(id: int) -> Optional[Manga]:
+        response = await api_query(MANGA_GET_QUERY, dict(id=id, MediaType="MANGA"))
         data = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
         return process_get_manga(data)
 
-    async def get_character(self, id: int) -> Optional[Character]:
-        need_to_close = False
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=CHARACTER_GET_QUERY,
-                variables=dict(
-                    id=id,
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    async def get_character(id: int) -> Optional[Character]:
+        response = await api_query(CHARACTER_GET_QUERY, dict(id=id))
         data = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
         return process_get_character(data)
 
-    async def get_staff(self, id: int) -> Optional[Staff]:
-        need_to_close = False
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=STAFF_GET_QUERY,
-                variables=dict(
-                    id=id,
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    async def get_staff(id: int) -> Optional[Staff]:
+        response = await api_query(STAFF_GET_QUERY, dict(id=id))
         data = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
         return process_get_staff(data)
 
-    async def get_user(self, name: str) -> Optional[User]:
-        need_to_close = False
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=USER_GET_QUERY,
-                variables=dict(
-                    name=name,
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    async def get_user(name: str) -> Optional[User]:
+        response = await api_query(USER_GET_QUERY, dict(name=name))
         data = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
         return process_get_user(data)
 
+    @staticmethod
     async def get_list(
-        self, user_id: int, limit: int, page: int = 1, content_type: str = "anime"
+            user_id: int, limit: int, page: int = 1, content_type: str = "anime"
     ) -> Optional[tuple[List[MediaList], List[MediaList]]]:
-        need_to_close = False
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-
         is_manga = "manga" in content_type
-
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=LIST_GET_QUERY_ANIME if not is_manga else LIST_GET_QUERY_MANGA,
-                variables=dict(
-                    user_id=user_id,
-                    page=page,
-                    per_page=limit,
-                ),
-            ),
-            headers=HEADERS,
-        )
+        response = await api_query(LIST_GET_QUERY_ANIME if not is_manga else LIST_GET_QUERY_MANGA,
+                                   dict(user_id=user_id, page=page, per_page=limit))
         data = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
-
         return process_get_list(data, content_type)
 
-    async def get_list_item(self, name: str, id: int) -> Optional[MediaList]:
+    @staticmethod
+    async def get_list_item(name: str, id: int) -> Optional[MediaList]:
         """Returns list item from user.
 
         Args:
@@ -471,34 +297,17 @@ class Client:
         Returns:
             Optional[MediaList]: List item.
         """
-        need_to_close = False
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=LIST_ITEM_GET_QUERY,
-                variables=dict(
-                    name=name,
-                    id=id,
-                ),
-            ),
-            headers=HEADERS,
-        )
+        response = await api_query(LIST_ITEM_GET_QUERY, dict(name=name, id=id))
         data = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
         return process_get_list_item(data)
 
     async def get_activity(
-        self,
-        id: Union[int, str],
-        content_type: str = "anime",
-        page: int = 1,
-        limit: int = 25,
-        pagination: bool = False,
+            self,
+            id: Union[int, str],
+            content_type: str = "anime",
+            page: int = 1,
+            limit: int = 25,
+            pagination: bool = False,
     ) -> Union[Optional[tuple[ListActivity, PageInfo]], Optional[ListActivity]]:
         """Returns activity of a user.
 
@@ -558,135 +367,41 @@ class Client:
             return activity, pages
         return activity
 
+    @staticmethod
     async def get_anime_activity(
-        self, user_id: int, limit: int, page: int = 1
+            user_id: int, limit: int, page: int = 1
     ) -> Optional[tuple[list[ListActivity], PageInfo]]:
-        need_to_close = False
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=LIST_ACTIVITY_QUERY,
-                variables=dict(
-                    user_id=user_id,
-                    page=page,
-                    per_page=limit,
-                    activity_type="ANIME_LIST",
-                ),
-            ),
-            headers=HEADERS,
-        )
+        response = await api_query(LIST_ACTIVITY_QUERY,
+                                   dict(user_id=user_id, page=page, per_page=limit, activity_type="ANIME_LIST"))
         data = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
         return process_get_anime_activity(data)
 
-    async def get_manga_activity(
-        self, user_id: int, limit: int, page: int = 1
-    ) -> Optional[tuple[list[ListActivity], PageInfo]]:
-        need_to_close = False
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-        MANGA_ACTIVITY_QUERY = LIST_ACTIVITY_QUERY.replace(
-            "episodes", "chapters\nvolumes"
-        )
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=MANGA_ACTIVITY_QUERY,
-                variables=dict(
-                    user_id=user_id,
-                    page=page,
-                    per_page=limit,
-                    activity_type="MANGA_LIST",
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    async def get_manga_activity(user_id: int, limit: int, page: int = 1
+                                 ) -> Optional[tuple[list[ListActivity], PageInfo]]:
+        MANGA_ACTIVITY_QUERY = LIST_ACTIVITY_QUERY.replace("episodes", "chapters\nvolumes")
+        response = await api_query(MANGA_ACTIVITY_QUERY,
+                                   dict(user_id=user_id, page=page, per_page=limit, activity_type="MANGA_LIST"))
         data = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
         return process_get_manga_activity(data)
 
-    async def get_text_activity(
-        self, user_id: int, limit: int, page: int = 1
-    ) -> Optional[tuple[list[TextActivity], PageInfo]]:
-        need_to_close = False
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=TEXT_ACTIVITY_QUERY,
-                variables=dict(
-                    user_id=user_id,
-                    page=page,
-                    per_page=limit,
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    async def get_text_activity(user_id: int, limit: int, page: int = 1
+                                ) -> Optional[tuple[list[TextActivity], PageInfo]]:
+        response = await api_query(TEXT_ACTIVITY_QUERY, dict(user_id=user_id, page=page, per_page=limit))
         data = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
         return process_get_text_activity(data)
 
-    async def get_message_activity(
-        self, user_id: int, limit: int, page: int = 1
-    ) -> Optional[tuple[list[TextActivity], PageInfo]]:
-        need_to_close = False
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=MESSAGE_ACTIVITY_QUERY,
-                variables=dict(
-                    user_id=user_id,
-                    page=page,
-                    per_page=limit,
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    async def get_message_activity(user_id: int, limit: int, page: int = 1
+                                   ) -> Optional[tuple[list[TextActivity], PageInfo]]:
+        response = await api_query(MESSAGE_ACTIVITY_QUERY, dict(user_id=user_id, page=page, per_page=limit))
         data = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
-
         return process_get_message_activity(data)
 
-    async def get_message_activity_sent(
-            self, user_id: int, limit: int, page: int = 1
-    ) -> Optional[tuple[list[TextActivity], PageInfo]]:
-        need_to_close = False
-
-        if not self.httpx:
-            self.httpx = httpx.AsyncClient(http2=True)
-            need_to_close = True
-        response = await self.httpx.post(
-            url=API_URL,
-            json=dict(
-                query=MESSAGE_ACTIVITY_QUERY_SENT,
-                variables=dict(
-                    user_id=user_id,
-                    page=page,
-                    per_page=limit,
-                ),
-            ),
-            headers=HEADERS,
-        )
+    @staticmethod
+    async def get_message_activity_sent(user_id: int, limit: int, page: int = 1
+                                        ) -> Optional[tuple[list[TextActivity], PageInfo]]:
+        response = await api_query(MESSAGE_ACTIVITY_QUERY_SENT, dict(user_id=user_id, page=page, per_page=limit))
         data = response.json()
-        if need_to_close:
-            await self.httpx.aclose()
-            self.httpx = None
-
         return process_get_message_activity_sent(data)
