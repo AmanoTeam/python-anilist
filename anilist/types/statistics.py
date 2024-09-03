@@ -5,10 +5,11 @@
 
 from typing import Callable, Dict, List
 
+from .object import Object
 from .score import Score
 
 
-class Ranking:
+class Ranking(Object):
     """Ranking of a media object."""
 
     def __init__(
@@ -30,17 +31,8 @@ class Ranking:
         if season:
             self.season = season
 
-    def raw(self) -> Dict:
-        return self.__dict__
 
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())
-
-
-class Statistic:
+class Statistic(Object):
     """Statistic object of a user."""
 
     def __init__(
@@ -52,9 +44,9 @@ class Statistic:
         episodes_watched: int = None,
         chapters_read: int = None,
         volumes_read: int = None,
-        statuses: List[Dict[str, int]] = None,
-        genres: List[Dict[str, int]] = None,
-        tags: List[Dict[str, int]] = None,
+        statuses: list[list[dict[str, int], dict[str, int]]] = None,
+        genres: list[list[dict[str, int], dict[str, int]]] = None,
+        tags: list[list[dict[str, int], dict[str, int]]] = None,
     ) -> None:
         self.count = count
         self.mean_score = mean_score
@@ -69,28 +61,10 @@ class Statistic:
         if tags:
             self.tags = tags
 
-    def raw(self) -> Dict:
-        return self.__dict__
 
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())
-
-
-class StatisticsUnion:
+class StatisticsUnion(Object):
     """Union containing anime and manga statistics of a user."""
 
     def __init__(self, *, anime: Statistic, manga: Statistic) -> None:
         self.anime = anime
         self.manga = manga
-
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())

@@ -9,6 +9,7 @@ from .character import Character
 from .cover import Cover
 from .date import Date
 from .next_airing import NextAiring
+from .object import Hashable
 from .score import Score
 from .season import Season
 from .staff import Staff
@@ -17,7 +18,7 @@ from .title import Title
 from .trailer import Trailer
 
 
-class Anime:
+class Anime(Hashable):
     """Anime object."""
 
     def __init__(
@@ -180,12 +181,3 @@ class Anime:
                 )
                 for relation in relations["edges"]
             ]
-
-    def raw(self) -> Dict:
-        return self.__dict__
-
-    def __repr__(self) -> Callable:
-        return self.__str__()
-
-    def __str__(self) -> str:
-        return str(self.raw())
