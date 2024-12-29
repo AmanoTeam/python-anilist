@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (C) 2021-2022 Amano Team <https://amanoteam.com/>, nfitzen
-  ~ 
+  ~
   ~ SPDX-License-Identifier: MIT
   -->
 
@@ -16,7 +16,7 @@
 
 ## Requirements
 
-- Python 3.7 or higher.
+- Python 3.8 or higher.
 - httpx 0.14 or higher.
 
 ## Installation
