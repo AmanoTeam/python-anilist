@@ -265,6 +265,7 @@ def process_search_user(data) -> Optional[tuple[list[User], PageInfo]]:
 
 
 def process_get_anime(data) -> Optional[Anime]:
+    print(data)
     if data["data"]:
         try:
             item = data["data"]["Page"]["media"][0]

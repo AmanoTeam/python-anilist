@@ -1,9 +1,40 @@
 # SPDX-License-Identifier: MIT
 # Copyright (C) 2021-2022 Amano Team <https://amanoteam.com/> and the python-anilist contributors
 
+[project]
+name = "python-anilist"
+version = "1.1.0"
+description = "A simple wrapper with full support for asyncio made in Python 3 for Anilist using httpx."
+readme = "README.md"
+authors = [{ name = "Andriel Ferreira", email = "andrielfr@proton.me" }]
+license = { text = "MIT" }
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Framework :: AsyncIO",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3 :: Only",
+]
+dependencies = [
+    "httpx[http2]",
+]
+requires-python = ">=3.8"
+
 [build-system]
 requires = ["setuptools>=42.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project.urls]
+tracker = "https://github.com/AmanoTeam/python-anilist/issues"
+source = "https://github.com/AmanoTeam/python-anilist"
+
+[tool.setuptools.package-data]
+anilist = ["py.typed", "*.graphql"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=python-anilist"
