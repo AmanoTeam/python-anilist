@@ -36,8 +36,13 @@ source = "https://github.com/AmanoTeam/python-anilist"
 [tool.setuptools.package-data]
 anilist = ["py.typed", "*.graphql"]
 
+[tool.rye]
+dev-dependencies = [
+    "pytest>=8.3.4",
+    "pytest-asyncio>=0.24.0",
+]
+
 [tool.pytest.ini_options]
-addopts = "--cov=python-anilist"
 testpaths = [
     "tests",
 ]

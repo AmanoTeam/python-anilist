@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List, Tuple
 
 from .types import (
     Anime,
@@ -163,7 +163,7 @@ def construct_studio_object(media: dict) -> Studio:
     )
 
 
-def process_search_anime(data: Optional[dict]) -> Optional[tuple[list[Anime], PageInfo]]:
+def process_search_anime(data: Optional[dict]) -> Optional[Tuple[List[Anime], PageInfo]]:
     if data["data"]:
         try:
             items = data["data"]["Page"]["media"]
@@ -184,7 +184,7 @@ def process_search_anime(data: Optional[dict]) -> Optional[tuple[list[Anime], Pa
     return None
 
 
-def process_search_manga(data: Optional[dict]) -> Optional[tuple[list[Manga], PageInfo]]:
+def process_search_manga(data: Optional[dict]) -> Optional[Tuple[List[Manga], PageInfo]]:
     if data["data"]:
         try:
             items = data["data"]["Page"]["media"]
@@ -205,7 +205,7 @@ def process_search_manga(data: Optional[dict]) -> Optional[tuple[list[Manga], Pa
     return None
 
 
-def process_search_character(data: dict) -> Optional[tuple[list[Character], PageInfo]]:
+def process_search_character(data: dict) -> Optional[Tuple[List[Character], PageInfo]]:
     if data["data"]:
         try:
             items = data["data"]["Page"]["characters"]
@@ -225,7 +225,7 @@ def process_search_character(data: dict) -> Optional[tuple[list[Character], Page
     return None
 
 
-def process_search_staff(data) -> Optional[tuple[list[Staff], PageInfo]]:
+def process_search_staff(data) -> Optional[Tuple[List[Staff], PageInfo]]:
     if data["data"]:
         try:
             items = data["data"]["Page"]["staff"]
@@ -243,7 +243,7 @@ def process_search_staff(data) -> Optional[tuple[list[Staff], PageInfo]]:
     return None
 
 
-def process_search_user(data) -> Optional[tuple[list[User], PageInfo]]:
+def process_search_user(data) -> Optional[Tuple[List[User], PageInfo]]:
     if data["data"]:
         try:
             items = data["data"]["Page"]["users"]
@@ -265,7 +265,6 @@ def process_search_user(data) -> Optional[tuple[list[User], PageInfo]]:
 
 
 def process_get_anime(data) -> Optional[Anime]:
-    print(data)
     if data["data"]:
         try:
             item = data["data"]["Page"]["media"][0]
@@ -472,7 +471,7 @@ def process_get_user(data) -> Optional[User]:
     return None
 
 
-def process_get_list(data: dict, content_type: str) -> Optional[tuple[list[MediaList], PageInfo]]:
+def process_get_list(data: dict, content_type: str) -> Optional[Tuple[List[MediaList], PageInfo]]:
     is_manga = "manga" in content_type
     res = []
     if data["data"]:
@@ -557,7 +556,7 @@ def process_get_list_item(data: dict) -> Optional[MediaList]:
     return None
 
 
-def process_get_anime_activity(data) -> Optional[tuple[list[ListActivity], PageInfo]]:
+def process_get_anime_activity(data) -> Optional[Tuple[List[ListActivity], PageInfo]]:
     if data["data"]:
         try:
             items = data["data"]["Page"]["activities"]
@@ -592,7 +591,7 @@ def process_get_anime_activity(data) -> Optional[tuple[list[ListActivity], PageI
     return None
 
 
-def process_get_manga_activity(data: dict) -> Optional[tuple[list[ListActivity], PageInfo]]:
+def process_get_manga_activity(data: dict) -> Optional[Tuple[List[ListActivity], PageInfo]]:
     if data["data"]:
         try:
             items = data["data"]["Page"]["activities"]
@@ -626,7 +625,7 @@ def process_get_manga_activity(data: dict) -> Optional[tuple[list[ListActivity],
     return None
 
 
-def process_get_text_activity(data: dict) -> Optional[tuple[list[TextActivity], PageInfo]]:
+def process_get_text_activity(data: dict) -> Optional[Tuple[List[TextActivity], PageInfo]]:
     if data["data"]:
         try:
             items = data["data"]["Page"]["activities"]
@@ -662,7 +661,7 @@ def process_get_text_activity(data: dict) -> Optional[tuple[list[TextActivity], 
     return None
 
 
-def process_get_message_activity(data: dict) -> Optional[list[TextActivity]]:
+def process_get_message_activity(data: dict) -> Optional[List[TextActivity]]:
     result = []
 
     if data["data"]:
@@ -700,5 +699,5 @@ def process_get_message_activity(data: dict) -> Optional[list[TextActivity]]:
     return None
 
 
-def process_get_message_activity_sent(data: dict) -> Optional[tuple[list[TextActivity], PageInfo]]:
+def process_get_message_activity_sent(data: dict) -> Optional[Tuple[List[TextActivity], PageInfo]]:
     return process_get_message_activity(data)  # Currently they are the same

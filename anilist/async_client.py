@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Tuple
 
 import httpx
 
@@ -71,7 +71,7 @@ class Client:
             pagination: bool = False,
     ) -> Optional[
         Union[
-            tuple[Union[Anime, Manga, Character, Staff, User], PageInfo],
+            Tuple[Union[Anime, Manga, Character, Staff, User], PageInfo],
             Union[Anime, Manga, Character, Staff, User]]
     ]:
         """Used to search specified content type with the given query.
@@ -135,7 +135,7 @@ class Client:
             page: int = 1,
             limit: int = 25,
             pagination: bool = False,
-    ) -> Optional[tuple[Union[Anime, Manga, Character, Staff, List[MediaList], User], PageInfo]]:
+    ) -> Optional[Tuple[Union[Anime, Manga, Character, Staff, List[MediaList], User], PageInfo]]:
         """Gets specified item from given id.
 
         Args:
@@ -172,7 +172,7 @@ class Client:
                     user = await self.get_user(name=id)
                     id = user.id
                 except Exception:
-                    raise TypeError(f"user not found")
+                    raise TypeError("user not found")
             else:
                 raise TypeError(
                     f"id argument must be a string, not '{id.__class__.__name__}'"
@@ -207,7 +207,7 @@ class Client:
     @staticmethod
     async def search_anime(
             query: str, limit: int, page: int = 1
-    ) -> Optional[tuple[list[Anime], PageInfo]]:
+    ) -> Optional[Tuple[List[Anime], PageInfo]]:
         response = await api_query(ANIME_SEARCH_QUERY,
                                    dict(search=query, page=page, per_page=limit, MediaType="ANIME"))
         data: Optional[dict] = response.json()
@@ -216,7 +216,7 @@ class Client:
     @staticmethod
     async def search_manga(
             query: str, limit: int, page: int = 1
-    ) -> Optional[tuple[list[Manga], PageInfo]]:
+    ) -> Optional[Tuple[List[Manga], PageInfo]]:
         response = await api_query(MANGA_SEARCH_QUERY,
                                    dict(search=query, page=page, per_page=limit, MediaType="MANGA"))
         data: dict = response.json()
@@ -225,7 +225,7 @@ class Client:
     @staticmethod
     async def search_character(
             query: str, limit: int, page: int = 1
-    ) -> Optional[tuple[list[Character], PageInfo]]:
+    ) -> Optional[Tuple[List[Character], PageInfo]]:
         response = await api_query(CHARACTER_SEARCH_QUERY, dict(search=query, page=page, per_page=limit))
         data = response.json()
         return process_search_character(data)
@@ -233,7 +233,7 @@ class Client:
     @staticmethod
     async def search_staff(
             query: str, limit: int, page: int = 1
-    ) -> Optional[tuple[list[Staff], PageInfo]]:
+    ) -> Optional[Tuple[List[Staff], PageInfo]]:
         response = await api_query(STAFF_SEARCH_QUERY, dict(search=query, page=page, per_page=limit))
         data = response.json()
         return process_search_staff(data)
@@ -241,7 +241,7 @@ class Client:
     @staticmethod
     async def search_user(
             query: str, limit: int, page: int = 1
-    ) -> Optional[tuple[list[User], PageInfo]]:
+    ) -> Optional[Tuple[List[User], PageInfo]]:
         response = await api_query(USER_SEARCH_QUERY, dict(search=query, page=page, per_page=limit))
         data = response.json()
         return process_search_user(data)
@@ -279,7 +279,7 @@ class Client:
     @staticmethod
     async def get_list(
             user_id: int, limit: int, page: int = 1, content_type: str = "anime"
-    ) -> Optional[tuple[List[MediaList], List[MediaList]]]:
+    ) -> Optional[Tuple[List[MediaList], List[MediaList]]]:
         is_manga = "manga" in content_type
         response = await api_query(LIST_GET_QUERY_ANIME if not is_manga else LIST_GET_QUERY_MANGA,
                                    dict(user_id=user_id, page=page, per_page=limit))
@@ -308,7 +308,7 @@ class Client:
             page: int = 1,
             limit: int = 25,
             pagination: bool = False,
-    ) -> Union[Optional[tuple[ListActivity, PageInfo]], Optional[ListActivity]]:
+    ) -> Union[Optional[Tuple[ListActivity, PageInfo]], Optional[ListActivity]]:
         """Returns activity of a user.
 
         Args:
@@ -370,7 +370,7 @@ class Client:
     @staticmethod
     async def get_anime_activity(
             user_id: int, limit: int, page: int = 1
-    ) -> Optional[tuple[list[ListActivity], PageInfo]]:
+    ) -> Optional[Tuple[List[ListActivity], PageInfo]]:
         response = await api_query(LIST_ACTIVITY_QUERY,
                                    dict(user_id=user_id, page=page, per_page=limit, activity_type="ANIME_LIST"))
         data = response.json()
@@ -378,7 +378,7 @@ class Client:
 
     @staticmethod
     async def get_manga_activity(user_id: int, limit: int, page: int = 1
-                                 ) -> Optional[tuple[list[ListActivity], PageInfo]]:
+                                 ) -> Optional[Tuple[List[ListActivity], PageInfo]]:
         MANGA_ACTIVITY_QUERY = LIST_ACTIVITY_QUERY.replace("episodes", "chapters\nvolumes")
         response = await api_query(MANGA_ACTIVITY_QUERY,
                                    dict(user_id=user_id, page=page, per_page=limit, activity_type="MANGA_LIST"))
@@ -387,21 +387,21 @@ class Client:
 
     @staticmethod
     async def get_text_activity(user_id: int, limit: int, page: int = 1
-                                ) -> Optional[tuple[list[TextActivity], PageInfo]]:
+                                ) -> Optional[Tuple[List[TextActivity], PageInfo]]:
         response = await api_query(TEXT_ACTIVITY_QUERY, dict(user_id=user_id, page=page, per_page=limit))
         data = response.json()
         return process_get_text_activity(data)
 
     @staticmethod
     async def get_message_activity(user_id: int, limit: int, page: int = 1
-                                   ) -> Optional[tuple[list[TextActivity], PageInfo]]:
+                                   ) -> Optional[Tuple[List[TextActivity], PageInfo]]:
         response = await api_query(MESSAGE_ACTIVITY_QUERY, dict(user_id=user_id, page=page, per_page=limit))
         data = response.json()
         return process_get_message_activity(data)
 
     @staticmethod
     async def get_message_activity_sent(user_id: int, limit: int, page: int = 1
-                                        ) -> Optional[tuple[list[TextActivity], PageInfo]]:
+                                        ) -> Optional[Tuple[List[TextActivity], PageInfo]]:
         response = await api_query(MESSAGE_ACTIVITY_QUERY_SENT, dict(user_id=user_id, page=page, per_page=limit))
         data = response.json()
         return process_get_message_activity_sent(data)

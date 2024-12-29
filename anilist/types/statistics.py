@@ -3,10 +3,9 @@
 #
 # SPDX-License-Identifier: MIT
 
-from typing import Callable, Dict, List
 
+from typing import List, Dict
 from .object import Object
-from .score import Score
 
 
 class Ranking(Object):
@@ -44,9 +43,9 @@ class Statistic(Object):
         episodes_watched: int = None,
         chapters_read: int = None,
         volumes_read: int = None,
-        statuses: list[list[dict[str, int], dict[str, int]]] = None,
-        genres: list[list[dict[str, int], dict[str, int]]] = None,
-        tags: list[list[dict[str, int], dict[str, int]]] = None,
+        statuses: List[List[Dict[str, int]]] = None,
+        genres: List[List[Dict[str, int]]] = None,
+        tags: List[List[Dict[str, int]]] = None,
     ) -> None:
         self.count = count
         self.mean_score = mean_score
